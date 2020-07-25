@@ -6,7 +6,7 @@ import helper_threaded_meter
 import helper_peers
 import oled_helpers
 import oled_meters
-import helper_jacktrip
+import pytrip
 
 
 cfg = ConfigParser()
@@ -74,17 +74,17 @@ class Noisebox:
                                                 'server': False})
             self.oled_helpers.draw_text(0, 26, "Starting JackTrip as client")
 
-        self.current_session = helper_jacktrip.PyTrip(self.current_session_params)
+        self.current_session = pytrip.PyTrip(self.current_session_params)
         self.current_session.start()
-        self.session_active = self.current_session.monitor()
-        if self.session_active:
-            self.oled_helpers.draw_text(0, 26, "Jacktrip Connected")
-            # TO DO
-            # start monitoring JackTrip and handle errors or disconnects
-            # Eventually meter session from here
-        else:
-            self.oled_helpers.draw_text(0, 26, "Jacktrip could not connect")
-            sleep(1)
+        # self.session_active = self.current_session.monitor()
+        # if self.session_active:
+        #     self.oled_helpers.draw_text(0, 26, "Jacktrip Connected")
+        #     # TO DO
+        #     # start monitoring JackTrip and handle errors or disconnects
+        #     # Eventually meter session from here
+        # else:
+        #     self.oled_helpers.draw_text(0, 26, "Jacktrip could not connect")
+        #     sleep(1)
 
     def start_session(self):
         """Start hubserver JackTrip session"""
@@ -93,28 +93,21 @@ class Noisebox:
         # depending on which server we are connecting to
         # Refactor code, make more DRY
 
-        self.oled_helpers.draw_text(0, 26, "Connecting to server...")
         self.current_session_params = self.server1_params
-        self.current_session = helper_jacktrip.PyTrip(self.current_session_params)
+        self.current_session = pytrip.PyTrip(self.current_session_params)
+        self.oled_helpers.draw_text(0, 26, "Connecting to server...")
         self.current_session.start()
-        self.session_active = self.current_session.monitor()
-        if self.session_active:
-            self.oled_helpers.draw_text(0, 26, "Jacktrip Connected")
-            # TO DO
-            # start monitoring JackTrip and handle errors or disconnects
-            # replace lounge-music metering with input metering
-            sleep(1)
+
+        if self.current_session.jacktrip_monitor.jacktrip_connected is True:
+            self.session_active = True
             command = [
                 "lounge-music:1",
                 "lounge-music:2",
                 self.active_server + ":receive_1",
                 self.active_server + ":receive_2"
             ]
-            self.start_meters()
-            self.current_session.status(command)
-        else:
-            self.oled_helpers.draw_text(0, 26, "Jacktrip could not connect")
-            sleep(1)
+
+            self.start_meters(command)
 
     def stop_session(self):
         """Stop JackTrip session"""
