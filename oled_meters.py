@@ -32,3 +32,6 @@ class Meters:
         while self._running:
             virtual.set_position((0, 0))
             time.sleep(0.1)
+
+        for level_thread in level_threads:
+            level_thread.terminate()
