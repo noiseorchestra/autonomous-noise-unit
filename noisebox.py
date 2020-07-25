@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 from rotary import KY040
+import jack
 from configparser import ConfigParser
 from threading import Thread
 from time import sleep
@@ -9,7 +10,7 @@ import helper_peers
 import oled_helpers
 import oled_meters
 import helper_jacktrip
-import helper_jack
+import jack_helpers
 import noisebox_menu
 
 cfg = ConfigParser()
@@ -20,7 +21,7 @@ peers = cfg.get('peers', 'ips')
 class Noisebox:
     """Main noisebox object"""
 
-    def __init__(self):
+    def __init__(self, jackClient):
         self.server1_ip = cfg.get('server1', 'ip')
         self.server2_ip = cfg.get('server2', 'ip')
         self.active_server = cfg.get('server1', 'ip')
@@ -37,13 +38,14 @@ class Noisebox:
         self.current_session = None
         self.current_meters = None
         self.oled_helpers = oled_helpers.OLED_helpers()
+        self.jackClient = jackClient
 
     def start_jack(self):
-        helper_jack.PyJack.start(['jackd', '-dalsa', '-r48000'])
+        jack_helpers.start(['jackd', '-dalsa', '-r48000'])
         sleep(1)
 
     def stop_jack(self):
-        helper_jack.stop()
+        jack_helpers.stop()
 
     def get_ip(self):
         """Get and return ip"""
@@ -73,7 +75,7 @@ class Noisebox:
         """Start peer 2 peer JackTrip session"""
 
         # TODO
-        # when OLED menu is ready connect to chosen peer
+        # use OLED menu to connect to chosen peer
 
         if len(self.online_peers) == 1:
             self.current_session_params = self.default_peer_params
@@ -86,15 +88,13 @@ class Noisebox:
 
         self.current_session = helper_jacktrip.PyTrip(self.current_session_params)
         self.current_session.start()
-        # self.session_active = self.current_session.monitor()
-        # if self.session_active:
-        #     self.oled_helpers.draw_text(0, 26, "Jacktrip Connected")
-        #     # TO DO
-        #     # start monitoring JackTrip and handle errors or disconnects
-        #     # Eventually meter session from here
-        # else:
-        #     self.oled_helpers.draw_text(0, 26, "Jacktrip could not connect")
-        #     sleep(1)
+
+        # not tested this section
+
+        if self.current_session.jacktrip_monitor.jacktrip_connected is True:
+            self.session_active = True
+
+        self.start_meters()
 
     def start_session(self):
         """Start hubserver JackTrip session"""
@@ -141,16 +141,13 @@ class Noisebox:
     def start_meters(self):
         """Start drawing OLED meters"""
 
-        jack_client = helper_jack.PyJackClient()
-        with jack_client as jack:
-
-            port_names = jack.get_input_port_names()
-            meter_threads = self.monitor_channels(port_names)
-            self.current_meters = oled_meters.Meters()
-            t = Thread(
-                target=self.current_meters.render,
-                args=(self.oled_helpers.get_device(), meter_threads,))
-            t.start()
+        port_names = jack_helpers.get_input_port_names(self.jackClient)
+        meter_threads = self.monitor_channels(port_names)
+        self.current_meters = oled_meters.Meters()
+        t = Thread(
+            target=self.current_meters.render,
+            args=(self.oled_helpers.get_device(), meter_threads,))
+        t.start()
 
     def stop_meters(self):
         """Stop drawing OLED meters"""
@@ -165,7 +162,8 @@ def main():
     DATAPIN = 17
     SWITCHPIN = 27
 
-    noisebox = Noisebox()
+    jackClient = jack.Client('noisebox')
+    noisebox = Noisebox(jackClient)
     oled_h = oled_helpers.OLED_helpers()
     oled_menu = noisebox_menu.Menu(['ROOM 1',
                                     'LEVEL METER',
