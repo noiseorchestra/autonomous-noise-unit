@@ -1,4 +1,3 @@
-from queue import Queue
 from threading import Thread
 from subprocess import Popen, PIPE
 
@@ -25,6 +24,9 @@ class ThreadedMeter:
             try:
                 level = -2 * int(float(str(line, 'utf-8')))
             except OverflowError:
+                print("Meter value not int")
+                pass
+            except ValueError:
                 print("Meter value not int")
                 pass
             finally:

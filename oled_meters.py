@@ -23,7 +23,7 @@ class Meters:
             widgets.append(meter)
 
         virtual = viewport(device,
-                           width=widget_width * len(widgets),
+                           width=widget_width * 4,
                            height=widget_height)
 
         for i, widget in enumerate(widgets):

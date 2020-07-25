@@ -50,6 +50,7 @@ class Menu:
             self.noisebox.start_session()
 
         if (strval == "LEVEL METER"):
+
             self.noisebox.start_meters(["lounge-music:1",
                                         "lounge-music:2",
                                         "lounge-music:1",
@@ -79,12 +80,13 @@ if __name__ == "__main__":
                       'IPAddress'], oled_helpers)
 
     def rotaryChange(direction):
-        oled_menu.counter
-        if direction == 1:
-            oled_menu.counter += 1
-        else:
-            oled_menu.counter -= 1
-        oled_menu.draw_menu()
+        if oled_menu.noisebox.current_meters is None:
+            oled_menu.counter
+            if direction == 1:
+                oled_menu.counter += 1
+            else:
+                oled_menu.counter -= 1
+            oled_menu.draw_menu()
 
     def switchPressed():
         if oled_menu.noisebox.session_active is True:

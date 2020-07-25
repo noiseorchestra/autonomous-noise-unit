@@ -40,10 +40,6 @@ class Noisebox:
         helper_jack.PyJack.start(['jackd', '-dalsa', '-r48000'])
         sleep(1)
         jack_client = helper_jack.PyJackClient()
-        with jack_client as jack:
-            # Do things with JACK-Client here
-            ports = jack.current.get_ports(is_audio=True, is_input=True)
-            print(ports)
 
     def stop_jack(self):
         helper_jack.stop()
@@ -113,14 +109,8 @@ class Noisebox:
 
         if self.current_session.jacktrip_monitor.jacktrip_connected is True:
             self.session_active = True
-            command = [
-                "lounge-music:1",
-                "lounge-music:2",
-                self.active_server + ":receive_1",
-                self.active_server + ":receive_2"
-            ]
 
-            self.start_meters(command)
+        self.start_meters()
 
     def stop_session(self):
         """Stop JackTrip session"""
@@ -147,15 +137,25 @@ class Noisebox:
             threads.append(meter_thread)
         return threads
 
-    def start_meters(self, channels):
+    def start_meters(self):
         """Start drawing OLED meters"""
 
-        meter_threads = self.monitor_channels(channels)
-        self.current_meters = oled_meters.Meters()
-        t = Thread(
-            target=self.current_meters.render,
-            args=(self.oled_helpers.get_device(), meter_threads,))
-        t.start()
+        jack_client = helper_jack.PyJackClient()
+        with jack_client as jack:
+            # Do things with JACK-Client here
+            ports = jack.current.get_ports(is_audio=True, is_output=True)
+            port_names =[]
+            for port in ports:
+                port_names.append(port.name)
+
+            print(port_names)
+            meter_threads = self.monitor_channels(port_names)
+
+            self.current_meters = oled_meters.Meters()
+            t = Thread(
+                target=self.current_meters.render,
+                args=(self.oled_helpers.get_device(), meter_threads,))
+            t.start()
 
     def stop_meters(self):
         """Stop drawing OLED meters"""
