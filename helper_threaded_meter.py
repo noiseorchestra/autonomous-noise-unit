@@ -9,53 +9,35 @@ class ThreadedMeter:
     def __init__(self, command):
         self.current_meter_value = 0
         self.command = command
-        self._sentinel = object()
+        self._running = True
 
-    def producer(self, out_q, command):
+    def terminate(self):
+        self._running = False
+
+    def level_monitor(self, command):
         """Open process and push stdout to queue"""
 
         process = Popen(command, stdout=PIPE, shell=True)
-        n = 0
-        while n < 1000:
+        level = 0
+        while self._running:
             # Produce some data
             line = process.stdout.readline().rstrip()
-            out_q.put(line)
-            n += 1
-        process.terminate()
-        # Put the sentinel on the queue to indicate completion
-        out_q.put(self._sentinel)
-
-    # A thread that consumes data
-    def consumer(self, in_q):
-        """Read and process level measurements from queue"""
-
-        level = 0
-        while True:
-            # Get some data
-            data = in_q.get()
-
-            # Check for termination
-            if data is self._sentinel:
-                in_q.put(self._sentinel)
-                break
             try:
-                level = -2 * int(float(str(data, 'utf-8')))
+                level = -2 * int(float(str(line, 'utf-8')))
             except OverflowError:
                 print("Meter value not int")
                 pass
             finally:
                 self.current_meter_value = level
+        process.terminate()
 
-        print('Consumer shutting down')
+    def get_current_value(self):
+        """Get current value"""
+
+        return self.current_meter_value
 
     def run(self):
         """Run producer and consumer threads"""
 
-        q = Queue()
-        t1 = Thread(target=self.consumer, args=(q,))
-        t2 = Thread(target=self.producer, args=(q, self.command,))
-        t1.start()
-        t2.start()
-
-    def get_current_value(self):
-        return self.current_meter_value
+        t = Thread(target=self.level_monitor, args=(self.command,))
+        t.start()
