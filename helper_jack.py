@@ -33,3 +33,10 @@ class PyJackClient:
     def __exit__(self, type, value, traceback):
         self.current.deactivate()
         self.current.close()
+
+    def get_input_port_names(self):
+        ports = self.current.get_ports(is_audio=True, is_output=True)
+        port_names = []
+        for port in ports:
+            port_names.append(port.name)
+        return port_names

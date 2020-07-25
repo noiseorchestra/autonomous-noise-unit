@@ -142,15 +142,9 @@ class Noisebox:
 
         jack_client = helper_jack.PyJackClient()
         with jack_client as jack:
-            # Do things with JACK-Client here
-            ports = jack.current.get_ports(is_audio=True, is_output=True)
-            port_names =[]
-            for port in ports:
-                port_names.append(port.name)
 
-            print(port_names)
+            port_names = jack.get_input_port_names()
             meter_threads = self.monitor_channels(port_names)
-
             self.current_meters = oled_meters.Meters()
             t = Thread(
                 target=self.current_meters.render,

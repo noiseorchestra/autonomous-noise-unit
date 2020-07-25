@@ -51,10 +51,7 @@ class Menu:
 
         if (strval == "LEVEL METER"):
 
-            self.noisebox.start_meters(["lounge-music:1",
-                                        "lounge-music:2",
-                                        "lounge-music:1",
-                                        "lounge-music:2"])
+            self.noisebox.start_meters()
 
         if (strval == "TEST"):
             self.noisebox.start_jack()
