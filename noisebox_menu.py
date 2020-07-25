@@ -55,8 +55,8 @@ class Menu:
                                         "lounge-music:1",
                                         "lounge-music:2"])
 
-        if (strval == "LOOPBACK"):
-            self.oled_helpers.draw_text(0, 26, "LOOPBACK")
+        if (strval == "TEST"):
+            self.noisebox.start_jack()
 
         if (strval == "P2P"):
             self.noisebox.check_peers()
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     oled_helpers = oled_helpers.OLED_helpers()
     oled_menu = Menu(['ROOM 1',
                       'LEVEL METER',
-                      'LOOPBACK',
+                      'TEST',
                       'P2P',
                       'IPAddress'], oled_helpers)
 

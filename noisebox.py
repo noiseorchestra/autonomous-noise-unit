@@ -6,7 +6,8 @@ import helper_threaded_meter
 import helper_peers
 import oled_helpers
 import oled_meters
-import pytrip
+import helper_jacktrip
+import helper_jack
 
 
 cfg = ConfigParser()
@@ -34,6 +35,18 @@ class Noisebox:
         self.current_session = None
         self.current_meters = None
         self.oled_helpers = oled_helpers.OLED_helpers()
+
+    def start_jack(self):
+        helper_jack.PyJack.start(['jackd', '-dalsa', '-r48000'])
+        sleep(1)
+        jack_client = helper_jack.PyJackClient()
+        with jack_client as jack:
+            # Do things with JACK-Client here
+            ports = jack.current.get_ports(is_audio=True, is_input=True)
+            print(ports)
+
+    def stop_jack(self):
+        helper_jack.stop()
 
     def get_ip(self):
         """Get and return ip"""
@@ -74,7 +87,7 @@ class Noisebox:
                                                 'server': False})
             self.oled_helpers.draw_text(0, 26, "Starting JackTrip as client")
 
-        self.current_session = pytrip.PyTrip(self.current_session_params)
+        self.current_session = helper_jacktrip.PyTrip(self.current_session_params)
         self.current_session.start()
         # self.session_active = self.current_session.monitor()
         # if self.session_active:
@@ -94,7 +107,7 @@ class Noisebox:
         # Refactor code, make more DRY
 
         self.current_session_params = self.server1_params
-        self.current_session = pytrip.PyTrip(self.current_session_params)
+        self.current_session = helper_jacktrip.PyTrip(self.current_session_params)
         self.oled_helpers.draw_text(0, 26, "Connecting to server...")
         self.current_session.start()
 
