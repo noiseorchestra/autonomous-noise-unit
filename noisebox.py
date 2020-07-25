@@ -1,3 +1,5 @@
+import RPi.GPIO as GPIO
+from rotary import KY040
 from configparser import ConfigParser
 from threading import Thread
 from time import sleep
@@ -8,7 +10,7 @@ import oled_helpers
 import oled_meters
 import helper_jacktrip
 import helper_jack
-
+import noisebox_menu
 
 cfg = ConfigParser()
 cfg.read('config.ini')
@@ -39,7 +41,6 @@ class Noisebox:
     def start_jack(self):
         helper_jack.PyJack.start(['jackd', '-dalsa', '-r48000'])
         sleep(1)
-        jack_client = helper_jack.PyJackClient()
 
     def stop_jack(self):
         helper_jack.stop()
@@ -156,3 +157,56 @@ class Noisebox:
 
         self.current_meters.terminate()
         self.current_meters = None
+
+
+def main():
+
+    CLOCKPIN = 18
+    DATAPIN = 17
+    SWITCHPIN = 27
+
+    noisebox = Noisebox()
+    oled_h = oled_helpers.OLED_helpers()
+    oled_menu = noisebox_menu.Menu(['ROOM 1',
+                                    'LEVEL METER',
+                                    'TEST',
+                                    'P2P',
+                                    'IPAddress'], oled_h, noisebox)
+
+    def rotaryChange(direction):
+        if noisebox.current_meters is None:
+            oled_menu.counter
+            if direction == 1:
+                oled_menu.counter += 1
+            else:
+                oled_menu.counter -= 1
+            oled_menu.draw_menu()
+
+    def switchPressed():
+        if noisebox.session_active:
+            noisebox.stop_session()
+            oled_menu.draw_menu()
+        elif noisebox.current_meters:
+            noisebox.stop_meters()
+            oled_menu.draw_menu()
+        else:
+            strval = oled_menu.names[oled_menu.menuindex]
+            oled_menu.menu_operation(strval)
+
+    GPIO.setmode(GPIO.BCM)
+
+    ky040 = KY040(CLOCKPIN, DATAPIN, SWITCHPIN,
+                  rotaryChange, switchPressed)
+    ky040.start()
+    oled_menu.draw_menu()
+
+    try:
+        while True:
+            sleep(0.1)
+    finally:
+        ky040.stop()
+        GPIO.cleanup()
+
+
+if __name__ == "__main__":
+    main()

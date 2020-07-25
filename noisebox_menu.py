@@ -1,23 +1,20 @@
 # Based on https://gist.github.com/codelectron/d493d4aaa6fc858ce69f2b335afd0b00#file-oled_rot_menu_rpi-py
 
-import RPi.GPIO as GPIO
 from luma.core.render import canvas
 from PIL import ImageFont
 from time import sleep
-from rotary import KY040
 import oled_helpers
-import noisebox
 
 
 class Menu:
     """Object for drawing OLED menu and managing input with rotary"""
 
-    def __init__(self, names, oled_helpers):
+    def __init__(self, names, oled_helpers, noisebox):
         # persist values
         self.counter = 1
         self.menuindex = 0
         self.names = names
-        self.noisebox = noisebox.Noisebox()
+        self.noisebox = noisebox
         self.oled_helpers = oled_helpers
         self.device = oled_helpers.get_device()
 
@@ -61,51 +58,3 @@ class Menu:
 
         if (strval == "IPAddress"):
             self.oled_helpers.draw_text(0, 26, self.noisebox.get_ip())
-
-
-if __name__ == "__main__":
-
-    CLOCKPIN = 18
-    DATAPIN = 17
-    SWITCHPIN = 27
-
-    oled_helpers = oled_helpers.OLED_helpers()
-    oled_menu = Menu(['ROOM 1',
-                      'LEVEL METER',
-                      'TEST',
-                      'P2P',
-                      'IPAddress'], oled_helpers)
-
-    def rotaryChange(direction):
-        if oled_menu.noisebox.current_meters is None:
-            oled_menu.counter
-            if direction == 1:
-                oled_menu.counter += 1
-            else:
-                oled_menu.counter -= 1
-            oled_menu.draw_menu()
-
-    def switchPressed():
-        if oled_menu.noisebox.session_active is True:
-            oled_menu.noisebox.stop_session()
-            oled_menu.draw_menu()
-        elif oled_menu.noisebox.current_meters is not None:
-            oled_menu.noisebox.stop_meters()
-            oled_menu.draw_menu()
-        else:
-            strval = oled_menu.names[oled_menu.menuindex]
-            oled_menu.menu_operation(strval)
-
-    GPIO.setmode(GPIO.BCM)
-
-    ky040 = KY040(CLOCKPIN, DATAPIN, SWITCHPIN,
-                  rotaryChange, switchPressed)
-    ky040.start()
-    oled_menu.draw_menu()
-
-    try:
-        while True:
-            sleep(0.1)
-    finally:
-        ky040.stop()
-        GPIO.cleanup()
