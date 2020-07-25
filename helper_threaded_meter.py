@@ -40,8 +40,9 @@ class ThreadedMeter:
                 break
             try:
                 level = -2 * int(float(str(data, 'utf-8')))
-            except TypeError:
+            except OverflowError:
                 print("Meter value not int")
+                pass
             finally:
                 self.current_meter_value = level
 
