@@ -2,7 +2,6 @@ from configparser import ConfigParser
 from threading import Thread
 from time import sleep
 import helper_get_ip
-import helper_is_jacktrip_connected
 import helper_threaded_meter
 import helper_peers
 import oled_helpers
