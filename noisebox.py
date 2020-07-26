@@ -9,7 +9,7 @@ import helper_peers
 import oled_helpers
 import oled_meters
 import helper_jacktrip
-import jack_helpers
+import jack_helper
 import noisebox_menu
 
 cfg = ConfigParser()
@@ -20,7 +20,7 @@ peers = cfg.get('peers', 'ips')
 class Noisebox:
     """Main noisebox object"""
 
-    def __init__(self, jackClient):
+    def __init__(self, jackHelper):
         self.server1_ip = cfg.get('server1', 'ip')
         self.server2_ip = cfg.get('server2', 'ip')
         self.active_server = cfg.get('server1', 'ip')
@@ -37,14 +37,7 @@ class Noisebox:
         self.current_session = None
         self.current_meters = None
         self.oled_helpers = oled_helpers.OLED_helpers()
-        self.jackClient = jackClient
-
-    def start_jack(self, command):
-        jack_helpers.start(command)
-        sleep(1)
-
-    def stop_jack(self):
-        jack_helpers.stop()
+        self.jackHelper = jackHelper
 
     def get_ip(self):
         """Get and return ip"""
@@ -140,7 +133,7 @@ class Noisebox:
     def start_meters(self):
         """Start drawing OLED meters"""
 
-        port_names = jack_helpers.get_input_port_names(self.jackClient)
+        port_names = self.jackHelper.get_input_port_names()
         meter_threads = self.monitor_channels(port_names)
         self.current_meters = oled_meters.Meters()
         t = Thread(
@@ -161,8 +154,9 @@ def main():
     DATAPIN = 17
     SWITCHPIN = 27
 
-    jackClient = jack_helpers.initialize(['jackd', '-dalsa', '-r44100'])
-    noisebox = Noisebox(jackClient)
+    jackHelper = jack_helper.JackHelper(['jackd', '-dalsa', '-r48000'])
+    jackHelper.enable_monitoring()
+    noisebox = Noisebox(jackHelper)
     oled_h = oled_helpers.OLED_helpers()
     oled_menu = noisebox_menu.Menu(['ROOM 1',
                                     'LEVEL METER',
