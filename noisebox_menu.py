@@ -2,8 +2,7 @@
 
 from luma.core.render import canvas
 from PIL import ImageFont
-from time import sleep
-import oled_helpers
+import oled_layout
 
 
 class Menu:
@@ -51,7 +50,8 @@ class Menu:
             self.noisebox.start_meters()
 
         if (strval == "TEST"):
-            self.oled_helpers.scroll_text("Some long text")
+            layout = oled_layout.Layout()
+            layout.render(self.oled_helpers.get_device())
 
         if (strval == "P2P"):
             self.noisebox.check_peers()

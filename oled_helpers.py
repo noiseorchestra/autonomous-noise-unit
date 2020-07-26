@@ -3,6 +3,7 @@ from luma.core.render import canvas
 from luma.oled.device import ssd1306
 from PIL import ImageFont, ImageDraw
 from luma.core.virtual import viewport
+from threading import Thread
 import time
 
 
@@ -35,7 +36,7 @@ class OLED_helpers:
                 draw.text((0, y), line, fill="white")
                 y += 13
 
-    def scroll_text(self, text, font=None, speed=1):
+    def scroll_text(self, text, y=0, font=None, speed=1):
         full_text = text
         x = self.device.width
 
@@ -45,10 +46,10 @@ class OLED_helpers:
 
         virtual = viewport(self.device, width=max(self.device.width, w + x + x), height=max(h, self.device.height))
         with canvas(virtual) as draw:
-            draw.text((x, 0), full_text, font=font, fill="white")
+            draw.text((0, y), full_text, font=font, fill="white")
 
         i = 0
-        while i < x + w:
-            virtual.set_position((i, 0))
+        while i < x:
+            virtual.set_position((i, y))
             i += speed
             time.sleep(0.025)
