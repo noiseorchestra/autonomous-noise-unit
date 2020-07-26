@@ -103,11 +103,12 @@ class Noisebox:
         if self.current_session.jacktrip_monitor.jacktrip_connected is True:
             self.session_active = True
 
-            receive_ports = self.jackHelper.client.get_ports('lounge-music.*')
+            # Refactor this into own function
+            receive_ports = self.jackHelper.client.get_ports(is_audio=True, is_output=True, is_physical=True)
             local_send_ports = self.jackHelper.client.get_ports('system:playback.*')
             jacktrip_send_ports = self.jackHelper.client.get_ports(self.active_server + ':send.*')
             jacktrip_receive_ports = self.jackHelper.client.get_ports(self.active_server + ':receive.*')
-            self.jackHelper.connect_ports(receive_ports, [jacktrip_send_ports, local_send_ports])
+            self.jackHelper.connect_ports(receive_ports, [jacktrip_send_ports])
             self.jackHelper.connect_ports(jacktrip_receive_ports, [local_send_ports])
 
             self.start_meters()
@@ -150,6 +151,9 @@ class Noisebox:
 
     def stop_meters(self):
         """Stop drawing OLED meters"""
+        receive_ports = self.jackHelper.client.get_ports('lounge-music.*')
+        for port in receive_ports:
+            self.jackHelper.disconnect_all(port)
 
         self.current_meters.terminate()
         self.current_meters = None

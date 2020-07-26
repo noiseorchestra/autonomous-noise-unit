@@ -46,6 +46,11 @@ class Menu:
 
         if (strval == "LEVEL METER"):
 
+            # Refactor this into own function
+            receive_ports = self.jackHelper.client.get_ports(is_audio=True, is_output=True, is_physical=True)
+            local_send_ports = self.noisebox.jackHelper.client.get_ports('system:playback.*')
+            self.noisebox.jackHelper.connect_ports(receive_ports, [local_send_ports])
+
             self.noisebox.start_meters()
 
         if (strval == "TEST AUDIO"):
