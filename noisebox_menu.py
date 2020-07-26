@@ -42,14 +42,13 @@ class Menu:
     def menu_operation(self, strval):
         """check menu value when button clicked and run corresponding function"""
         if (strval == "ROOM 1"):
-            self.noisebox.active_server = self.noisebox.server1_ip
             self.noisebox.start_session()
 
         if (strval == "LEVEL METER"):
 
             self.noisebox.start_meters()
 
-        if (strval == "TEST"):
+        if (strval == "TEST AUDIO"):
             layout = oled_layout.Layout()
             layout.render(self.oled_helpers.get_device())
 

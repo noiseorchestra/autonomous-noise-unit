@@ -94,7 +94,7 @@ class Noisebox:
         # Eventually pass in different server params..
         # depending on which server we are connecting to
         # Refactor code, make more DRY
-
+        self.noisebox.active_server = self.noisebox.server1_ip
         self.current_session_params = self.server1_params
         self.current_session = helper_jacktrip.PyTrip(self.current_session_params)
         self.oled_helpers.draw_text(0, 26, "Connecting to server...")
@@ -102,14 +102,15 @@ class Noisebox:
 
         if self.current_session.jacktrip_monitor.jacktrip_connected is True:
             self.session_active = True
+
             receive_ports = self.jackHelper.client.get_ports(is_audio=True, is_output=True)
             local_send_ports = self.jackHelper.client.get_ports('system:playback.*')
-            jack_send_ports = self.jackHelper.client.get_ports(self.server1_ip + ':send.*')
-            jack_receive_ports = self.jackHelper.client.get_ports(self.server1_ip + ':receive.*')
+            jack_send_ports = self.jackHelper.client.get_ports(self.noisebox.active_server + ':send.*')
+            jack_receive_ports = self.jackHelper.client.get_ports(self.noisebox.active_server + ':receive.*')
             self.jackHelper.connect_ports(receive_ports, [jack_send_ports, local_send_ports])
             self.jackHelper.connect_ports(jack_receive_ports, [local_send_ports])
 
-        self.start_meters()
+            self.start_meters()
 
     def stop_session(self):
         """Stop JackTrip session"""
