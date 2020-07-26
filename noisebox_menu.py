@@ -51,7 +51,7 @@ class Menu:
             self.noisebox.start_meters()
 
         if (strval == "TEST"):
-            self.noisebox.start_jack()
+            self.oled_helpers.scroll_text("Some long text")
 
         if (strval == "P2P"):
             self.noisebox.check_peers()
