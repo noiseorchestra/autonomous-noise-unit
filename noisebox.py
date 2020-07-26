@@ -151,7 +151,9 @@ class Noisebox:
 
     def stop_meters(self):
         """Stop drawing OLED meters"""
-        receive_ports = self.jackHelper.client.get_ports('lounge-music.*')
+
+        # Refactor and deal with different situations (monitoring channels, jacktrip session)
+        receive_ports = self.jackHelper.client.get_ports(is_audio=True, is_output=True)
         for port in receive_ports:
             self.jackHelper.disconnect_all(port)
 
