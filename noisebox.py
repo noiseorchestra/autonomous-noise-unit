@@ -103,11 +103,11 @@ class Noisebox:
         if self.current_session.jacktrip_monitor.jacktrip_connected is True:
             self.session_active = True
 
-            receive_ports = self.jackHelper.client.get_ports(is_audio=True, is_output=True, is_physical=True)
+            receive_ports = self.jackHelper.client.get_ports('lounge-music.*')
             local_send_ports = self.jackHelper.client.get_ports('system:playback.*')
             jacktrip_send_ports = self.jackHelper.client.get_ports(self.active_server + ':send.*')
             jacktrip_receive_ports = self.jackHelper.client.get_ports(self.active_server + ':receive.*')
-            self.jackHelper.connect_ports(receive_ports, [jacktrip_send_ports, local_send_ports])
+            self.jackHelper.connect_ports(receive_ports, [jacktrip_send_ports])
             self.jackHelper.connect_ports(jacktrip_receive_ports, [local_send_ports])
 
             self.start_meters()
@@ -163,8 +163,8 @@ def main():
 
     jackHelper = jack_helper.JackHelper(['jackd', '-dalsa', '-r48000'])
     receive_ports = jackHelper.client.get_ports(is_audio=True, is_output=True)
-    send_ports = jackHelper.client.get_ports('system:playback.*')
-    jackHelper.connect_ports(receive_ports, [send_ports])
+    for port in receive_ports:
+        jackHelper.disconnect_all(port)
     noisebox = Noisebox(jackHelper)
     oled_h = oled_helpers.OLED_helpers()
     oled_menu = noisebox_menu.Menu(['ROOM 1',

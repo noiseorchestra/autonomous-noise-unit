@@ -38,7 +38,7 @@ class JackHelper:
 
     def connect_ports(self, receive_ports, send_ports_list):
         """Connect stereo/mono receive port/s to a list of send ports"""
-        # what if receive is stereo and send is mono?
+        # if receive is stereo and send is mono only first channel is sent
 
         print('receive ports:', receive_ports)
         print('send ports:', send_ports_list)
