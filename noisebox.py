@@ -103,7 +103,7 @@ class Noisebox:
         if self.current_session.jacktrip_monitor.jacktrip_connected is True:
             self.session_active = True
 
-            receive_ports = self.jackHelper.client.get_ports(is_audio=True, is_output=True)
+            receive_ports = self.jackHelper.client.get_ports(is_audio=True, is_output=True, is_physical=True)
             local_send_ports = self.jackHelper.client.get_ports('system:playback.*')
             jacktrip_send_ports = self.jackHelper.client.get_ports(self.active_server + ':send.*')
             jacktrip_receive_ports = self.jackHelper.client.get_ports(self.active_server + ':receive.*')
