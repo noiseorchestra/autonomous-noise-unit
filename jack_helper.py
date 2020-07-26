@@ -47,9 +47,12 @@ class JackHelper:
 
         for send_ports in send_ports_list:
             for i, port in enumerate(send_ports):
-                x = 0 if len(receive_ports) == 1 else i
-                self.client.connect(receive_ports[x], send_ports[i])
-                print(self.client.get_all_connections(send_ports[i]))
+                x = i
+                if len(receive_ports) == 0:
+                    continue
+                if len(receive_ports) == 1:
+                    x = 0
+                self.client.connect(receive_ports[x], port)
 
     def disconnect_all(self, my_port):
         # from madwort py_patcher
