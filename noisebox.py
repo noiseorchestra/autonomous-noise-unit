@@ -1,6 +1,5 @@
 import RPi.GPIO as GPIO
 from rotary import KY040
-import jack
 from configparser import ConfigParser
 from threading import Thread
 from time import sleep
@@ -40,8 +39,8 @@ class Noisebox:
         self.oled_helpers = oled_helpers.OLED_helpers()
         self.jackClient = jackClient
 
-    def start_jack(self):
-        jack_helpers.start(['jackd', '-dalsa', '-r48000'])
+    def start_jack(self, command):
+        jack_helpers.start(command)
         sleep(1)
 
     def stop_jack(self):
@@ -162,7 +161,7 @@ def main():
     DATAPIN = 17
     SWITCHPIN = 27
 
-    jackClient = jack.Client('noisebox')
+    jackClient = jack_helpers.initialize(['jackd', '-dalsa', '-r44100'])
     noisebox = Noisebox(jackClient)
     oled_h = oled_helpers.OLED_helpers()
     oled_menu = noisebox_menu.Menu(['ROOM 1',
