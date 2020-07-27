@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import RPi.GPIO as GPIO
 from rotary import KY040
 from configparser import ConfigParser
