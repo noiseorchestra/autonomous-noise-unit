@@ -177,11 +177,11 @@ def main():
         jackHelper.disconnect_all(port)
     noisebox = Noisebox(jackHelper)
     oled_h = oled_helpers.OLED_helpers()
-    oled_menu = noisebox_menu.Menu(['ROOM 1',
+    oled_menu = noisebox_menu.Menu(['SERVER 1',
                                     'LEVEL METER',
-                                    'TEST',
-                                    'P2P',
-                                    'IPAddress'], oled_h, noisebox)
+                                    'CONNECTED PEERS',
+                                    'IP ADDRESS',
+                                    'TEST LAYOUT'], oled_h, noisebox)
 
     def rotaryChange(direction):
         if noisebox.current_meters is None:

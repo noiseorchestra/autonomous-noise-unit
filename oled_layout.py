@@ -28,6 +28,10 @@ class Layout:
         virtual.add_hotspot(panel2, (0, panel1_height))
         virtual.set_position((0, 0))
 
+        x = 0
         while self._running:
+            x += 1
             virtual.set_position((0, 0))
             time.sleep(0.1)
+            if x == 100:
+                self._running = False

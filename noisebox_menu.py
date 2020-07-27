@@ -41,19 +41,18 @@ class Menu:
 
     def menu_operation(self, strval):
         """check menu value when button clicked and run corresponding function"""
-        if (strval == "ROOM 1"):
+        if (strval == "SERVER 1"):
             self.noisebox.start_jacktrip_session()
 
         if (strval == "LEVEL METER"):
-
             self.noisebox.start_monitoring_audio()
 
-        if (strval == "TEST AUDIO"):
-            layout = oled_layout.Layout()
-            layout.render(self.oled_helpers.get_device())
-
-        if (strval == "P2P"):
+        if (strval == "CONNECTED PEERS"):
             self.noisebox.check_peers()
 
-        if (strval == "IPAddress"):
+        if (strval == "IP ADDRESS"):
             self.oled_helpers.draw_text(0, 26, self.noisebox.get_ip())
+
+        if (strval == "TEST LAYOUT"):
+            layout = oled_layout.Layout()
+            layout.render(self.oled_helpers.get_device())

@@ -79,7 +79,7 @@ class JackHelper:
         jacktrip_send_ports = self.client.get_ports(ip + ':send.*')
         jacktrip_receive_ports = self.client.get_ports(ip + ':receive.*')
         self.connect_ports(local_receive_ports, [jacktrip_send_ports,
-                                                            local_send_ports])
+                                                 local_send_ports])
         self.connect_ports(jacktrip_receive_ports, [local_send_ports])
 
     def make_monitoring_connections(self):
