@@ -42,16 +42,11 @@ class Menu:
     def menu_operation(self, strval):
         """check menu value when button clicked and run corresponding function"""
         if (strval == "ROOM 1"):
-            self.noisebox.start_session()
+            self.noisebox.start_jacktrip_session()
 
         if (strval == "LEVEL METER"):
 
-            # Refactor this into own function
-            receive_ports = self.noisebox.jackHelper.client.get_ports(is_audio=True, is_output=True, is_physical=True)
-            local_send_ports = self.noisebox.jackHelper.client.get_ports('system:playback.*')
-            self.noisebox.jackHelper.connect_ports(receive_ports, [local_send_ports])
-
-            self.noisebox.start_meters()
+            self.noisebox.start_monitoring_audio()
 
         if (strval == "TEST AUDIO"):
             layout = oled_layout.Layout()

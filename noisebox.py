@@ -63,6 +63,29 @@ class Noisebox:
         self.oled_helpers.draw_lines(online_peers)
         # self.start_peer_session()
 
+    def start_monitoring_audio(self):
+        """Stop monitoring audio"""
+        self.jackHelper.make_monitoring_connections()
+        self.start_channel_meters()
+
+    def start_jacktrip_session(self):
+        """Start hubserver JackTrip session"""
+        # TO DO
+        # Eventually pass in different server params..
+        # depending on which server we are connecting to
+        # Refactor code, make more DRY
+        self.active_server = self.server1_ip
+        self.current_session_params = self.server1_params
+        self.current_session = helper_jacktrip.PyTrip(self.current_session_params)
+        self.oled_helpers.draw_text(0, 26, "Connecting to server...")
+        self.current_session.start()
+
+        if self.current_session.jacktrip_monitor.jacktrip_connected is True:
+            self.session_active = True
+
+            self.jackHelper.make_jacktrip_connections(self.active_server)
+            self.start_channel_meters()
+
     def start_peer_session(self):
         """Start peer 2 peer JackTrip session"""
 
@@ -86,36 +109,16 @@ class Noisebox:
         if self.current_session.jacktrip_monitor.jacktrip_connected is True:
             self.session_active = True
 
-        self.start_meters()
+        self.start_channel_meters()
 
-    def start_session(self):
-        """Start hubserver JackTrip session"""
-        # TO DO
-        # Eventually pass in different server params..
-        # depending on which server we are connecting to
-        # Refactor code, make more DRY
-        self.active_server = self.server1_ip
-        self.current_session_params = self.server1_params
-        self.current_session = helper_jacktrip.PyTrip(self.current_session_params)
-        self.oled_helpers.draw_text(0, 26, "Connecting to server...")
-        self.current_session.start()
+    def stop_monitoring_audio(self):
+        self.jackHelper.disconnect_session()
+        self.stop_meters()
 
-        if self.current_session.jacktrip_monitor.jacktrip_connected is True:
-            self.session_active = True
-
-            # Refactor this into own function
-            receive_ports = self.jackHelper.client.get_ports(is_audio=True, is_output=True, is_physical=True)
-            local_send_ports = self.jackHelper.client.get_ports('system:playback.*')
-            jacktrip_send_ports = self.jackHelper.client.get_ports(self.active_server + ':send.*')
-            jacktrip_receive_ports = self.jackHelper.client.get_ports(self.active_server + ':receive.*')
-            self.jackHelper.connect_ports(receive_ports, [jacktrip_send_ports])
-            self.jackHelper.connect_ports(jacktrip_receive_ports, [local_send_ports])
-
-            self.start_meters()
-
-    def stop_session(self):
+    def stop_jacktrip_session(self):
         """Stop JackTrip session"""
 
+        self.jackHelper.disconnect_session()
         self.current_meters.terminate()
         self.current_session.stop()
 
@@ -127,7 +130,7 @@ class Noisebox:
 
         sleep(1)
 
-    def monitor_channels(self, channels):
+    def get_channel_levels(self, channels):
         """Monitor array of channels and return threads"""
 
         threads = []
@@ -138,24 +141,23 @@ class Noisebox:
             threads.append(meter_thread)
         return threads
 
-    def start_meters(self):
+    def start_channel_meters(self):
         """Start drawing OLED meters"""
 
         port_names = self.jackHelper.get_input_port_names()
-        meter_threads = self.monitor_channels(port_names)
-        self.current_meters = oled_meters.Meters()
-        t = Thread(
-            target=self.current_meters.render,
-            args=(self.oled_helpers.get_device(), meter_threads,))
-        t.start()
+        print(port_names)
+        if len(port_names) != 0:
+            meter_threads = self.get_channel_levels(port_names)
+            self.current_meters = oled_meters.Meters()
+            t = Thread(
+                target=self.current_meters.render,
+                args=(self.oled_helpers.get_device(), meter_threads,))
+            t.start()
+        else:
+            self.oled_helpers.draw_text(0, 26, "No input ports detected")
 
     def stop_meters(self):
         """Stop drawing OLED meters"""
-
-        # Refactor and deal with different situations (monitoring channels, jacktrip session)
-        receive_ports = self.jackHelper.client.get_ports(is_audio=True, is_output=True)
-        for port in receive_ports:
-            self.jackHelper.disconnect_all(port)
 
         self.current_meters.terminate()
         self.current_meters = None
@@ -190,10 +192,10 @@ def main():
 
     def switchPressed():
         if noisebox.session_active:
-            noisebox.stop_session()
+            noisebox.stop_jacktrip_session()
             oled_menu.draw_menu()
         elif noisebox.current_meters:
-            noisebox.stop_meters()
+            noisebox.stop_monitoring_audio()
             oled_menu.draw_menu()
         else:
             strval = oled_menu.names[oled_menu.menuindex]

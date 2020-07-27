@@ -69,3 +69,30 @@ class JackHelper:
                 print('error disconnecting, trying the other way round!', e)
                 print('disconnect', send_port.name, 'from', my_port.name)
                 self.client.disconnect(send_port, my_port)
+
+    def make_jacktrip_connections(self, ip):
+        """Make connections for jacktrip session"""
+
+        local_receive_ports = self.client.get_ports(is_audio=True,
+                                                    is_output=True)
+        local_send_ports = self.client.get_ports('system:playback.*')
+        jacktrip_send_ports = self.client.get_ports(ip + ':send.*')
+        jacktrip_receive_ports = self.client.get_ports(ip + ':receive.*')
+        self.connect_ports(local_receive_ports, [jacktrip_send_ports,
+                                                            local_send_ports])
+        self.connect_ports(jacktrip_receive_ports, [local_send_ports])
+
+    def make_monitoring_connections(self):
+        """Make connections for monitoring local inputs"""
+
+        local_receive_ports = self.client.get_ports(is_audio=True,
+                                                    is_output=True)
+        local_send_ports = self.client.get_ports('system:playback.*')
+        self.connect_ports(local_receive_ports, [local_send_ports])
+
+    def disconnect_session(self):
+        """Disconnect all receive ports"""
+
+        receive_ports = self.client.get_ports(is_audio=True, is_output=True)
+        for port in receive_ports:
+            self.disconnect_all(port)
