@@ -1,6 +1,6 @@
 from threading import Thread
 from subprocess import Popen, PIPE
-
+import psutil
 
 class ThreadedMeter:
     """Helper object for live monitoring the volume level of audio channels"""
@@ -12,6 +12,9 @@ class ThreadedMeter:
 
     def terminate(self):
         self._running = False
+        for proc in psutil.process_iter():
+            if proc.name() == "jack_meter":
+                proc.kill()
 
     def level_monitor(self, command):
         """Open process and push stdout to queue"""
