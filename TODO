@@ -1,0 +1,17 @@
+JACKTRIP
+- timeout connection call when fails
+- finalise p2p connections
+
+DESIGN
+- make p2p connections menu
+
+METERS
+- label meters
+- check meter orientation
+
+ERROR CATCHING
+- tighten up error checks in install script
+- catch errors in noisebox script and show fallback screen (starting jackd, attaching to screen, rotary etc...)
+
+TESTING
+- add testing scripts
