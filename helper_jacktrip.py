@@ -37,7 +37,7 @@ class PyTrip:
                                                 shell=True)
         self.jacktrip_monitor = helper_jacktrip_monitor.JacktripMonitor(self.current_process, self.ip)
         self.jacktrip_monitor.run()
-        while self.jacktrip_monitor.jacktrip_connected is False:
+        while self.jacktrip_monitor.jacktrip_connecting is True:
             time.sleep(0.5)
 
     def stop(self):

@@ -10,6 +10,7 @@ class JacktripMonitor():
         self._sentinel = object()
         self.jacktrip = jacktrip
         self.jacktrip_connected = False
+        self.jacktrip_connecting = True
         self.jacktrip_error = False
         self.jacktrip_stopped = False
         self.server_ip = server_ip
@@ -32,10 +33,10 @@ class JacktripMonitor():
     def consumer(self, in_q):
         """Check q messages"""
 
+        count = 0
         while True:
             # Get some data
             data = in_q.get()
-
             # Check for termination
             if data is self._sentinel:
                 in_q.put(self._sentinel)
@@ -61,6 +62,7 @@ class JacktripMonitor():
                 print(message)
                 self.oled_helpers.draw_lines(message)
                 self.jacktrip_connected = True
+                self.jacktrip_connecting = False
                 time.sleep(1)
 
             if waiting in data:
@@ -68,13 +70,14 @@ class JacktripMonitor():
                            waiting]
                 print(message)
                 self.oled_helpers.draw_lines(message)
-                time.sleep(1)
+                time.sleep(0.1)
 
             for error in errors:
                 if error in data:
                     message = ['==ERROR==', error, 'JackTrip stopping']
                     self.oled_helpers.draw_lines(message)
                     self.jacktrip_connected = False
+                    self.jacktrip_connecting = False
                     self.jacktrip_error = True
                     print(message)
                     time.sleep(1)
@@ -87,8 +90,21 @@ class JacktripMonitor():
                 self.jacktrip_connected = False
                 self.jacktrip_error = True
                 self.jacktrip_stopped = True
+                self.jacktrip_connecting = False
                 print(message)
                 time.sleep(1)
+
+            if count > 100:
+                message = ['==TIMEOUT==',
+                           "Waited too long for peer"]
+                self.oled_helpers.draw_lines(message)
+                self.jacktrip_connected = False
+                self.jacktrip_error = True
+                self.jacktrip_stopped = True
+                self.jacktrip_connecting = False
+                print(message)
+                time.sleep(1)
+                break
 
         print("consumer should stop")
 
