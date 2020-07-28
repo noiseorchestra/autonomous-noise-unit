@@ -80,6 +80,7 @@ class Noisebox:
         self.current_session_params = self.server1_params
         self.current_session = helper_jacktrip.PyTrip(self.current_session_params)
         self.oled_helpers.draw_text(0, 26, "Connecting to server...")
+        sleep(1)
         self.current_session.start()
 
         if self.current_session.jacktrip_monitor.jacktrip_connected is True:
@@ -167,9 +168,9 @@ class Noisebox:
 
 def main():
 
-    CLOCKPIN = 18
-    DATAPIN = 17
-    SWITCHPIN = 27
+    CLOCKPIN = 5
+    DATAPIN = 6
+    SWITCHPIN = 22
 
     jackHelper = jack_helper.JackHelper(['jackd', '-dalsa', '-r48000'])
     receive_ports = jackHelper.client.get_ports(is_audio=True, is_output=True)
