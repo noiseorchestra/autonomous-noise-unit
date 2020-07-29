@@ -8,14 +8,21 @@ import oled_layout
 class Menu:
     """Object for drawing OLED menu and managing input with rotary"""
 
-    def __init__(self, names, oled_helpers, noisebox):
+    def __init__(self, menu_items):
         # persist values
         self.counter = 1
         self.menuindex = 0
-        self.names = names
+        self.menu_items = menu_items
+        self.noisebox = None
+        self.oled_helpers = None
+        self.device = None
+
+    def start(self, noisebox, oled_helpers):
         self.noisebox = noisebox
         self.oled_helpers = oled_helpers
         self.device = oled_helpers.get_device()
+
+        self.draw_menu()
 
     def invert(self, draw, x, y, text):
         """invert selected menue item"""
@@ -37,7 +44,7 @@ class Menu:
     def draw_menu(self):
         """draw menu on convas"""
         with canvas(self.device) as draw:
-            self.menu(self.device, draw, self.names, self.counter % 5)
+            self.menu(self.device, draw, self.menu_items, self.counter % 5)
 
     def menu_operation(self, strval):
         """check menu value when button clicked and run corresponding function"""

@@ -80,7 +80,6 @@ class Noisebox:
         self.current_session_params = self.server1_params
         self.current_session = helper_jacktrip.PyTrip(self.current_session_params)
         self.oled_helpers.draw_text(0, 26, "Connecting to server...")
-        sleep(1)
         self.current_session.start()
 
         if self.current_session.jacktrip_monitor.jacktrip_connected is True:
@@ -172,17 +171,21 @@ def main():
     DATAPIN = 6
     SWITCHPIN = 22
 
-    jackHelper = jack_helper.JackHelper(['jackd', '-dalsa', '-r48000'])
+    menu_items = ['SERVER 1',
+                  'LEVEL METER',
+                  'CONNECTED PEERS',
+                  'IP ADDRESS',
+                  'TEST LAYOUT']
+
+    jackHelper = jack_helper.JackHelper()
     receive_ports = jackHelper.client.get_ports(is_audio=True, is_output=True)
     for port in receive_ports:
         jackHelper.disconnect_all(port)
-    noisebox = Noisebox(jackHelper)
+
     oled_h = oled_helpers.OLED_helpers()
-    oled_menu = noisebox_menu.Menu(['SERVER 1',
-                                    'LEVEL METER',
-                                    'CONNECTED PEERS',
-                                    'IP ADDRESS',
-                                    'TEST LAYOUT'], oled_h, noisebox)
+    oled_menu = noisebox_menu.Menu(menu_items)
+
+    noisebox = Noisebox(jackHelper)
 
     def rotaryChange(direction):
         if noisebox.current_meters is None:
@@ -209,7 +212,7 @@ def main():
     ky040 = KY040(CLOCKPIN, DATAPIN, SWITCHPIN,
                   rotaryChange, switchPressed)
     ky040.start()
-    oled_menu.draw_menu()
+    oled_menu.start(noisebox, oled_h)
 
     try:
         while True:
