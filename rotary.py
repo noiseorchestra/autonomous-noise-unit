@@ -58,7 +58,7 @@ class KY040:
             self.switchCallback()
 
     def rotaryCallback(self, direction):
-        if self.noisebox.current_meters is None:
+        if self.noisebox.channel_meters is None:
             self.oled_menu.counter
             if direction == 1:
                 self.oled_menu.counter += 1
@@ -67,10 +67,10 @@ class KY040:
             self.oled_menu.draw_menu()
 
     def switchCallback(self):
-        if self.noisebox.session_active:
-            self.noisebox.stop_jacktrip_session()
-            self.oled_menu.draw_menu()
-        elif self.noisebox.current_meters:
+        # if self.noisebox.session_active:
+        #     self.noisebox.stop_jacktrip_session()
+        #     self.oled_menu.draw_menu()
+        if self.noisebox.channel_meters:
             self.noisebox.stop_monitoring_audio()
             self.oled_menu.draw_menu()
         else:

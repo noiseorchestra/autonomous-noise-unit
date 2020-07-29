@@ -3,41 +3,37 @@
 import RPi.GPIO as GPIO
 from rotary import KY040
 from configparser import ConfigParser
-from threading import Thread
 from time import sleep
 import helper_get_ip
-import helper_threaded_meter
 import helper_peers
 import oled_helpers
-import oled_meters
 from helper_jacktrip import PyTrip
+from helper_channel_meters import ChannelMeters
 import jack_helper
 import noisebox_menu
 
 cfg = ConfigParser()
 cfg.read('config.ini')
 peers = cfg.get('peers', 'ips')
+default_jacktrip_params = {
+    'hub_mode': cfg.get('jacktrip-default', 'hub_mode'),
+    'server': cfg.get('jacktrip-default', 'ip'),
+    'ip': cfg.get('jacktrip-default', 'ip'),
+    'channels': cfg.get('jacktrip-default', 'channels'),
+    'queue': cfg.get('jacktrip-default', 'queue')
+    }
 
 
 class Noisebox:
     """Main noisebox object"""
 
     def __init__(self, jackHelper):
-        self.server1_ip = cfg.get('server1', 'ip')
-        self.server2_ip = cfg.get('server2', 'ip')
-        self.active_server = cfg.get('server1', 'ip')
+        self.active_server = default_jacktrip_params['ip']
         self.peers = peers.split(',')
         self.online_peers = peers.split(',')
-        self.server1_params = {'hub_mode': True, 'server': False,
-                               'ip': self.server1_ip, 'channels': "1",
-                               'queue': "4"}
-        self.default_peer_params = {'hub_mode': False, 'ip': "",
-                                    'server': True, 'channels': "1",
-                                    'queue': "4"}
-        self.current_peer_params = {}
-        self.session_active = False
+        self.session_params = default_jacktrip_params
         self.current_session = None
-        self.current_meters = None
+        self.channel_meters = None
         self.oled_helpers = oled_helpers.OLED_helpers()
         self.jackHelper = jackHelper
 
@@ -68,7 +64,8 @@ class Noisebox:
     def start_monitoring_audio(self):
         """Stop monitoring audio"""
         self.jackHelper.make_monitoring_connections()
-        self.start_channel_meters()
+        port_names = self.jackHelper.get_input_port_names()
+        self.channel_meters = ChannelMeters(port_names)
 
     def start_jacktrip_session(self):
         """Start hubserver JackTrip session"""
@@ -76,92 +73,33 @@ class Noisebox:
         # Eventually pass in different server params..
         # depending on which server we are connecting to
         # Refactor code, make more DRY
-        self.active_server = self.server1_ip
-        self.current_session_params = self.server1_params
-        self.current_session = PyTrip(self.current_session_params)
+        self.current_session = PyTrip(self.session_params)
         self.current_session.start()
 
         if self.current_session.connected:
-            self.session_active = True
             self.jackHelper.make_jacktrip_connections(self.active_server)
             self.start_channel_meters()
-        # else draw_menu here
 
-    # def start_peer_session(self):
-    #     """Start peer 2 peer JackTrip session"""
-    #
-    #     # TODO
-    #     # use OLED menu to connect to chosen peer
-    #
-    #     if len(self.online_peers) == 1:
-    #         self.current_session_params = self.default_peer_params
-    #         self.oled_helpers.draw_text(0, 26, "Starting JackTrip as server")
-    #     else:
-    #         self.current_session_params = self.default_peer_params
-    #         self.current_session_params.update({'ip': self.online_peers[0],
-    #                                             'server': False})
-    #         self.oled_helpers.draw_text(0, 26, "Starting JackTrip as client")
-    #
-    #     self.current_session = PyTrip(self.current_session_params)
-    #     self.current_session.start()
-    #
-    #     # not tested this section
-    #
-    #     if self.current_session.jacktrip_monitor.jacktrip_connected is True:
-    #         self.session_active = True
-    #
-    #     self.start_channel_meters()
+    # P2P connections function goes here
 
     def stop_monitoring_audio(self):
         self.jackHelper.disconnect_session()
-        self.stop_meters()
+        self.channel_meters.stop()
+        self.channel_meters = None
 
     def stop_jacktrip_session(self):
         """Stop JackTrip session"""
 
         self.jackHelper.disconnect_session()
-        self.current_meters.terminate()
+        self.channel_meters.stop()
         self.current_session.stop()
 
-        self.session_active = False
         self.current_session = None
-        self.current_meters = None
+        self.channel_meters = None
 
         self.oled_helpers.draw_text(0, 26, "JackTrip stopped")
 
         sleep(1)
-
-    def get_channel_levels(self, channels):
-        """Monitor array of channels and return threads"""
-
-        threads = []
-        for channel in channels:
-            command = "jack_meter " + channel + " -n"
-            meter_thread = helper_threaded_meter.ThreadedMeter(command)
-            meter_thread.run()
-            threads.append(meter_thread)
-        return threads
-
-    def start_channel_meters(self):
-        """Start drawing OLED meters"""
-
-        port_names = self.jackHelper.get_input_port_names()
-        print(port_names)
-        if len(port_names) != 0:
-            meter_threads = self.get_channel_levels(port_names)
-            self.current_meters = oled_meters.Meters()
-            t = Thread(
-                target=self.current_meters.render,
-                args=(self.oled_helpers.get_device(), meter_threads,))
-            t.start()
-        else:
-            self.oled_helpers.draw_text(0, 26, "No input ports detected")
-
-    def stop_meters(self):
-        """Stop drawing OLED meters"""
-
-        self.current_meters.terminate()
-        self.current_meters = None
 
 
 def main():

@@ -3,7 +3,7 @@ from subprocess import Popen, PIPE
 import psutil
 
 
-class ThreadedMeter:
+class ChannelMeter:
     """Helper object for live monitoring the volume level of audio channels"""
 
     def __init__(self, command):
