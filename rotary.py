@@ -1,7 +1,9 @@
 # Based on https://gist.github.com/codelectron/d493d4aaa6fc858ce69f2b335afd0b00#file-oled_rot_menu_rpi-py
 
 import RPi.GPIO as GPIO
-
+from oled_helpers import OLED_helpers
+import time
+import sys
 
 class KY040:
 
@@ -17,9 +19,16 @@ class KY040:
         self.rotaryCallback = rotaryCallback
         self.switchCallback = switchCallback
 
-        GPIO.setup(clockPin, GPIO.IN)
-        GPIO.setup(dataPin, GPIO.IN)
-        GPIO.setup(switchPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        try:
+            GPIO.setup(clockPin, GPIO.IN)
+            GPIO.setup(dataPin, GPIO.IN)
+            GPIO.setup(switchPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        except Exception as e:
+            print("Rotary switch error:", e)
+            oled_h = OLED_helpers()
+            oled_h.draw_lines(["==ERROR==", "rotary switch error"])
+            time.sleep(4)
+            sys.exit("Exited because of rotary switch error")
 
     def start(self):
         GPIO.add_event_detect(self.clockPin,
