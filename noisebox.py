@@ -166,10 +166,6 @@ class Noisebox:
 
 def main():
 
-    CLOCKPIN = 5
-    DATAPIN = 6
-    SWITCHPIN = 22
-
     menu_items = ['SERVER 1',
                   'LEVEL METER',
                   'CONNECTED PEERS',
@@ -177,6 +173,7 @@ def main():
                   'TEST LAYOUT']
 
     jackHelper = jack_helper.JackHelper()
+
     receive_ports = jackHelper.client.get_ports(is_audio=True, is_output=True)
     for port in receive_ports:
         jackHelper.disconnect_all(port)
@@ -186,32 +183,10 @@ def main():
 
     noisebox = Noisebox(jackHelper)
 
-    def rotaryChange(direction):
-        if noisebox.current_meters is None:
-            oled_menu.counter
-            if direction == 1:
-                oled_menu.counter += 1
-            else:
-                oled_menu.counter -= 1
-            oled_menu.draw_menu()
-
-    def switchPressed():
-        if noisebox.session_active:
-            noisebox.stop_jacktrip_session()
-            oled_menu.draw_menu()
-        elif noisebox.current_meters:
-            noisebox.stop_monitoring_audio()
-            oled_menu.draw_menu()
-        else:
-            strval = oled_menu.menu_items[oled_menu.menuindex]
-            oled_menu.menu_operation(strval)
-
-    GPIO.setmode(GPIO.BCM)
-
-    ky040 = KY040(CLOCKPIN, DATAPIN, SWITCHPIN,
-                  rotaryChange, switchPressed)
-    ky040.start()
     oled_menu.start(noisebox, oled_h)
+
+    ky040 = KY040(noisebox, oled_menu)
+    ky040.start()
 
     try:
         while True:

@@ -5,24 +5,25 @@ from oled_helpers import OLED_helpers
 import time
 import sys
 
+
 class KY040:
 
     CLOCKWISE = 0
     ANTICLOCKWISE = 1
 
-    def __init__(self, clockPin, dataPin, switchPin,
-                 rotaryCallback, switchCallback):
+    def __init__(self, noisebox, oled_menu):
 
-        self.clockPin = clockPin
-        self.dataPin = dataPin
-        self.switchPin = switchPin
-        self.rotaryCallback = rotaryCallback
-        self.switchCallback = switchCallback
+        self.clockPin = 5
+        self.dataPin = 6
+        self.switchPin = 22
+        self.noisebox = noisebox
+        self.oled_menu = oled_menu
 
         try:
-            GPIO.setup(clockPin, GPIO.IN)
-            GPIO.setup(dataPin, GPIO.IN)
-            GPIO.setup(switchPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setup(self.clockPin, GPIO.IN)
+            GPIO.setup(self.dataPin, GPIO.IN)
+            GPIO.setup(self.switchPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         except Exception as e:
             print("Rotary switch error:", e)
             oled_h = OLED_helpers()
@@ -55,3 +56,23 @@ class KY040:
     def _switchCallback(self, pin):
         if GPIO.input(self.switchPin) == 0:
             self.switchCallback()
+
+    def rotaryCallback(self, direction):
+        if self.noisebox.current_meters is None:
+            self.oled_menu.counter
+            if direction == 1:
+                self.oled_menu.counter += 1
+            else:
+                self.oled_menu.counter -= 1
+            self.oled_menu.draw_menu()
+
+    def switchCallback(self):
+        if self.noisebox.session_active:
+            self.noisebox.stop_jacktrip_session()
+            self.oled_menu.draw_menu()
+        elif self.noisebox.current_meters:
+            self.noisebox.stop_monitoring_audio()
+            self.oled_menu.draw_menu()
+        else:
+            strval = self.oled_menu.menu_items[self.oled_menu.menuindex]
+            self.oled_menu.menu_operation(strval)
