@@ -1,118 +1,31 @@
 from queue import Queue
 from threading import Thread
-import oled_helpers
-import time
 
 
 class JacktripMonitor():
+    """Helper object for monitoring stdout of jacktrip process"""
 
-    def __init__(self, jacktrip, server_ip):
-        self._sentinel = object()
+    def __init__(self, jacktrip):
         self.jacktrip = jacktrip
-        self.jacktrip_connected = False
-        self.jacktrip_connecting = True
-        self.jacktrip_error = False
-        self.jacktrip_stopped = False
-        self.server_ip = server_ip
-        self.oled_helpers = oled_helpers.OLED_helpers()
+        self.queue = Queue()
+        self._running = True
 
-    def producer(self, out_q):
+    def monitor(self, out_q):
         """Monitor jacktrip stdout and push to queue"""
 
-        while self.jacktrip_stopped is not True:
-            # Produce some data
+        print("JackTrip monitor start")
+
+        while self._running:
             out = str(self.jacktrip.stdout.readline().rstrip(), 'utf-8')
-            if out != '':
-                out_q.put(out)
+            print(out)
+            out_q.put(out)
 
-        # # Put the sentinel on the queue to indicate completion
-        print("producer should stop")
-        out_q.put(self._sentinel)
-
-    # A thread that consumes data
-    def consumer(self, in_q):
-        """Check q messages"""
-
-        count = 0
-        while True:
-            # Get some data
-            data = in_q.get()
-            # Check for termination
-            if data is self._sentinel:
-                in_q.put(self._sentinel)
-                break
-
-            # check q for error strings
-
-            success = 'Received Connection from Peer!'
-            stopped = 'JackTrip Processes STOPPED!'
-            waiting = 'Waiting for Peer...'
-            errors = ['Maybe the JACK server is not running',
-                      'Unable to connect to JACK server',
-                      'JACK server not running',
-                      'Peer Buffer Size',
-                      'Wrong bit resolution']
-
-            print(data)
-
-            if success in data:
-                message = ['==SUCCESS==',
-                           success,
-                           'jacktrip connected to: ' + self.server_ip]
-                print(message)
-                self.oled_helpers.draw_lines(message)
-                self.jacktrip_connected = True
-                self.jacktrip_connecting = False
-                time.sleep(1)
-
-            if waiting in data:
-                message = ['==CONNECTING==',
-                           waiting]
-                print(message)
-                self.oled_helpers.draw_lines(message)
-                time.sleep(0.1)
-
-            for error in errors:
-                if error in data:
-                    message = ['==ERROR==', error, 'JackTrip stopping']
-                    self.oled_helpers.draw_lines(message)
-                    self.jacktrip_connected = False
-                    self.jacktrip_connecting = False
-                    self.jacktrip_error = True
-                    print(message)
-                    time.sleep(1)
-
-            if stopped in data:
-                message = ['==ERROR==',
-                           "Could not connect to: " + self.server_ip,
-                           stopped]
-                self.oled_helpers.draw_lines(message)
-                self.jacktrip_connected = False
-                self.jacktrip_error = True
-                self.jacktrip_stopped = True
-                self.jacktrip_connecting = False
-                print(message)
-                time.sleep(1)
-
-            if count > 100:
-                message = ['==TIMEOUT==',
-                           "Waited too long for peer"]
-                self.oled_helpers.draw_lines(message)
-                self.jacktrip_connected = False
-                self.jacktrip_error = True
-                self.jacktrip_stopped = True
-                self.jacktrip_connecting = False
-                print(message)
-                time.sleep(1)
-                break
-
-        print("consumer should stop")
+        print("JackTrip monitor should stop")
 
     def run(self):
-        """Run producer and consumer threads"""
+        """Run monitor thread"""
+        self.monitor_thread = Thread(target=self.monitor, args=(self.queue,))
+        self.monitor_thread.start()
 
-        q = Queue()
-        t1 = Thread(target=self.consumer, args=(q,))
-        t2 = Thread(target=self.producer, args=(q,))
-        t1.start()
-        t2.start()
+    def terminate(self):
+        self._running = False

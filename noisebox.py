@@ -10,7 +10,7 @@ import helper_threaded_meter
 import helper_peers
 import oled_helpers
 import oled_meters
-import helper_jacktrip
+from helper_jacktrip import PyTrip
 import jack_helper
 import noisebox_menu
 
@@ -78,40 +78,39 @@ class Noisebox:
         # Refactor code, make more DRY
         self.active_server = self.server1_ip
         self.current_session_params = self.server1_params
-        self.current_session = helper_jacktrip.PyTrip(self.current_session_params)
-        self.oled_helpers.draw_text(0, 26, "Connecting to server...")
+        self.current_session = PyTrip(self.current_session_params)
         self.current_session.start()
 
-        if self.current_session.jacktrip_monitor.jacktrip_connected is True:
+        if self.current_session.connected:
             self.session_active = True
-
             self.jackHelper.make_jacktrip_connections(self.active_server)
             self.start_channel_meters()
+        # else draw_menu here
 
-    def start_peer_session(self):
-        """Start peer 2 peer JackTrip session"""
-
-        # TODO
-        # use OLED menu to connect to chosen peer
-
-        if len(self.online_peers) == 1:
-            self.current_session_params = self.default_peer_params
-            self.oled_helpers.draw_text(0, 26, "Starting JackTrip as server")
-        else:
-            self.current_session_params = self.default_peer_params
-            self.current_session_params.update({'ip': self.online_peers[0],
-                                                'server': False})
-            self.oled_helpers.draw_text(0, 26, "Starting JackTrip as client")
-
-        self.current_session = helper_jacktrip.PyTrip(self.current_session_params)
-        self.current_session.start()
-
-        # not tested this section
-
-        if self.current_session.jacktrip_monitor.jacktrip_connected is True:
-            self.session_active = True
-
-        self.start_channel_meters()
+    # def start_peer_session(self):
+    #     """Start peer 2 peer JackTrip session"""
+    #
+    #     # TODO
+    #     # use OLED menu to connect to chosen peer
+    #
+    #     if len(self.online_peers) == 1:
+    #         self.current_session_params = self.default_peer_params
+    #         self.oled_helpers.draw_text(0, 26, "Starting JackTrip as server")
+    #     else:
+    #         self.current_session_params = self.default_peer_params
+    #         self.current_session_params.update({'ip': self.online_peers[0],
+    #                                             'server': False})
+    #         self.oled_helpers.draw_text(0, 26, "Starting JackTrip as client")
+    #
+    #     self.current_session = PyTrip(self.current_session_params)
+    #     self.current_session.start()
+    #
+    #     # not tested this section
+    #
+    #     if self.current_session.jacktrip_monitor.jacktrip_connected is True:
+    #         self.session_active = True
+    #
+    #     self.start_channel_meters()
 
     def stop_monitoring_audio(self):
         self.jackHelper.disconnect_session()
@@ -204,7 +203,7 @@ def main():
             noisebox.stop_monitoring_audio()
             oled_menu.draw_menu()
         else:
-            strval = oled_menu.names[oled_menu.menuindex]
+            strval = oled_menu.menu_items[oled_menu.menuindex]
             oled_menu.menu_operation(strval)
 
     GPIO.setmode(GPIO.BCM)

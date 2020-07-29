@@ -2,6 +2,7 @@ from threading import Thread
 from subprocess import Popen, PIPE
 import psutil
 
+
 class ThreadedMeter:
     """Helper object for live monitoring the volume level of audio channels"""
 
@@ -27,10 +28,8 @@ class ThreadedMeter:
             try:
                 level = -2 * int(float(str(line, 'utf-8')))
             except OverflowError:
-                print("Meter value not int")
                 pass
             except ValueError:
-                print("Meter value not int")
                 pass
             finally:
                 self.current_meter_value = level

@@ -1,21 +1,15 @@
-JACKTRIP
-- timeout connection call when fails
-- finalise p2p connections
+==TODO==
 
-DESIGN
+- function for making p2p connections
 - make p2p connections menu
-
-METERS
 - label meters
 - check meter orientation
-
-ERROR CATCHING
 - tighten up error checks in install script
 - catch errors in noisebox script and show fallback screen (starting jackd, attaching to screen, rotary etc...)
-
-TESTING
 - add testing scripts
+- remove subprocesses which run as shell
 
-SYSTEMD
-- fix bug when starting jackd from subprocess
-- gracefully close on exit with cleanup script
+==DONE==
+- timeout connection call when fails
+- fix bug when starting jackd subprocess from systemd
+- gracefully close on exit with cleanup script (kill jackd, kill jacktrip)

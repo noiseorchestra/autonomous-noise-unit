@@ -1,24 +1,28 @@
-import subprocess
+from subprocess import Popen, PIPE
 import psutil
 import time
 import jack
+import sys
 
 
 class JackHelper:
 
-    def __init__(self, command):
-        self.start(command)
-        time.sleep(1)
-        jackClient = jack.Client('noisebox',  no_start_server=True)
-        jackClient.activate()
+    def __init__(self):
+        self.client = self.start()
 
-        self.client = jackClient
-
-    def start(self, command):
+    def start(self):
         """Start JACK with relavent parameters"""
+        jackClient = None
+        Popen(['jackd', '-dalsa'], stdout=PIPE, stderr=PIPE)
+        time.sleep(2)
+        try:
+            jackClient = jack.Client('noisebox',  no_start_server=True)
+        except Exception as e:
+            print("JACK Client could not start", e)
+            sys.exit("Exited because jackd not running")
 
-        subprocess.Popen(command)
-        time.sleep(1)
+        jackClient.activate()
+        return jackClient
 
     def stop(self):
         """Stop JACK"""

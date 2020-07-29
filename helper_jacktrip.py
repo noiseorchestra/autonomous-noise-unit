@@ -1,7 +1,7 @@
 import subprocess
 import psutil
-import helper_jacktrip_monitor
-import time
+from helper_jacktrip_monitor import JacktripMonitor
+from helper_jacktrip_wait import JacktripWait
 
 
 class PyTrip:
@@ -16,6 +16,7 @@ class PyTrip:
         self.queue = "-q" + params["queue"]
         self.current_process = None
         self.jacktrip_monitor = None
+        self.connected = False
 
     def start(self):
         """Start JackTrip with relevent parameters"""
@@ -29,19 +30,26 @@ class PyTrip:
         else:
             mode = "-c"
 
-        command = ' '.join(["jacktrip", mode, ip, self.channels, self.queue, "-z"])
-        print(command)
+        command = ["jacktrip", mode, ip, self.channels, self.queue, "-z"]
+
         self.current_process = subprocess.Popen(command,
                                                 stdout=subprocess.PIPE,
-                                                stderr=subprocess.PIPE,
-                                                shell=True)
-        self.jacktrip_monitor = helper_jacktrip_monitor.JacktripMonitor(self.current_process, self.ip)
+                                                stderr=subprocess.PIPE)
+
+        self.jacktrip_monitor = JacktripMonitor(self.current_process)
         self.jacktrip_monitor.run()
-        while self.jacktrip_monitor.jacktrip_connecting is True:
-            time.sleep(0.5)
+
+        jacktrip_wait = JacktripWait(self.ip, self.jacktrip_monitor)
+        jacktrip_wait.run()
+
+        self.connected = jacktrip_wait.jacktrip_connected
+        if self.connected is False:
+            self.stop()
 
     def stop(self):
         """Stop JackTrip"""
+        self.current_process.terminate()
+        self.jacktrip_monitor.terminate()
         for proc in psutil.process_iter():
             if proc.name() == "jacktrip":
                 proc.kill()
