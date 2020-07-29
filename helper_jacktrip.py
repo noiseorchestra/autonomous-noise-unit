@@ -49,7 +49,5 @@ class PyTrip:
     def stop(self):
         """Stop JackTrip"""
         self.current_process.terminate()
+        self.current_process.wait()
         self.jacktrip_monitor.terminate()
-        for proc in psutil.process_iter():
-            if proc.name() == "jacktrip":
-                proc.kill()
