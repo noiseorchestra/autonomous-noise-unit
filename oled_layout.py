@@ -18,7 +18,8 @@ class Layout:
         panel2_height = device.height - panel1_height
 
         panel1 = oled_hotspots.Panel(panel_width, panel1_height, interval=0.1)
-        panel2 = oled_hotspots.Panel(panel_width, panel2_height, interval=0.1, scroll=True)
+        panel2 = oled_hotspots.Panel(panel_width, panel2_height,
+                                     interval=0.1, scroll=True)
 
         virtual = viewport(device,
                            width=device.width,

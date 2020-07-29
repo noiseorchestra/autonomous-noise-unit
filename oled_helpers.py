@@ -3,7 +3,6 @@ from luma.core.render import canvas
 from luma.oled.device import ssd1306
 from PIL import ImageFont, ImageDraw
 from luma.core.virtual import viewport
-from threading import Thread
 import time
 
 
@@ -44,7 +43,8 @@ class OLED_helpers:
         with canvas(self.device) as draw:
             w, h = draw.textsize(full_text, font)
 
-        virtual = viewport(self.device, width=max(self.device.width, w + x + x), height=max(h, self.device.height))
+        virtual = viewport(self.device, width=max(self.device.width, w + x + x),
+                           height=max(h, self.device.height))
         with canvas(virtual) as draw:
             draw.text((0, y), full_text, font=font, fill="white")
 
