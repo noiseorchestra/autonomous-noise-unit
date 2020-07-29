@@ -15,3 +15,7 @@ ERROR CATCHING
 
 TESTING
 - add testing scripts
+
+SYSTEMD
+- fix bug when starting jackd from subprocess
+- gracefully close on exit with cleanup script
