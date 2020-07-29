@@ -7,6 +7,9 @@
 - add testing scripts
 - remove subprocesses which run as shell
 - move jacktrip and jackd commands to config file
+- move app entry point into own file with noisebox and noise_menu as children
+- refactor rotary setup scripts (currently in noisebox) into rotary file
+- install and refactor for use with setuptools
 
 ==DONE==
 - timeout connection call when fails
