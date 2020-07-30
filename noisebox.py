@@ -59,7 +59,7 @@ class Noisebox:
         port_names = self.jackHelper.get_input_port_names()
 
         if len(port_names) == 0:
-            raise TypeError("No audio inputs found")
+            raise TypeError(["==ERROR==", "No audio inputs found"])
 
         self.channel_meters = ChannelMeters(port_names)
 
@@ -105,8 +105,7 @@ def main():
     menu_items = ['START JACKTRIP',
                   'LEVEL METER',
                   'CONNECTED PEERS',
-                  'IP ADDRESS',
-                  'TEST LAYOUT']
+                  'IP ADDRESS']
 
     jackHelper = jack_helper.JackHelper()
 

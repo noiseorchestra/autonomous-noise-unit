@@ -1,4 +1,3 @@
-from oled_helpers import OLED_helpers
 
 class SwitchState:
     def __init__(self):
@@ -11,7 +10,7 @@ class SwitchState:
         print("switchCallback not set")
 
     def rotaryCallback(self, oled_menu, direction):
-        print("rotaryCallback not set")
+        print("Do nothing")
 
 
 class SwitchState_A(SwitchState):
@@ -25,14 +24,16 @@ class SwitchState_A(SwitchState):
                 noisebox.start_jacktrip_session()
                 self.new_state(SwitchState_C)
             except Exception as e:
-                oled_helpers.draw_lines(e.args[0])
+                oled_helpers.start_layout(e.args[0])
+                self.new_state(SwitchState_D)
 
         if (strval == "LEVEL METER"):
             try:
                 noisebox.start_monitoring_audio()
                 self.new_state(SwitchState_B)
             except Exception as e:
-                oled_helpers.draw_text(0, 26, e.args[0])
+                oled_helpers.start_layout(e.args[0])
+                self.new_state(SwitchState_D)
 
         if (strval == "CONNECTED PEERS"):
             oled_helpers.draw_text(0, 26, "Searching for peers...")
@@ -42,10 +43,6 @@ class SwitchState_A(SwitchState):
         if (strval == "IP ADDRESS"):
             title = ["==HOSTNAME & IP=="]
             oled_helpers.draw_lines(title + noisebox.get_ip())
-
-        # if (strval == "TEST LAYOUT"):
-            # layout = oled_layout.Layout()
-            # layout.render(self.oled_helpers.get_device())
 
     def rotaryCallback(self, oled_menu, direction):
         if direction == 1:
@@ -62,10 +59,7 @@ class SwitchState_B(SwitchState):
         print('STOP MONITORING')
         noisebox.stop_monitoring_audio()
         self.new_state(SwitchState_A)
-
-    def rotaryCallback(self, oled_menu, direction):
-        print("Do nothing")
-
+        oled_menu.draw_menu()
 
 class SwitchState_C(SwitchState):
     """New swtitch state"""
@@ -74,6 +68,13 @@ class SwitchState_C(SwitchState):
         print('STOP JACKTRIP SESSION')
         noisebox.stop_jacktrip_session()
         self.new_state(SwitchState_A)
+        oled_menu.draw_menu()
 
-    def rotaryCallback(self, oled_menu, direction):
-        print("Do nothing")
+class SwitchState_D(SwitchState):
+    """New swtitch state"""
+
+    def switchCallback(self, noisebox, oled_menu, oled_helpers):
+        print('STOP LAYOUT')
+        oled_helpers.stop_layout()
+        self.new_state(SwitchState_A)
+        oled_menu.draw_menu()

@@ -2,9 +2,7 @@ from luma.core.interface.serial import i2c
 from luma.core.render import canvas
 from luma.oled.device import ssd1306
 from PIL import ImageFont, ImageDraw
-from luma.core.virtual import viewport
-import time
-
+from oled_hotspot_layout import Layout
 
 class OLED_helpers:
     """Helper object for OLED functions"""
@@ -17,6 +15,7 @@ class OLED_helpers:
     def __init__(self):
         self.serial = i2c(port=1, address=0x3C)
         self.device = ssd1306(self.serial, rotate=0)
+        self.current_layout = None
 
     def get_device(self):
         """Return OLED device object"""
@@ -35,21 +34,9 @@ class OLED_helpers:
                 draw.text((0, y), line, fill="white")
                 y += 13
 
-    def scroll_text(self, text, y=0, font=None, speed=1):
-        full_text = text
-        x = self.device.width
+    def start_layout(self, text_array):
+        self.current_layout = Layout()
+        self.current_layout.start(self.get_device(), text_array)
 
-        # First measure the text size
-        with canvas(self.device) as draw:
-            w, h = draw.textsize(full_text, font)
-
-        virtual = viewport(self.device, width=max(self.device.width, w + x + x),
-                           height=max(h, self.device.height))
-        with canvas(virtual) as draw:
-            draw.text((0, y), full_text, font=font, fill="white")
-
-        i = 0
-        while i < x:
-            virtual.set_position((i, y))
-            i += speed
-            time.sleep(0.025)
+    def stop_layout(self):
+        self.current_layout.terminate()
