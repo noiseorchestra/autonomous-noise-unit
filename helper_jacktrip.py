@@ -20,17 +20,8 @@ class PyTrip:
 
     def start(self):
         """Start JackTrip with relevent parameters"""
-        mode = ""
-        ip = self.ip
-        if self.hub_mode:
-            mode = "-C"
-        elif self.server:
-            mode = "-s"
-            ip = ""
-        else:
-            mode = "-c"
 
-        command = ["jacktrip", mode, ip, self.channels, self.queue, "-z"]
+        command = ["jacktrip", "-C", self.ip, self.channels, self.queue, "-z"]
 
         self.current_jacktrip = subprocess.Popen(command,
                                                 stdout=subprocess.PIPE,
