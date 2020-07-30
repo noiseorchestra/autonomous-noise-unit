@@ -118,10 +118,10 @@ def main():
 
     noisebox = Noisebox(jackHelper)
 
-    oled_menu.start(noisebox, oled_h)
-
     ky040 = KY040(noisebox, oled_menu)
     ky040.start()
+
+    oled_menu.start(noisebox, oled_h)
 
     try:
         while True:

@@ -1,6 +1,5 @@
 ==TODO==
 
-- finnish rotary key state device
 - function for making p2p connections
 - make p2p connections menu
 - label meters
@@ -19,3 +18,5 @@
 - catch errors in noisebox script and show fallback screen (starting jackd, attaching to screen, rotary etc...)
 - refactor rotary setup scripts (currently in noisebox) into rotary file
 - create rotary key state device
+- finish rotary key state device
+- implement multi-line messages with conditional scrolling

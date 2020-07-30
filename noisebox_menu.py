@@ -20,7 +20,6 @@ class Menu:
         self.noisebox = noisebox
         self.oled_helpers = oled_helpers
         self.device = oled_helpers.get_device()
-
         self.draw_menu()
 
     def invert(self, draw, x, y, text):
