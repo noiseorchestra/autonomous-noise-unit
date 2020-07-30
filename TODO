@@ -1,6 +1,6 @@
 ==TODO==
 
-- create rotary key switching unit
+- finnish rotary key state device
 - function for making p2p connections
 - make p2p connections menu
 - label meters
@@ -18,3 +18,4 @@
 - tighten up error checks in install script
 - catch errors in noisebox script and show fallback screen (starting jackd, attaching to screen, rotary etc...)
 - refactor rotary setup scripts (currently in noisebox) into rotary file
+- create rotary key state device

@@ -20,8 +20,7 @@ class SwitchState_A(SwitchState):
         strval = oled_menu.menu_items[oled_menu.menuindex]
 
         """check menu value when button clicked and run corresponding function"""
-        if (strval == "SERVER 1"):
-            print('START JACKTRIP')
+        if (strval == "START JACKTRIP"):
             try:
                 noisebox.start_jacktrip_session()
                 self.new_state(SwitchState_C)
@@ -29,7 +28,6 @@ class SwitchState_A(SwitchState):
                 oled_helpers.draw_lines(e.args[0])
 
         if (strval == "LEVEL METER"):
-            print('LEVEL METER')
             try:
                 noisebox.start_monitoring_audio()
                 self.new_state(SwitchState_B)
@@ -37,15 +35,14 @@ class SwitchState_A(SwitchState):
                 oled_helpers.draw_text(0, 26, e.args[0])
 
         if (strval == "CONNECTED PEERS"):
-            print('CONNECTED PEERS')
-            # noisebox.check_peers()
+            oled_helpers.draw_text(0, 26, "Searching for peers...")
+            online_peers = noisebox.check_peers()
+            oled_helpers.draw_lines(online_peers)
 
         if (strval == "IP ADDRESS"):
-            print('CONNECTED PEERS')
-            #  oled_helpers.draw_text(0, 26, noisebox.get_ip())
+            oled_helpers.draw_text(0, 26, noisebox.get_ip())
 
-        if (strval == "TEST LAYOUT"):
-            print('TEST LAYOUT')
+        # if (strval == "TEST LAYOUT"):
             # layout = oled_layout.Layout()
             # layout.render(self.oled_helpers.get_device())
 
