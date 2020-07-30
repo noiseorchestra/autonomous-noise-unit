@@ -8,27 +8,20 @@ class JacktripWait():
 
     def __init__(self, server_ip, jacktrip_monitor):
         self.jacktrip_monitor = jacktrip_monitor
-        self.jacktrip_connected = False
         self.waiting = True
         self.server_ip = server_ip
         self.oled_helpers = oled_helpers.OLED_helpers()
 
     def keep_waiting(self, message):
         self.oled_helpers.draw_lines(message)
-        print(message)
 
     def stop_waiting_error(self, message):
-        self.oled_helpers.draw_lines(message)
-        self.jacktrip_connected = False
         self.waiting = False
-        print(message)
-        time.sleep(1)
+        raise Exception(message)
 
     def stop_waiting_success(self, message):
         self.oled_helpers.draw_lines(message)
-        self.jacktrip_connected = True
         self.waiting = False
-        print(message)
         time.sleep(1)
 
     def check_messages(self, data):
@@ -75,8 +68,8 @@ class JacktripWait():
 
         message = ['==STARTING==', 'JackTrip starting...']
         self.oled_helpers.draw_lines(message)
+        time.sleep(1)
 
-        print("JackTrip wait start")
         while self.waiting is True:
             try:
                 data = self.jacktrip_monitor.queue.get(True, timeout=10)
@@ -84,6 +77,3 @@ class JacktripWait():
                 self.check_messages(data)
             except Empty:
                 self.timeout()
-                raise Exception("JackTrip timed out")
-
-        print("JackTrip wait should stop")

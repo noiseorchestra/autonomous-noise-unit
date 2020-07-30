@@ -26,7 +26,7 @@ class SwitchState_A(SwitchState):
                 noisebox.start_jacktrip_session()
                 self.new_state(SwitchState_C)
             except Exception as e:
-                oled_helpers.draw_text(0, 26, e.args[0])
+                oled_helpers.draw_lines(e.args[0])
 
         if (strval == "LEVEL METER"):
             print('LEVEL METER')
@@ -67,6 +67,7 @@ class SwitchState_B(SwitchState):
 
     def rotaryCallback(self, oled_menu, direction):
         print("Do nothing")
+
 
 class SwitchState_C(SwitchState):
     """New swtitch state"""

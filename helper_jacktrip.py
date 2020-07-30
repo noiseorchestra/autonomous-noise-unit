@@ -42,8 +42,6 @@ class PyTrip:
         jacktrip_wait = JacktripWait(self.ip, self.jacktrip_monitor)
         jacktrip_wait.run()
 
-        jacktrip_wait.jacktrip_connected
-
     def stop(self):
         """Stop JackTrip"""
         self.current_jacktrip.terminate()

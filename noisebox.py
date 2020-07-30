@@ -78,12 +78,13 @@ class Noisebox:
 
         try:
             self.current_jacktrip.start()
-            self.jackHelper.make_jacktrip_connections(self.active_server)
-            self.start_monitoring_audio()
 
         except Exception:
             self.current_jacktrip.stop()
             raise
+
+        self.jackHelper.make_jacktrip_connections(self.active_server)
+        self.start_monitoring_audio()
 
     # P2P connections function goes here
 
