@@ -9,9 +9,6 @@ class ChannelMeters:
         self.oled_helpers = OLED_helpers()
         self.current_meters = self.start(port_names)
 
-        if self.channel_meters is None:
-            return None
-
     def get_meter_threads(self, channels):
         """Monitor array of channels and return threads"""
 
@@ -26,18 +23,17 @@ class ChannelMeters:
     def start(self, port_names):
         """Start drawing OLED meters"""
 
-        if len(port_names) != 0:
-            current_meters = Meters()
-            meter_threads = self.get_meter_threads(port_names)
+        current_meters = Meters()
+        meter_threads = self.get_meter_threads(port_names)
 
-            t = Thread(
-                target=current_meters.render,
-                args=(self.oled_helpers.get_device(), meter_threads,))
-            t.start()
-            return current_meters
-        else:
-            self.oled_helpers.draw_text(0, 26, "No input ports detected")
-            return None
+        t = Thread(
+            target=current_meters.render,
+            args=(self.oled_helpers.get_device(), meter_threads,))
+        t.start()
+
+        self.current_meters = current_meters
+
+        return current_meters
 
     def stop(self):
         """Stop drawing OLED meters"""

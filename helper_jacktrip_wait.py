@@ -1,5 +1,6 @@
 import oled_helpers
 import time
+from queue import Queue, Empty
 
 
 class JacktripWait():
@@ -32,8 +33,6 @@ class JacktripWait():
 
     def check_messages(self, data):
 
-        print(data)
-
         success = 'Received Connection from Peer!'
         stopped = 'JackTrip Processes STOPPED!'
         waiting = 'Waiting for Peer...'
@@ -41,7 +40,8 @@ class JacktripWait():
                   'Unable to connect to JACK server',
                   'JACK server not running',
                   'Peer Buffer Size',
-                  'Wrong bit resolution']
+                  'Wrong bit resolution',
+                  'Exiting JackTrip']
 
         if success in data:
             message = ['==SUCCESS==',
@@ -56,7 +56,7 @@ class JacktripWait():
 
         for error in errors:
             if error in data:
-                message = ['==ERROR==', error, 'JackTrip stopping']
+                message = ['==ERROR==', error, 'JackTrip stopped']
                 self.stop_waiting_error(message)
 
         if stopped in data:
@@ -73,21 +73,17 @@ class JacktripWait():
     def run(self):
         """Check q messages and block until connected or timeout"""
 
-        message = ['==CONNECTING==', 'Contacting server...']
+        message = ['==STARTING==', 'JackTrip starting...']
         self.oled_helpers.draw_lines(message)
 
         print("JackTrip wait start")
         while self.waiting is True:
-            print("JackTrip wait running")
-            # Get some data
             try:
                 data = self.jacktrip_monitor.queue.get(True, timeout=10)
-
+                print(data)
                 self.check_messages(data)
-
-            except Exception as e:
-                print(e)
+            except Empty:
                 self.timeout()
-                break
+                raise Exception("JackTrip timed out")
 
         print("JackTrip wait should stop")

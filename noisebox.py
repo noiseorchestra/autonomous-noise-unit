@@ -2,7 +2,7 @@
 
 import RPi.GPIO as GPIO
 from rotary import KY040
-from configparser import ConfigParser
+import configparser
 from time import sleep
 import helper_get_ip
 import helper_peers
@@ -12,12 +12,12 @@ from helper_channel_meters import ChannelMeters
 import jack_helper
 import noisebox_menu
 
-cfg = ConfigParser()
+cfg = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
 cfg.read('config.ini')
 peers = cfg.get('peers', 'ips')
 default_jacktrip_params = {
     'hub_mode': cfg.get('jacktrip-default', 'hub_mode'),
-    'server': cfg.get('jacktrip-default', 'ip'),
+    'server': cfg.get('jacktrip-default', 'server'),
     'ip': cfg.get('jacktrip-default', 'ip'),
     'channels': cfg.get('jacktrip-default', 'channels'),
     'queue': cfg.get('jacktrip-default', 'queue')
@@ -32,7 +32,7 @@ class Noisebox:
         self.peers = peers.split(',')
         self.online_peers = peers.split(',')
         self.session_params = default_jacktrip_params
-        self.current_session = None
+        self.current_jacktrip = None
         self.channel_meters = None
         self.oled_helpers = oled_helpers.OLED_helpers()
         self.jackHelper = jackHelper
@@ -62,25 +62,28 @@ class Noisebox:
         # self.start_peer_session()
 
     def start_monitoring_audio(self):
-        """Stop monitoring audio"""
+        """Start monitoring audio"""
         self.jackHelper.make_monitoring_connections()
         port_names = self.jackHelper.get_input_port_names()
+
+        if len(port_names) == 0:
+            raise TypeError("No audio inputs found")
+
         self.channel_meters = ChannelMeters(port_names)
 
     def start_jacktrip_session(self):
         """Start hubserver JackTrip session"""
-        # TO DO
-        # Eventually pass in different server params..
-        # depending on which server we are connecting to
-        # Refactor code, make more DRY
-        self.current_session = PyTrip(self.session_params)
-        self.current_session.start()
+        print(self.session_params)
+        self.current_jacktrip = PyTrip(self.session_params)
 
-        if self.current_session.connected:
+        try:
+            self.current_jacktrip.start()
             self.jackHelper.make_jacktrip_connections(self.active_server)
             self.start_monitoring_audio()
 
-        return self.current_session.connected
+        except Exception:
+            self.current_jacktrip.stop()
+            raise
 
     # P2P connections function goes here
 
@@ -96,7 +99,7 @@ class Noisebox:
 
         self.stop_monitoring_audio()
 
-        self.current_session.stop()
+        self.current_jacktrip.stop()
         self.channel_meters = None
 
         self.oled_helpers.draw_text(0, 26, "JackTrip stopped")

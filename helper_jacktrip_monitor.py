@@ -13,14 +13,9 @@ class JacktripMonitor():
     def monitor(self, out_q):
         """Monitor jacktrip stdout and push to queue"""
 
-        print("JackTrip monitor start")
-
         while self._running:
-            out = str(self.jacktrip.stdout.readline().rstrip(), 'utf-8')
-            print(out)
-            out_q.put(out)
-
-        print("JackTrip monitor should stop")
+            stdout = str(self.jacktrip.stdout.readline().rstrip(), 'utf-8')
+            out_q.put(stdout)
 
     def run(self):
         """Run monitor thread"""

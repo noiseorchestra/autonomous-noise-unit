@@ -16,6 +16,7 @@ class KY040:
         self.switchPin = 22
         self.noisebox = noisebox
         self.oled_menu = oled_menu
+        self.oled_helpers = OLED_helpers()
         self.switchState = SwitchState()
         self.CLOCKWISE = 0
         self.ANTICLOCKWISE = 1
@@ -56,4 +57,4 @@ class KY040:
 
     def _switchCallback(self, pin):
         if GPIO.input(self.switchPin) == 0:
-            self.switchState.switchCallback(self.noisebox, self.oled_menu)
+            self.switchState.switchCallback(self.noisebox, self.oled_menu, self.oled_helpers)
