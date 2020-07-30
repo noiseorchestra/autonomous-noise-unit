@@ -40,7 +40,8 @@ class SwitchState_A(SwitchState):
             oled_helpers.draw_lines(online_peers)
 
         if (strval == "IP ADDRESS"):
-            oled_helpers.draw_text(0, 26, noisebox.get_ip())
+            title = ["==HOSTNAME & IP=="]
+            oled_helpers.draw_lines(title + noisebox.get_ip())
 
         # if (strval == "TEST LAYOUT"):
             # layout = oled_layout.Layout()

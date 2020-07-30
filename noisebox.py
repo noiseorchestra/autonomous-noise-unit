@@ -40,8 +40,9 @@ class Noisebox:
     def get_ip(self):
         """Get and return ip"""
 
-        ip = helper_get_ip.ip_address()
-        return ip
+        result = helper_get_ip.ip_address()
+
+        return result
 
     def check_peers(self):
         """Check status of all peers and show results"""
