@@ -15,7 +15,6 @@ class PyTrip:
         self.channels = "-n" + params["channels"]
         self.queue = "-q" + params["queue"]
         self.current_jacktrip = None
-        self.jacktrip_monitor = None
         self.connected = False
 
     def start(self):
@@ -27,14 +26,16 @@ class PyTrip:
                                                 stdout=subprocess.PIPE,
                                                 stderr=subprocess.STDOUT)
 
-        self.jacktrip_monitor = JacktripMonitor(self.current_jacktrip)
-        self.jacktrip_monitor.run()
+        jacktrip_monitor = JacktripMonitor(self.current_jacktrip)
+        jacktrip_monitor.run()
 
-        jacktrip_wait = JacktripWait(self.ip, self.jacktrip_monitor)
+        jacktrip_wait = JacktripWait(self.ip, jacktrip_monitor)
         jacktrip_wait.run()
+
+        jacktrip_monitor.termintae()
+        # How to handle errors that occur later, during a session?
 
     def stop(self):
         """Stop JackTrip"""
         self.current_jacktrip.terminate()
         self.current_jacktrip.wait()
-        self.jacktrip_monitor.terminate()
