@@ -78,11 +78,15 @@ class Noisebox:
 
         if self.current_session.connected:
             self.jackHelper.make_jacktrip_connections(self.active_server)
-            self.start_channel_meters()
+            self.start_monitoring_audio()
+
+        return self.current_session.connected
 
     # P2P connections function goes here
 
     def stop_monitoring_audio(self):
+        """Stop monitoring audio"""
+
         self.jackHelper.disconnect_session()
         self.channel_meters.stop()
         self.channel_meters = None
@@ -90,15 +94,12 @@ class Noisebox:
     def stop_jacktrip_session(self):
         """Stop JackTrip session"""
 
-        self.jackHelper.disconnect_session()
-        self.channel_meters.stop()
-        self.current_session.stop()
+        self.stop_monitoring_audio()
 
-        self.current_session = None
+        self.current_session.stop()
         self.channel_meters = None
 
         self.oled_helpers.draw_text(0, 26, "JackTrip stopped")
-
         sleep(1)
 
 
