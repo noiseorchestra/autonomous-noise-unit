@@ -1,5 +1,6 @@
 ==TODO==
 
+- create rotary key switching unit
 - function for making p2p connections
 - make p2p connections menu
 - label meters
@@ -8,7 +9,6 @@
 - remove subprocesses which run as shell
 - move jacktrip and jackd commands to config file
 - move app entry point into own file with noisebox and noise_menu as children
-- refactor rotary setup scripts (currently in noisebox) into rotary file
 - install and refactor for use with setuptools
 
 ==DONE==
@@ -17,3 +17,4 @@
 - gracefully close on exit with cleanup script (kill jackd, kill jacktrip)
 - tighten up error checks in install script
 - catch errors in noisebox script and show fallback screen (starting jackd, attaching to screen, rotary etc...)
+- refactor rotary setup scripts (currently in noisebox) into rotary file

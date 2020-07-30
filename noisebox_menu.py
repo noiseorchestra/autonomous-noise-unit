@@ -2,7 +2,6 @@
 
 from luma.core.render import canvas
 from PIL import ImageFont
-import oled_layout
 
 
 class Menu:
@@ -45,21 +44,3 @@ class Menu:
         """draw menu on convas"""
         with canvas(self.device) as draw:
             self.menu(self.device, draw, self.menu_items, self.counter % 5)
-
-    def menu_operation(self, strval):
-        """check menu value when button clicked and run corresponding function"""
-        if (strval == "SERVER 1"):
-            self.noisebox.start_jacktrip_session()
-
-        if (strval == "LEVEL METER"):
-            self.noisebox.start_monitoring_audio()
-
-        if (strval == "CONNECTED PEERS"):
-            self.noisebox.check_peers()
-
-        if (strval == "IP ADDRESS"):
-            self.oled_helpers.draw_text(0, 26, self.noisebox.get_ip())
-
-        if (strval == "TEST LAYOUT"):
-            layout = oled_layout.Layout()
-            layout.render(self.oled_helpers.get_device())
