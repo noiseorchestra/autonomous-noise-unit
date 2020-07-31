@@ -5,7 +5,8 @@ from luma.core.virtual import hotspot
 def vertical_bar(draw, x1, y1, x2, y2, yh):
     """Draw meter bar and frame"""
     draw.rectangle((x1, y1) + (x2, y2), "black", "white")
-    draw.rectangle((x1, yh) + (x2, y2), "white", "white")
+    draw.rectangle((x1, y1) + (x2, yh), "white", "white")
+    draw.text((x1 + 4, y1 + 2), "ch", fill="white")
 
 
 def render(draw, width, height, meter):
@@ -18,12 +19,13 @@ def render(draw, width, height, meter):
     bar_width = 0.5 * width_meter
     bar_margin = (width_meter - bar_width) / 2
 
-    x = bar_margin
-
     # cpu_height = bar_height * (percentages[0] / 100.0)
+    fraction = (100 + meter.get_current_value()) / 100
     y2 = height - bottom_margin
-    vertical_bar(draw, x, y2 - bar_height - 1,
-                 x + bar_width, y2, y2 - meter.get_current_value())
+    level = top_margin + (y2 - (y2 * fraction))
+    print("From meter:", fraction)
+    vertical_bar(draw, bar_margin, bar_height,
+                 bar_margin + bar_width, top_margin, level)
 
 
 class Meter(hotspot):

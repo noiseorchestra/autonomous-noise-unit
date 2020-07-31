@@ -28,7 +28,7 @@ class ChannelMeters:
 
         t = Thread(
             target=current_meters.render,
-            args=(self.oled_helpers.get_device(), meter_threads,))
+            args=(self.oled_helpers.device, meter_threads,))
         t.start()
 
         self.current_meters = current_meters

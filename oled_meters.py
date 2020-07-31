@@ -19,7 +19,7 @@ class Meters:
 
         for level_thread in level_threads:
             meter = oled_meter.Meter(widget_width, widget_height,
-                                     level_thread, interval=0.1)
+                                     level_thread, interval=0.2)
             widgets.append(meter)
 
         virtual = viewport(device,
