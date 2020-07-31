@@ -13,9 +13,6 @@ class ChannelMeter:
 
     def terminate(self):
         self._running = False
-        for proc in psutil.process_iter():
-            if proc.name() == "jack_meter":
-                proc.kill()
 
     def level_monitor(self, command):
         """Open process and push stdout to queue"""
@@ -26,18 +23,18 @@ class ChannelMeter:
             # Produce some data
             line = process.stdout.readline().rstrip()
             try:
-                level = -2 * int(float(str(line, 'utf-8')))
-            except OverflowError:
-                pass
-            except ValueError:
+                level = int(float(str(line, 'utf-8')))
+                print("from meter:", level)
+            except (OverflowError, ValueError):
                 pass
             finally:
                 self.current_meter_value = level
+
         process.terminate()
+        process.wait()
 
     def get_current_value(self):
         """Get current value"""
-
         return self.current_meter_value
 
     def run(self):

@@ -1,5 +1,4 @@
-import subprocess
-import time
+from subprocess import Popen, PIPE, STDOUT
 from helper_jacktrip_monitor import JacktripMonitor
 from helper_jacktrip_wait import JacktripWait
 
@@ -22,9 +21,9 @@ class PyTrip:
 
         command = ["jacktrip", "-C", self.ip, self.channels, self.queue, "-z"]
 
-        self.current_jacktrip = subprocess.Popen(command,
-                                                stdout=subprocess.PIPE,
-                                                stderr=subprocess.STDOUT)
+        self.current_jacktrip = Popen(command,
+                                      stdout=PIPE,
+                                      stderr=STDOUT)
 
         jacktrip_monitor = JacktripMonitor(self.current_jacktrip)
         jacktrip_monitor.run()
