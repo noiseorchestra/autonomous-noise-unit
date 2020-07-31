@@ -34,4 +34,5 @@ class Meters:
             time.sleep(0.1)
 
         for level_thread in level_threads:
+            print("TERMINATE JACK_METER THREAD")
             level_thread.terminate()

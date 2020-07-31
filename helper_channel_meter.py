@@ -17,15 +17,16 @@ class ChannelMeter:
     def level_monitor(self, command):
         """Open process and push stdout to queue"""
 
-        process = Popen(command, stdout=PIPE, shell=True)
+        process = Popen(command, stdout=PIPE)
         while self._running:
             # Produce some data
             level = float(str(process.stdout.readline().rstrip(), 'utf-8'))
             self.current_meter_value = -62 if math.isinf(level) else level
-            print("From thread:", level)
 
+        print("JACK_METER THREAD BEING TERMINATED")
         process.terminate()
         process.wait()
+        print("JACK_METER THREAD TERMINATED")
 
     def get_current_value(self):
         """Get current value"""

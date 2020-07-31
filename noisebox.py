@@ -84,9 +84,9 @@ class Noisebox:
     def stop_monitoring_audio(self):
         """Stop monitoring audio"""
 
-        self.jackHelper.disconnect_session()
         self.channel_meters.stop()
         self.channel_meters = None
+        self.jackHelper.disconnect_session()
 
     def stop_jacktrip_session(self):
         """Stop JackTrip session"""
@@ -94,7 +94,6 @@ class Noisebox:
         self.stop_monitoring_audio()
 
         self.current_jacktrip.stop()
-        self.channel_meters = None
 
         self.oled_helpers.draw_text(0, 26, "JackTrip stopped")
         sleep(1)

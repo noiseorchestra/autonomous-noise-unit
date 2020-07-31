@@ -23,7 +23,6 @@ def render(draw, width, height, meter):
     fraction = (100 + meter.get_current_value()) / 100
     y2 = height - bottom_margin
     level = top_margin + (y2 - (y2 * fraction))
-    print("From meter:", fraction)
     vertical_bar(draw, bar_margin, bar_height,
                  bar_margin + bar_width, top_margin, level)
 

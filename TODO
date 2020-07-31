@@ -4,10 +4,9 @@
 - OLED frame rate improvements (HOW?? try new display? best fps is 4.8)
 - function for making p2p connections
 - make p2p connections menu
-- label meters
-- check meter orientation and convert to correct range
+- label meters (50%)
 - add testing scripts
-- remove subprocesses which run as shell
+- remove subprocesses which run as shell (25%)
 - move jacktrip and jackd commands to config file
 - move app entry point into own file with noisebox and noise_menu as children
 - install and refactor for use with setuptools
@@ -25,3 +24,5 @@
 - create rotary key state device
 - finish rotary key state device
 - implement multi-line messages with conditional scrolling
+- stop jack_meter when metetring stops
+- check meter orientation and convert to correct range

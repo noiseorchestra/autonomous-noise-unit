@@ -8,27 +8,30 @@ class ChannelMeters:
     def __init__(self, port_names):
         self.oled_helpers = OLED_helpers()
         self.current_meters = self.start(port_names)
+        self.jack_meter_threads = None
 
-    def get_meter_threads(self, channels):
+    def get_jack_meter_threads(self, channels):
         """Monitor array of channels and return threads"""
 
-        threads = []
+        jack_meter_threads = []
         for channel in channels:
-            command = "jack_meter " + channel + " -n"
-            meter_thread = ChannelMeter(command)
-            meter_thread.run()
-            threads.append(meter_thread)
-        return threads
+            command = ["jack_meter", channel, "-n"]
+            jack_meter_thread = ChannelMeter(command)
+            jack_meter_thread.run()
+            jack_meter_threads.append(jack_meter_thread)
+        return jack_meter_threads
 
     def start(self, port_names):
         """Start drawing OLED meters"""
 
         current_meters = Meters()
-        meter_threads = self.get_meter_threads(port_names)
+        jack_meter_threads = self.get_jack_meter_threads(port_names)
+        self.jack_meter_threads = jack_meter_threads
 
         t = Thread(
             target=current_meters.render,
-            args=(self.oled_helpers.device, meter_threads,))
+            args=(self.oled_helpers.device, jack_meter_threads,))
+
         t.start()
 
         self.current_meters = current_meters
@@ -37,6 +40,6 @@ class ChannelMeters:
 
     def stop(self):
         """Stop drawing OLED meters"""
-
+        print("STOP METERS")
         self.current_meters.terminate()
         self.channel_meters = None
