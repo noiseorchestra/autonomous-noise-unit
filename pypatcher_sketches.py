@@ -33,7 +33,7 @@ def get_grouped_port_list(jackClient, identifier):
 def disconnect_all(jackClient, receive_ports_list):
     """disconnect everything from a port"""
     # iterate over all individual ports and get connections
-    for receive_port in chain(receive_ports_list):
+    for receive_port in chain.from_iterable(receive_ports_list):
         for send_port in jackClient.get_all_connections(receive_port):
             # disconnect all connections
             jackClient.disconnect(receive_port, send_port)
@@ -46,20 +46,34 @@ def connect_all(jackClient, receive_ports_list, send_ports_list):
     # are grouped in pairs when mono it should be fairly simple.
     # I just forgot.....
 
-    in_out_ports = [chain(receive_ports_list), chain(send_ports_list)]
+    in_out_ports = [receive_ports_list + send_ports_list]
 
     # create all possible connections between receive_ports and send_ports
     # this function could be expanded a lot to deal with ladspa panning
     # or adapted to compare against a list of existing connections and only
     # make new connections.
     for connection in product(*in_out_ports):
-        # don't connect a port to itself
-        if connection[0].name.split(':')[0] == connection[1].name.split(':')[0]:
-            continue
-        jackClient.connect(connection[0], connection[1])
 
+        for receive_ports in connection[0]:
+            for send_ports in enumerate(connection[1]):
+                # don't connect a port to itself
+                if receive_ports[0].name.split(':')[0] == send_ports[0].name.split(':')[0]:
+                    continue
+
+                # Make connections depending on stereo or mono clients
+                receive_stereo = True if len(receive_ports) == 2 else False
+                send_stereo = True if len(send_ports) == 2 else False
+                if receive_stereo and send_stereo:
+                    jackClient.connect(receive_ports[0], send_ports[0])
+                    jackClient.connect(receive_ports[1], send_ports[1])
+                if receive_stereo and not send_stereo:
+                    jackClient.connect(receive_ports[0], send_ports[0])
+                    jackClient.connect(receive_ports[1], send_ports[0])
+                if not receive_stereo and not send_stereo:
+                    jackClient.connect(receive_ports[0], send_ports[0])
 
 # make lists of all connections we want to connect
+
 jacktrip_client_receives = get_grouped_port_list(jackClient, 'receive')
 jacktrip_client_sends = get_grouped_port_list(jackClient, 'send')
 darkice_sends = get_grouped_port_list(jackClient, 'darkice')
