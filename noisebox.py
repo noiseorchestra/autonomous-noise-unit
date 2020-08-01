@@ -73,6 +73,7 @@ class Noisebox:
             self.current_jacktrip.start()
 
         except Exception:
+            print("Could not start JackTrip session")
             self.current_jacktrip.stop()
             raise
 
