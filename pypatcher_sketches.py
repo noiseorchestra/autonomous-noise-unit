@@ -42,6 +42,10 @@ def disconnect_all(jackClient, receive_ports_list):
 def connect_all(jackClient, receive_ports_list, send_ports_list):
     """Connect all receive  port to list of send ports"""
 
+    # not dealt with the stereo/mono connections yet but as the ports
+    # are grouped in pairs when mono it should be fairly simple.
+    # I just forgot.....
+
     in_out_ports = [chain(receive_ports_list), chain(send_ports_list)]
 
     # create all possible connections between receive_ports and send_ports
