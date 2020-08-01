@@ -24,6 +24,7 @@ class SwitchState_A(SwitchState):
                 noisebox.start_jacktrip_session()
                 self.new_state(SwitchState_C)
             except Exception as e:
+                # re-write exception catching with custom exceptions
                 oled_helpers.start_layout(e.args[0])
                 self.new_state(SwitchState_D)
 
@@ -32,6 +33,7 @@ class SwitchState_A(SwitchState):
                 noisebox.start_monitoring_audio()
                 self.new_state(SwitchState_B)
             except Exception as e:
+                # re-write exception catching with custom exceptions
                 oled_helpers.start_layout(e.args[0])
                 self.new_state(SwitchState_D)
 

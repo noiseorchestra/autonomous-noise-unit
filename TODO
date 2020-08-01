@@ -1,6 +1,7 @@
 ==TODO==
 
-- adapt jack_monitor & jack_wait run in background and handle errors that occur during a session
+- re-write exception catching with custom errors
+- adapt jack_monitor & jack_wait to both run in background and handle errors that occur during a session, poll jack_monitor
 - OLED frame rate improvements (HOW?? try new display? best fps is 4.8)
 - function for making p2p connections
 - make p2p connections menu
@@ -13,6 +14,7 @@
 - Boost output to headphones
 - Stereo return when sending in mono
 - hello and goodbye messages
+- refactor list for loops into list comprehension statements
 
 ==DONE==
 - timeout connection call when fails
