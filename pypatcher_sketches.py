@@ -48,23 +48,23 @@ def connect_all(jackClient, receive_ports_list, send_ports_list):
     # make new connections.
     for connection in product(*receive_ports_list, *send_ports_list):
 
-        for receive_ports in connection[0]:
-            for send_ports in connection[1]:
-                # don't connect a port to itself
-                if receive_ports[0].name.split(':')[0] == send_ports[0].name.split(':')[0]:
-                    continue
+        receive_ports = connection[0]
+        send_ports in connection[1]:
+        # don't connect a port to itself
+        if receive_ports[0].name.split(':')[0] == send_ports[0].name.split(':')[0]:
+            continue
 
-                # Make connections depending on stereo or mono clients
-                receive_stereo = True if len(receive_ports) == 2 else False
-                send_stereo = True if len(send_ports) == 2 else False
-                if receive_stereo and send_stereo:
-                    jackClient.connect(receive_ports[0], send_ports[0])
-                    jackClient.connect(receive_ports[1], send_ports[1])
-                if receive_stereo and not send_stereo:
-                    jackClient.connect(receive_ports[0], send_ports[0])
-                    jackClient.connect(receive_ports[1], send_ports[0])
-                if not receive_stereo and not send_stereo:
-                    jackClient.connect(receive_ports[0], send_ports[0])
+        # Make connections depending on stereo or mono clients
+        receive_stereo = True if len(receive_ports) == 2 else False
+        send_stereo = True if len(send_ports) == 2 else False
+        if receive_stereo and send_stereo:
+            jackClient.connect(receive_ports[0], send_ports[0])
+            jackClient.connect(receive_ports[1], send_ports[1])
+        if receive_stereo and not send_stereo:
+            jackClient.connect(receive_ports[0], send_ports[0])
+            jackClient.connect(receive_ports[1], send_ports[0])
+        if not receive_stereo and not send_stereo:
+            jackClient.connect(receive_ports[0], send_ports[0])
 
 # make lists of all connections we want to connect
 
