@@ -40,6 +40,21 @@ def disconnect_all(jackClient, receive_ports_list):
             for send_port in send_ports:
                 jackClient.disconnect(receive_port, send_port)
 
+def is_already_connected(jackClient, receive_port, send_port):
+    """check if ports are already connected"""
+
+    connected_ports = jackClient.get_all_connections(receive_port)
+    for connected_port in connected_ports:
+        if send_port.name == connected_port.name:
+            return True
+    return False
+
+
+def connect(jackClient, receive_port, send_port):
+    """connect ports if not already connected"""
+    if not is_already_connected(receive_port, send_port):
+        jackClient.connect(receive_port, send_port)
+
 
 def connect_all(jackClient, receive_ports_list, send_ports_list):
     """Connect all receive  port to list of send ports"""
@@ -60,13 +75,13 @@ def connect_all(jackClient, receive_ports_list, send_ports_list):
         receive_stereo = True if len(receive_ports) == 2 else False
         send_stereo = True if len(send_ports) == 2 else False
         if receive_stereo and send_stereo:
-            jackClient.connect(receive_ports[0], send_ports[0])
-            jackClient.connect(receive_ports[1], send_ports[1])
+            connect(receive_ports[0], send_ports[0])
+            connect(receive_ports[1], send_ports[1])
         if receive_stereo and not send_stereo:
-            jackClient.connect(receive_ports[0], send_ports[0])
-            jackClient.connect(receive_ports[1], send_ports[0])
+            connect(receive_ports[0], send_ports[0])
+            connect(receive_ports[1], send_ports[0])
         if not receive_stereo and not send_stereo:
-            jackClient.connect(receive_ports[0], send_ports[0])
+            connect(receive_ports[0], send_ports[0])
 
 # make lists of all connections we want to connect
 
@@ -76,7 +91,10 @@ jacktrip_client_sends = get_grouped_port_list(jackClient, 'send')
 darkice_sends = get_grouped_port_list(jackClient, 'darkice')
 
 # disconnect all existing connections
-disconnect_all(jackClient, jacktrip_client_receives)
+# not clear what happens to connections on a port when it unregisters
+# if they just cleanly disappear that would be nice....
+
+# disconnect_all(jackClient, jacktrip_client_receives)
 
 # make new connections
 connect_all(jackClient, jacktrip_client_receives, [jacktrip_client_sends, darkice_sends])
