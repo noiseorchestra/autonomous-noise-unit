@@ -7,8 +7,8 @@ jackClient = jack.Client('MadwortAutoPatcher')
 
 
 def get_unique_port_names(jackClient, search_string):
-    return list(map(lambda x: x.name.split(':')[0],
-                    jackClient.get_ports(search_string)))
+    return list(set(map(lambda x: x.name.split(':')[0],
+                    jackClient.get_ports(search_string))))
 
 # Get list  of jack ports grouped into singlets (mono) or pairs (stereo)
 
@@ -20,8 +20,12 @@ def get_grouped_port_list(jackClient, identifier):
     target_ports = jackClient.get_ports(search_string)
     unique_ports = get_unique_port_names(search_string)
 
+    grouped_ports = []
+
     for port in target_ports:
-        return [port for port_name in unique_ports if port.name.startswith(port_name)]
+        grouped_ports.append([port for port_name in unique_ports if port.name.startswith(port_name)])
+
+    return grouped_ports
 
 # This would give us something like:
 # [[..ffff.192.168.0.1:receive_1, ..ffff.192.168.0.1:receive_2],
@@ -39,6 +43,7 @@ def disconnect_all(jackClient, receive_ports_list):
 
             for send_port in send_ports:
                 jackClient.disconnect(receive_port, send_port)
+
 
 def is_already_connected(jackClient, receive_port, send_port):
     """check if ports are already connected"""
