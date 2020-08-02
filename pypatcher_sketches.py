@@ -1,7 +1,7 @@
 # Code apadted from https://github.com/madwort/jacktrip_pypatcher
 
 import jack
-from itertools import chain, product
+from itertools import product
 
 jackClient = jack.Client('MadwortAutoPatcher')
 
@@ -33,10 +33,12 @@ def get_grouped_port_list(jackClient, identifier):
 def disconnect_all(jackClient, receive_ports_list):
     """disconnect everything from a port"""
     # iterate over all individual ports and get connections
-    for receive_port in chain.from_iterable(receive_ports_list):
-        for send_port in jackClient.get_all_connections(receive_port):
-            # disconnect all connections
-            jackClient.disconnect(receive_port, send_port)
+    for receive_ports in (*receive_ports_list):
+        for receive_port in receive_ports:
+            send_ports = jackClient.get_all_connections(receive_port)
+
+            for send_port in send_ports:
+                jackClient.disconnect(receive_port, send_port)
 
 
 def connect_all(jackClient, receive_ports_list, send_ports_list):
@@ -68,6 +70,7 @@ def connect_all(jackClient, receive_ports_list, send_ports_list):
 
 # make lists of all connections we want to connect
 
+
 jacktrip_client_receives = get_grouped_port_list(jackClient, 'receive')
 jacktrip_client_sends = get_grouped_port_list(jackClient, 'send')
 darkice_sends = get_grouped_port_list(jackClient, 'darkice')
@@ -75,5 +78,5 @@ darkice_sends = get_grouped_port_list(jackClient, 'darkice')
 # disconnect all existing connections
 disconnect_all(jackClient, jacktrip_client_receives)
 
-#make new connections
+# make new connections
 connect_all(jackClient, jacktrip_client_receives, [jacktrip_client_sends, darkice_sends])
