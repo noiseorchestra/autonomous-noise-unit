@@ -42,13 +42,11 @@ def disconnect_all(jackClient, receive_ports_list):
 def connect_all(jackClient, receive_ports_list, send_ports_list):
     """Connect all receive  port to list of send ports"""
 
-    in_out_ports = [receive_ports_list + send_ports_list]
-
     # create all possible connections between receive_ports and send_ports
     # this function could be expanded a lot to deal with ladspa panning
     # or adapted to compare against a list of existing connections and only
     # make new connections.
-    for connection in product(*in_out_ports):
+    for connection in product(*receive_ports_list, *send_ports_list):
 
         for receive_ports in connection[0]:
             for send_ports in enumerate(connection[1]):
