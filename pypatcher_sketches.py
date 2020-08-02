@@ -49,7 +49,7 @@ def connect_all(jackClient, receive_ports_list, send_ports_list):
     for connection in product(*receive_ports_list, *send_ports_list):
 
         for receive_ports in connection[0]:
-            for send_ports in enumerate(connection[1]):
+            for send_ports in connection[1]:
                 # don't connect a port to itself
                 if receive_ports[0].name.split(':')[0] == send_ports[0].name.split(':')[0]:
                     continue
