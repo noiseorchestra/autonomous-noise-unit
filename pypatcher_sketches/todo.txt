@@ -1,3 +1,4 @@
 - should be able to refactor so that we don't need seperate ladspa methods
 - investigate what happens when clients diconnect
 - automate client generation so we can test for higher client volumes
+- should we have a stereo ladspa setting? So we always patch through ladspa? <-- this simplifies the different modes
