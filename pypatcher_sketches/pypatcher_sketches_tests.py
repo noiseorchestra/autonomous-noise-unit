@@ -269,7 +269,7 @@ def test_connect_all_to_ladspa():
     assert pypatcher_sketches.connect_all_to_ladspa(jackClient, grouped_receive_ports, ladspa_sends) == ladspa_receive_connections
 
 
-def test_connect_from_ladspa():
+def test_connect_ladspa_to_all():
     grouped_ladspa_ports = pypatcher_sketches.get_grouped_ladspa_ports(jackClient, 'Output')
     all_client_sends = pypatcher_sketches.get_grouped_port_list(jackClient, 'send')
     assert pypatcher_sketches.connect_all(jackClient, grouped_ladspa_ports, all_client_sends) == ladspa_send_connections
