@@ -64,19 +64,21 @@ unique_port_names = ["client_1_stereo",
 grouped_receive_ports = [
     ["client_1_stereo:receive_1", "client_1_stereo:receive_2"],
     ["client_2_stereo:receive_1", "client_2_stereo:receive_2"],
-    ["client_3_mono:receive_1"], ["client_4_stereo:receive_1",
-    "client_4_stereo:receive_2"], ["client_5_mono:receive_1"],
-    ["client_6_stereo:receive_1", "client_6_stereo:receive_2"]
-]
+    ["client_3_mono:receive_1"],
+    ["client_4_stereo:receive_1", "client_4_stereo:receive_2"],
+    ["client_5_mono:receive_1"],
+    ["client_6_stereo:receive_1", "client_6_stereo:receive_2"]]
 
-grouped_send_ports = [["client_1_stereo:send_1", "client_1_stereo:send_2"],
-                      ["client_2_stereo:send_1", "client_2_stereo:send_2"],
-                      ["client_3_mono:send_1"], ["client_4_stereo:send_1",
-                      "client_4_stereo:send_2"], ["client_5_mono:send_1"],
-                      ["client_6_stereo:send_1", "client_6_stereo:send_2"]]
+grouped_send_ports = [
+    ["client_1_stereo:send_1", "client_1_stereo:send_2"],
+    ["client_2_stereo:send_1", "client_2_stereo:send_2"],
+    ["client_3_mono:send_1"],
+    ["client_4_stereo:send_1", "client_4_stereo:send_2"],
+    ["client_5_mono:send_1"],
+    ["client_6_stereo:send_1", "client_6_stereo:send_2"]]
 
 
-all_fake_connections = [
+all_connections = [
     (['client_1_stereo:receive_1', 'client_1_stereo:receive_2'],
         ['client_2_stereo:send_1', 'client_2_stereo:send_2']),
     (['client_1_stereo:receive_1', 'client_1_stereo:receive_2'],
@@ -136,8 +138,82 @@ all_fake_connections = [
     (['client_6_stereo:receive_1', 'client_6_stereo:receive_2'],
         ['client_4_stereo:send_1', 'client_4_stereo:send_2']),
     (['client_6_stereo:receive_1', 'client_6_stereo:receive_2'],
-        ['client_5_mono:send_1'])
-]
+        ['client_5_mono:send_1'])]
+
+
+ladspa_client_1 = jack.Client('left-65')
+ladspa_client_2 = jack.Client('left-30')
+ladspa_client_3 = jack.Client('right-30')
+ladspa_client_4 = jack.Client('right-65')
+
+ladspa_client_1.activate()
+ladspa_client_2.activate()
+ladspa_client_3.activate()
+ladspa_client_4.activate()
+
+ladspa_client_1.outports.register('Output (Left)')
+ladspa_client_2.outports.register('Output (Left)')
+ladspa_client_3.outports.register('Output (Right)')
+ladspa_client_4.outports.register('Output (Right)')
+
+ladspa_client_1.inports.register('Input (Left)')
+ladspa_client_2.inports.register('Input (Left)')
+ladspa_client_3.inports.register('Input (Right)')
+ladspa_client_4.inports.register('Input (Right)')
+
+ladspa_sends = [
+    'left-65:Input (Left)',
+    'left-30:Input (Left)',
+    'right-30:Input (Right)',
+    'right-65:Input (Right)']
+
+ladspa_receives = [
+    'left-65:Output (Left)',
+    'left-30:Output (Left)',
+    'right-30:Output (Right)',
+    'right-65:Output (Right)']
+
+ladspa_receive_connections = [
+    (['client_1_stereo:receive_1', 'client_1_stereo:receive_2'],
+        ['left-65:Input (Left)']),
+    (['client_2_stereo:receive_1', 'client_2_stereo:receive_2'],
+        ['left-30:Input (Left)']),
+    (['client_3_mono:receive_1'],
+        ['right-30:Input (Right)']),
+    (['client_4_stereo:receive_1', 'client_4_stereo:receive_2'],
+        ['right-65:Input (Right)']),
+    (['client_5_mono:receive_1'],
+        ['left-65:Input (Left)']),
+    (['client_6_stereo:receive_1', 'client_6_stereo:receive_2'],
+        ['left-30:Input (Left)'])]
+
+ladspa_send_connections = [
+    (['left-30:Output (Left)', 'right-30:Output (Right)'],
+        ['client_1_stereo:send_1', 'client_1_stereo:send_2']),
+    (['left-30:Output (Left)', 'right-30:Output (Right)'],
+        ['client_2_stereo:send_1', 'client_2_stereo:send_2']),
+    (['left-30:Output (Left)', 'right-30:Output (Right)'],
+        ['client_3_mono:send_1']),
+    (['left-30:Output (Left)', 'right-30:Output (Right)'],
+        ['client_4_stereo:send_1', 'client_4_stereo:send_2']),
+    (['left-30:Output (Left)', 'right-30:Output (Right)'],
+        ['client_5_mono:send_1']),
+    (['left-30:Output (Left)', 'right-30:Output (Right)'],
+        ['client_6_stereo:send_1', 'client_6_stereo:send_2']),
+    (['left-65:Output (Left)', 'right-65:Output (Right)'],
+        ['client_1_stereo:send_1', 'client_1_stereo:send_2']),
+    (['left-65:Output (Left)', 'right-65:Output (Right)'],
+        ['client_2_stereo:send_1', 'client_2_stereo:send_2']),
+    (['left-65:Output (Left)', 'right-65:Output (Right)'],
+        ['client_3_mono:send_1']),
+    (['left-65:Output (Left)', 'right-65:Output (Right)'],
+        ['client_4_stereo:send_1', 'client_4_stereo:send_2']),
+    (['left-65:Output (Left)', 'right-65:Output (Right)'],
+        ['client_5_mono:send_1']),
+    (['left-65:Output (Left)', 'right-65:Output (Right)'],
+        ['client_6_stereo:send_1', 'client_6_stereo:send_2'])]
+
+
 
 # for later randomised testing
 
@@ -181,5 +257,19 @@ def test_get_grouped_send_ports():
 
 
 def test_connect_all():
-    print(all_fake_connections)
-    assert pypatcher_sketches.connect_all(jackClient, grouped_receive_ports, grouped_send_ports) == all_fake_connections
+    assert pypatcher_sketches.connect_all(jackClient, grouped_receive_ports, grouped_send_ports) == all_connections
+
+
+def test_get_ladspa_ports():
+    assert pypatcher_sketches.get_ladspa_ports(jackClient, 'Input') == ladspa_sends
+    assert pypatcher_sketches.get_ladspa_ports(jackClient, 'Output') == ladspa_receives
+
+
+def test_connect_all_to_ladspa():
+    assert pypatcher_sketches.connect_all_to_ladspa(jackClient, grouped_receive_ports, ladspa_sends) == ladspa_receive_connections
+
+
+def test_connect_from_ladspa():
+    grouped_ladspa_ports = pypatcher_sketches.get_grouped_ladspa_ports(jackClient, 'Output')
+    all_client_sends = pypatcher_sketches.get_grouped_port_list(jackClient, 'send')
+    assert pypatcher_sketches.connect_all(jackClient, grouped_ladspa_ports, all_client_sends) == ladspa_send_connections
