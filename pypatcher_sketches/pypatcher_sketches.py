@@ -6,9 +6,8 @@ from itertools import product
 jackClient = jack.Client('MadwortAutoPatcher')
 
 
-def get_unique_port_names(jackClient, search_string):
-    return list(set(map(lambda x: x.name.split(':')[0],
-                    jackClient.get_ports(search_string))))
+def get_unique_port_names(target_ports):
+    return list(set(map(lambda x: x.name.split(':')[0], target_ports)))
 
 
 def get_grouped_port_list(jackClient, identifier):
@@ -19,7 +18,7 @@ def get_grouped_port_list(jackClient, identifier):
 
     search_string = '.*{}.*'.format(identifier)
     target_ports = jackClient.get_ports(search_string)
-    unique_ports = get_unique_port_names(search_string)
+    unique_ports = get_unique_port_names(target_ports)
 
     grouped_ports = []
 
