@@ -51,8 +51,6 @@ def get_grouped_ladspa_ports(jackClient, identifier):
 
     return [[port.name for port in mid_ladspa_ports], [port.name for port in wide_ladspa_ports]]
 
-# SIMPLE MONO or STEREO SESSION / MAIN OUT
-
 
 def is_already_connected(jackClient, receive_port, send_port):
     """check if 2 ports are already connected"""
