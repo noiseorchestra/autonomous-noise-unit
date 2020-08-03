@@ -36,6 +36,20 @@ def get_grouped_port_list(jackClient, identifier):
     return grouped_ports
 
 
+def get_ladspa_ports(jackClient, identifier):
+    search_string = '.*{}.*'.format(identifier)
+    ladspa_ports = jackClient.get_ports(search_string)
+
+    return [port.name for port in ladspa_ports]
+
+def get_grouped_ladspa_ports(jackClient, identifier):
+    mid_search_string = '.*{}.*{}.*'.format("30", identifier)
+    wide_search_string = '.*{}.*{}.*'.format("65", identifier)
+    mid_ladspa_ports = jackClient.get_ports(mid_search_string)
+    wide_ladspa_ports = jackClient.get_ports(wide_search_string)
+
+    return [[port.name for port in mid_ladspa_ports], [port.name for port in wide_ladspa_ports]]
+
 # SIMPLE MONO or STEREO SESSION / MAIN OUT
 
 
@@ -62,11 +76,6 @@ def connect_all(jackClient, receive_ports_list, send_ports_list):
 
     # create all possible connections between receive_ports and send_ports.
     for connection in product(receive_ports_list, send_ports_list):
-
-        # this should produce connection pairs like this:
-        # [([stereo-receive-left, stereo-receive-right], [mono-send]),
-        # [([mono-receive], [stereo-send-left, stereo-send-right]),
-        # [([mono-receive], [mono-send])]
 
         receive_ports = connection[0]
         send_ports = connection[1]
@@ -100,7 +109,7 @@ def is_already_connected_ladspa(jackClient, receive_port, ladspa_send_ports):
     connected_ports = jackClient.get_all_connections(receive_port)
     for connected_port in connected_ports:
         for ladspa_send_port in ladspa_send_ports:
-            if ladspa_send_port.name == connected_port.name:
+            if ladspa_send_port == connected_port.name:
                 connected = True
     return connected
 
@@ -114,28 +123,44 @@ def connect_ladspa(jackClient, receive_port, ladspa_send_port, ladspa_send_ports
 
 def loop(ladspa_send_ports):
     """generator to loop through all ladspa send ports and return one at a time"""
-    x = 0
-    while True:
-        yield ladspa_send_ports[x]
-        x += 1 if x < len(ladspa_send_ports) else 0
 
+    port_index = 0
+
+    while True:
+        if port_index == len(ladspa_send_ports):
+         port_index = 0
+
+        yield ladspa_send_ports[port_index]
+        port_index += 1
 
 def connect_all_to_ladspa(jackClient, receive_ports_list, ladspa_send_ports):
     """Connect all receive ports to list of ladspa send ports"""
 
-    for receive_ports in receive_ports_list:
-        ladspa_send_port = next(loop(ladspa_send_ports))
-        for receive_port in (receive_ports):
-            connect_ladspa(receive_port, ladspa_send_port, ladspa_send_ports)
+    ladspa_connections = []
+    loop_ladspa_ports = loop(ladspa_send_ports)
 
+
+    for receive_ports in receive_ports_list:
+        ladspa_send_port = next(loop_ladspa_ports)
+        ladspa_connections.append((receive_ports, [ladspa_send_port]))
+
+        receive_stereo = True if len(receive_ports) == 2 else False
+
+        if receive_stereo:
+            connect(jackClient, receive_ports[0], ladspa_send_port)
+            connect(jackClient, receive_ports[1], ladspa_send_port)
+        else:
+            connect(jackClient, receive_ports[0], ladspa_send_port)
+
+    return ladspa_connections
 
 # make lists of all ports we want to connect
 
 # jacktrip_client_receives = get_grouped_port_list(jackClient, 'receive')
 # jacktrip_client_sends = get_grouped_port_list(jackClient, 'send')
-# darkice_sends = jackClient.get_ports('.*darkice.*')
-# ladspa_sends = jackClient.get_ports('.*Input.*')
-# ladspa_receives = jackClient.get_ports('.*Output.*')
+# darkice_sends = jackClient.get_grouped_port_list(jackClient, 'darkice')
+# ladspa_sends = get_ladspa_ports(jackClient, 'Input')
+# ladspa_receives = get_ladspa_ports(jackClient, 'Output')
 
 # make all mono / stereo connections
 # connect_all(jackClient, jacktrip_client_receives, [jacktrip_client_sends, darkice_sends])
