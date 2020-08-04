@@ -36,22 +36,6 @@ def get_grouped_port_list(jackClient, identifier):
     return grouped_ports
 
 
-def get_ladspa_ports(jackClient, identifier):
-    search_string = '.*{}.*'.format(identifier)
-    ladspa_ports = jackClient.get_ports(search_string)
-
-    return [port.name for port in ladspa_ports]
-
-
-def get_grouped_ladspa_ports(jackClient, identifier):
-    mid_search_string = '.*{}.*{}.*'.format("30", identifier)
-    wide_search_string = '.*{}.*{}.*'.format("65", identifier)
-    mid_ladspa_ports = jackClient.get_ports(mid_search_string)
-    wide_ladspa_ports = jackClient.get_ports(wide_search_string)
-
-    return [[port.name for port in mid_ladspa_ports], [port.name for port in wide_ladspa_ports]]
-
-
 def is_already_connected(jackClient, receive_port, send_port):
     """check if 2 ports are already connected"""
 
@@ -68,11 +52,21 @@ def connect(jackClient, receive_port, send_port):
         jackClient.connect(receive_port, send_port)
 
 
-def connect_all(jackClient, receive_ports_list, send_ports_list):
+def connect_all(jackClient, receive_ports_list, send_ports_list, withPanning=False):
     """Connect all receive  port to list of send ports"""
 
     all_connections = []
 
+    if withPanning:
+        connect_with_panning(jackClient, receive_ports_list, send_ports_list, all_connections)
+    else:
+        connect_in_stereo(jackClient, receive_ports_list, send_ports_list, all_connections)
+
+    print(all_connections)
+    return all_connections
+
+
+def connect_in_stereo(jackClient, receive_ports_list, send_ports_list, all_connections):
     # create all possible connections between receive_ports and send_ports.
     for connection in product(receive_ports_list, send_ports_list):
 
@@ -87,6 +81,7 @@ def connect_all(jackClient, receive_ports_list, send_ports_list):
         # Make connections depending on stereo or mono clients
         receive_stereo = True if len(receive_ports) == 2 else False
         send_stereo = True if len(send_ports) == 2 else False
+
         if receive_stereo and send_stereo:
             connect(jackClient, receive_ports[0], send_ports[0])
             connect(jackClient, receive_ports[1], send_ports[1])
@@ -96,12 +91,28 @@ def connect_all(jackClient, receive_ports_list, send_ports_list):
         if not receive_stereo and not send_stereo:
             connect(jackClient, receive_ports[0], send_ports[0])
 
-    print(all_connections)
-    return all_connections
+
+def connect_with_panning(jackClient, receive_ports_list, send_ports_list, all_connections):
+
+    panning_position = get_next_panning_position(send_ports_list)
+
+    for receive_ports in receive_ports_list:
+        ladspa_send_ports = next(panning_position)
+        all_connections.append((receive_ports, ladspa_send_ports))
+
+        receive_stereo = True if len(receive_ports) == 2 else False
+
+        if receive_stereo:
+            connect(jackClient, receive_ports[0], ladspa_send_ports[0])
+            connect(jackClient, receive_ports[1], ladspa_send_ports[0])
+        else:
+            connect(jackClient, receive_ports[0], ladspa_send_ports[0])
+            connect(jackClient, receive_ports[0], ladspa_send_ports[1])
 
 
-def loop(ladspa_send_ports):
-    """generator to loop through all ladspa send ports and return one at a time"""
+
+def get_next_panning_position(ladspa_send_ports):
+    """generator to get_next_panning_position through all ladspa send ports and return one at a time"""
 
     port_index = 0
 
@@ -113,25 +124,10 @@ def loop(ladspa_send_ports):
         port_index += 1
 
 
-def connect_all_to_ladspa(jackClient, receive_ports_list, ladspa_send_ports):
+def connect_all_with_panning(jackClient, receive_ports_list, ladspa_send_ports_list):
     """Connect all receive ports to list of ladspa send ports"""
 
     ladspa_connections = []
-    loop_ladspa_ports = loop(ladspa_send_ports)
-
-
-    for receive_ports in receive_ports_list:
-        ladspa_send_port = next(loop_ladspa_ports)
-        ladspa_connections.append((receive_ports, [ladspa_send_port]))
-
-        receive_stereo = True if len(receive_ports) == 2 else False
-
-        if receive_stereo:
-            connect(jackClient, receive_ports[0], ladspa_send_port)
-            connect(jackClient, receive_ports[1], ladspa_send_port)
-        else:
-            connect(jackClient, receive_ports[0], ladspa_send_port)
-
     return ladspa_connections
 
 # make lists of all ports we want to connect
