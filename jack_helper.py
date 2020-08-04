@@ -15,7 +15,7 @@ class JackHelper:
     def start(self):
         """Start JACK with relavent parameters"""
 
-        Popen(['jackd', '-dalsa'], stdout=PIPE, stderr=PIPE)
+        Popen(['jackd', '-R', '-dalsa', '-r48000', '-p256', '-n1', '-s', '-S'], stdout=PIPE, stderr=PIPE)
         time.sleep(2)
 
         try:
