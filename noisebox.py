@@ -12,6 +12,8 @@ from helper_channel_meters import ChannelMeters
 import jack_helper
 import noisebox_menu
 from custom_exceptions import NoiseBoxCustomError
+from helper_jacktrip_monitor import JacktripMonitor
+from helper_jacktrip_wait import JacktripWait
 
 cfg = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
 cfg.read('config.ini')
@@ -61,26 +63,32 @@ class Noisebox:
         port_names = self.jackHelper.get_input_port_names()
 
         if len(port_names) == 0:
-            raise TypeError(["==ERROR==", "No audio inputs found"])
+            raise NoiseBoxCustomError(["==ERROR==", "No audio inputs found"])
 
         self.channel_meters = ChannelMeters(port_names)
 
     def start_jacktrip_session(self):
         """Start hubserver JackTrip session"""
 
-        print(self.session_params)
         self.current_jacktrip = PyTrip(self.session_params)
+        jacktrip_monitor = JacktripMonitor(self.current_jacktrip)
+        jacktrip_wait = JacktripWait(self.active_server, jacktrip_monitor)
 
         try:
             self.current_jacktrip.start()
+            jacktrip_monitor.run()
+            jacktrip_wait.run()
+
         except self.NoiseBoxCustomError:
             print("Could not start JackTrip session")
             raise
+
         else:
             self.jackHelper.make_jacktrip_connections(self.active_server)
             self.start_monitoring_audio()
 
-    # P2P connections function goes here
+        finally:
+            jacktrip_monitor.terminate()
 
     def stop_monitoring_audio(self):
         """Stop monitoring audio"""

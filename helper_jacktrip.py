@@ -1,7 +1,4 @@
 from subprocess import Popen, PIPE, STDOUT
-from helper_jacktrip_monitor import JacktripMonitor
-from helper_jacktrip_wait import JacktripWait
-from custom_exceptions import NoiseBoxCustomError
 
 class PyTrip:
     """Helper object to start, monitor and disconnect JackTrip"""
@@ -24,19 +21,6 @@ class PyTrip:
         self.current_jacktrip = Popen(command,
                                       stdout=PIPE,
                                       stderr=STDOUT)
-
-        jacktrip_monitor = JacktripMonitor(self.current_jacktrip)
-        jacktrip_monitor.run()
-
-        jacktrip_wait = JacktripWait(self.ip, jacktrip_monitor)
-
-        try:
-            jacktrip_wait.run()
-        except NoiseBoxCustomError:
-            raise
-        finally:
-            jacktrip_monitor.terminate()
-        # How to handle errors that occur later, during a session?
 
     def stop(self):
         """Stop JackTrip"""
