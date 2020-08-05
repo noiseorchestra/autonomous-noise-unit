@@ -1,6 +1,7 @@
 ==TODO==
 
 - re-write exception catching with custom errors
+- account for mono connections
 - adapt jack_monitor & jack_wait to both run in background and handle errors that occur during a session, poll jack_monitor
 - OLED frame rate improvements (HOW?? try new display? best fps is 4.8)
 - function for making p2p connections

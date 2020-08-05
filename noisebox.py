@@ -11,6 +11,7 @@ from helper_jacktrip import PyTrip
 from helper_channel_meters import ChannelMeters
 import jack_helper
 import noisebox_menu
+from custom_exceptions import NoiseBoxCustomError
 
 cfg = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
 cfg.read('config.ini')
@@ -36,6 +37,7 @@ class Noisebox:
         self.channel_meters = None
         self.oled_helpers = oled_helpers.OLED_helpers()
         self.jackHelper = jackHelper
+        self.NoiseBoxCustomError = NoiseBoxCustomError
 
     def get_ip(self):
         """Get and return ip"""
@@ -71,14 +73,12 @@ class Noisebox:
 
         try:
             self.current_jacktrip.start()
-
-        except Exception:
+        except self.NoiseBoxCustomError:
             print("Could not start JackTrip session")
-            self.current_jacktrip.stop()
             raise
-
-        self.jackHelper.make_jacktrip_connections(self.active_server)
-        self.start_monitoring_audio()
+        else:
+            self.jackHelper.make_jacktrip_connections(self.active_server)
+            self.start_monitoring_audio()
 
     # P2P connections function goes here
 

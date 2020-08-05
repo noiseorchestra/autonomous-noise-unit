@@ -4,6 +4,7 @@ import psutil
 import time
 import jack
 import sys
+from custom_exceptions import NoiseBoxCustomError
 
 
 class JackHelper:

@@ -1,3 +1,4 @@
+from custom_exceptions import NoiseBoxCustomError
 
 class SwitchState:
     def __init__(self):
@@ -22,20 +23,20 @@ class SwitchState_A(SwitchState):
         if (strval == "START JACKTRIP"):
             try:
                 noisebox.start_jacktrip_session()
-                self.new_state(SwitchState_C)
-            except Exception as e:
-                # re-write exception catching with custom exceptions
+            except NoiseBoxCustomError as e:
                 oled_helpers.start_layout(e.args[0])
                 self.new_state(SwitchState_D)
+            else:
+                self.new_state(SwitchState_C)
 
         if (strval == "LEVEL METER"):
             try:
                 noisebox.start_monitoring_audio()
-                self.new_state(SwitchState_B)
-            except Exception as e:
-                # re-write exception catching with custom exceptions
+            except NoiseBoxCustomError as e:
                 oled_helpers.start_layout(e.args[0])
                 self.new_state(SwitchState_D)
+            else:
+                self.new_state(SwitchState_B)
 
         if (strval == "CONNECTED PEERS"):
             oled_helpers.draw_text(0, 26, "Searching for peers...")
