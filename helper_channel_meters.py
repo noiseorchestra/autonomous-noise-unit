@@ -42,4 +42,3 @@ class ChannelMeters:
         """Stop drawing OLED meters"""
         print("STOP METERS")
         self.current_meters.terminate()
-        self.channel_meters = None

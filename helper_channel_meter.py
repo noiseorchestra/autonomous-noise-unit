@@ -11,22 +11,16 @@ class ChannelMeter:
         self.command = command
         self._running = True
 
-    def terminate(self):
-        self._running = False
+    def set_meter_value(self, process):
+        level = float(str(process.stdout.readline().rstrip(), 'utf-8'))
+        self.current_meter_value = -62 if math.isinf(level) else level
 
     def level_monitor(self, command):
         """Open process and push stdout to queue"""
 
         process = Popen(command, stdout=PIPE)
         while self._running:
-            # Produce some data
-            level = float(str(process.stdout.readline().rstrip(), 'utf-8'))
-            self.current_meter_value = -62 if math.isinf(level) else level
-
-        print("JACK_METER THREAD BEING TERMINATED")
-        process.terminate()
-        process.wait()
-        print("JACK_METER THREAD TERMINATED")
+            self.set_meter_value(process)
 
     def get_current_value(self):
         """Get current value"""
@@ -37,3 +31,6 @@ class ChannelMeter:
 
         t = Thread(target=self.level_monitor, args=(self.command,))
         t.start()
+
+    def terminate(self):
+        self._running = False

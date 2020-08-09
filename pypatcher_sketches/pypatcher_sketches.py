@@ -118,7 +118,7 @@ def get_next_panning_position(ladspa_send_ports):
 
     while True:
         if port_index == len(ladspa_send_ports):
-         port_index = 0
+            port_index = 0
 
         yield ladspa_send_ports[port_index]
         port_index += 1
