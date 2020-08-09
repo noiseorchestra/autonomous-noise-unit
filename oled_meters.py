@@ -1,5 +1,5 @@
 from luma.core.virtual import viewport
-import oled_meter
+from oled_meter import Meter
 import time
 
 
@@ -18,8 +18,8 @@ class Meters:
         widgets = []
 
         for level_thread in level_threads:
-            meter = oled_meter.Meter(widget_width, widget_height,
-                                     level_thread, interval=0.2)
+            meter = Meter(widget_width, widget_height,
+                          level_thread, interval=0.2)
             widgets.append(meter)
 
         virtual = viewport(device,
@@ -32,7 +32,3 @@ class Meters:
         while self._running:
             virtual.set_position((0, 0))
             time.sleep(0.1)
-
-        for level_thread in level_threads:
-            print("TERMINATE JACK_METER THREAD")
-            level_thread.terminate()

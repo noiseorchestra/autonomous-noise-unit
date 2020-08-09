@@ -8,12 +8,14 @@ import helper_get_ip
 from helper_peers import CheckPeers
 import oled_helpers
 from helper_jacktrip import PyTrip
-from helper_channel_meters import ChannelMeters
 import jack_helper
 import noisebox_menu
 from custom_exceptions import NoiseBoxCustomError
 from helper_jacktrip_monitor import JacktripMonitor
 from helper_jacktrip_wait import JacktripWait
+from helper_channel_meter import ChannelMeter
+from oled_meters import Meters
+from threading import Thread
 
 cfg = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
 cfg.read('config.ini')
@@ -59,13 +61,34 @@ class Noisebox:
     def start_monitoring_audio(self):
         """Start monitoring audio"""
 
-        self.jackHelper.make_monitoring_connections()
-        port_names = self.jackHelper.get_input_port_names()
+        try:
+            port_names = self.jackHelper.get_input_port_names()
 
-        if len(port_names) == 0:
-            raise NoiseBoxCustomError(["==ERROR==", "No audio inputs found"])
+            if len(port_names) == 0:
+                raise NoiseBoxCustomError(["==ERROR==", "No audio inputs found"])
 
-        self.channel_meters = ChannelMeters(port_names)
+            self.jackHelper.make_monitoring_connections()
+
+            jack_meter_threads = []
+
+            for port in port_names:
+                command = ["jack_meter", port, "-n"]
+                jack_meter_thread = ChannelMeter(command)
+                jack_meter_thread.run()
+                jack_meter_threads.append(jack_meter_thread)
+
+            current_meters = Meters()
+
+            t = Thread(target=current_meters.render,
+                       args=(self.oled_helpers.device, jack_meter_threads,))
+
+            t.start()
+
+            self.current_meters = current_meters
+            self.jack_meter_threads = jack_meter_threads
+
+        except NoiseBoxCustomError:
+            raise
 
     def start_jacktrip_session(self):
         """Start hubserver JackTrip session"""
@@ -93,8 +116,10 @@ class Noisebox:
     def stop_monitoring_audio(self):
         """Stop monitoring audio"""
 
-        self.channel_meters.stop()
-        self.channel_meters = None
+        self.current_meters.stop()
+        self.current_meters = None
+        for thread in self.jack_meter_threads:
+            thread.terminate()
         self.jackHelper.disconnect_session()
 
     def stop_jacktrip_session(self):
