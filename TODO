@@ -1,6 +1,6 @@
 ==TODO==
 
-- re-write exception catching with custom errors
+- refactor modules and move into folders
 - account for mono connections
 - adapt jack_monitor & jack_wait to both run in background and handle errors that occur during a session, poll jack_monitor
 - OLED frame rate improvements (HOW?? try new display? best fps is 4.8)
@@ -15,7 +15,6 @@
 - Boost output to headphones
 - Stereo return when sending in mono
 - hello and goodbye messages
-- refactor list for loops into list comprehension statements
 
 ==DONE==
 - timeout connection call when fails
@@ -29,3 +28,4 @@
 - implement multi-line messages with conditional scrolling
 - stop jack_meter when metetring stops
 - check meter orientation and convert to correct range
+- re-write exception catching with custom errors

@@ -9,7 +9,7 @@ from custom_exceptions import NoiseBoxCustomError
 import jack_helper
 from oled_helpers import OLED
 from helper_jacktrip import PyTrip
-from noisebox_menu import Menu
+from oled_menu import Menu
 from helper_peers import CheckPeers
 import helper_get_ip
 from helper_jacktrip_monitor import JacktripMonitor
