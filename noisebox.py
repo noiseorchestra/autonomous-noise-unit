@@ -3,19 +3,18 @@
 import RPi.GPIO as GPIO
 from rotary import KY040
 import configparser
+from threading import Thread
 from time import sleep
-import helper_get_ip
-from helper_peers import CheckPeers
-import oled_helpers
-from helper_jacktrip import PyTrip
-import jack_helper
-import noisebox_menu
 from custom_exceptions import NoiseBoxCustomError
+import jack_helper
+from oled_helpers import OLED
+from helper_jacktrip import PyTrip
+from noisebox_menu import Menu
+from helper_peers import CheckPeers
+import helper_get_ip
 from helper_jacktrip_monitor import JacktripMonitor
 from helper_jacktrip_wait import JacktripWait
 from helper_channel_meter import ChannelMeter
-from oled_meters import Meters
-from threading import Thread
 
 cfg = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
 cfg.read('config.ini')
@@ -38,8 +37,7 @@ class Noisebox:
         self.online_peers = peers.split(',')
         self.session_params = default_jacktrip_params
         self.current_jacktrip = None
-        self.channel_meters = None
-        self.oled_helpers = oled_helpers.OLED_helpers()
+        self.oled = OLED()
         self.jackHelper = jackHelper
         self.NoiseBoxCustomError = NoiseBoxCustomError
 
@@ -77,14 +75,11 @@ class Noisebox:
                 jack_meter_thread.run()
                 jack_meter_threads.append(jack_meter_thread)
 
-            current_meters = Meters()
-
-            t = Thread(target=current_meters.render,
-                       args=(self.oled_helpers.device, jack_meter_threads,))
+            t = Thread(target=self.oled.start_meters,
+                       args=(jack_meter_threads,))
 
             t.start()
 
-            self.current_meters = current_meters
             self.jack_meter_threads = jack_meter_threads
 
         except NoiseBoxCustomError:
@@ -116,8 +111,7 @@ class Noisebox:
     def stop_monitoring_audio(self):
         """Stop monitoring audio"""
 
-        self.current_meters.stop()
-        self.current_meters = None
+        self.oled.stop_meters()
         for thread in self.jack_meter_threads:
             thread.terminate()
         self.jackHelper.disconnect_session()
@@ -129,7 +123,7 @@ class Noisebox:
 
         self.current_jacktrip.stop()
 
-        self.oled_helpers.draw_text(0, 26, "JackTrip stopped")
+        self.oled.draw_text(0, 26, "JackTrip stopped")
         sleep(1)
 
 
@@ -146,15 +140,15 @@ def main():
     for port in receive_ports:
         jackHelper.disconnect_all(port)
 
-    oled_h = oled_helpers.OLED_helpers()
-    oled_menu = noisebox_menu.Menu(menu_items)
+    oled = OLED()
+    oled_menu = Menu(menu_items)
 
     noisebox = Noisebox(jackHelper)
 
     ky040 = KY040(noisebox, oled_menu)
     ky040.start()
 
-    oled_menu.start(noisebox, oled_h)
+    oled_menu.start(oled)
 
     try:
         while True:

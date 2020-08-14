@@ -1,5 +1,5 @@
 from subprocess import Popen, PIPE
-from oled_helpers import OLED_helpers
+from oled_helpers import OLED
 import psutil
 import time
 import jack
@@ -23,8 +23,8 @@ class JackHelper:
             self.jackClient = jack.Client('noisebox',  no_start_server=True)
         except Exception as e:
             print("JACK Client could not start", e)
-            oled_h = OLED_helpers()
-            oled_h.draw_lines(["==ERROR==", "JACK didn't start", "Restarting script"])
+            oled = OLED()
+            oled.draw_lines(["==ERROR==", "JACK didn't start", "Restarting script"])
             time.sleep(4)
             sys.exit("Exited because jackd not running")
 

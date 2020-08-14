@@ -1,7 +1,8 @@
-import oled_helpers
+from oled import OLED
 import time
-from queue import Queue, Empty
+from queue import Empty
 from custom_exceptions import NoiseBoxCustomError
+
 
 class JacktripWait():
     """Watch jacktrip stdout q and wait on connection otherwise timeout"""
@@ -10,10 +11,10 @@ class JacktripWait():
         self.jacktrip_monitor = jacktrip_monitor
         self.waiting = True
         self.server_ip = server_ip
-        self.oled_helpers = oled_helpers.OLED_helpers()
+        self.oled = OLED()
 
     def keep_waiting(self, message):
-        self.oled_helpers.draw_lines(message)
+        self.oled.draw_lines(message)
 
     def stop_waiting_error(self, message):
         print("Error occured stop JackTrip")
@@ -22,7 +23,7 @@ class JacktripWait():
         raise NoiseBoxCustomError(message)
 
     def stop_waiting_success(self, message):
-        self.oled_helpers.draw_lines(message)
+        self.oled.draw_lines(message)
         self.waiting = False
         time.sleep(1)
 
@@ -68,7 +69,7 @@ class JacktripWait():
         """Check q messages and block until connected or timeout"""
 
         message = ['==STARTING==', 'JackTrip starting...']
-        self.oled_helpers.draw_lines(message)
+        self.oled.draw_lines(message)
         time.sleep(1)
 
         while self.waiting is True:

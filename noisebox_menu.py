@@ -12,12 +12,10 @@ class Menu:
         self.counter = 1
         self.menuindex = 0
         self.menu_items = menu_items
-        self.noisebox = None
         self.oled_helpers = None
         self.device = None
 
-    def start(self, noisebox, oled_helpers):
-        self.noisebox = noisebox
+    def start(self, oled_helpers):
         self.oled_helpers = oled_helpers
         self.device = oled_helpers.get_device()
         self.draw_menu()

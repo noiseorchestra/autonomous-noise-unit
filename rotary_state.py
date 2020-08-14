@@ -16,7 +16,7 @@ class SwitchState:
 
 class SwitchState_A(SwitchState):
 
-    def switchCallback(self, noisebox, oled_menu, oled_helpers):
+    def switchCallback(self, noisebox, oled_menu, oled):
         strval = oled_menu.menu_items[oled_menu.menuindex]
 
         """check menu value when button clicked and run corresponding function"""
@@ -24,7 +24,7 @@ class SwitchState_A(SwitchState):
             try:
                 noisebox.start_jacktrip_session()
             except NoiseBoxCustomError as e:
-                oled_helpers.start_layout(e.args[0])
+                oled.start_layout(e.args[0])
                 self.new_state(SwitchState_D)
             else:
                 self.new_state(SwitchState_C)
@@ -33,19 +33,19 @@ class SwitchState_A(SwitchState):
             try:
                 noisebox.start_monitoring_audio()
             except NoiseBoxCustomError as e:
-                oled_helpers.start_layout(e.args[0])
+                oled.start_layout(e.args[0])
                 self.new_state(SwitchState_D)
             else:
                 self.new_state(SwitchState_B)
 
         if (strval == "CONNECTED PEERS"):
-            oled_helpers.draw_text(0, 26, "Searching for peers...")
+            oled.draw_text(0, 26, "Searching for peers...")
             online_peers = noisebox.check_peers()
-            oled_helpers.draw_lines(online_peers)
+            oled.draw_lines(online_peers)
 
         if (strval == "IP ADDRESS"):
             title = ["==HOSTNAME & IP=="]
-            oled_helpers.draw_lines(title + noisebox.get_ip())
+            oled.draw_lines(title + noisebox.get_ip())
 
     def rotaryCallback(self, oled_menu, direction):
         if direction == 1:
@@ -58,7 +58,7 @@ class SwitchState_A(SwitchState):
 class SwitchState_B(SwitchState):
     """New swtitch state"""
 
-    def switchCallback(self, noisebox, oled_menu, oled_helpers):
+    def switchCallback(self, noisebox, oled_menu, oled):
         print('STOP MONITORING')
         noisebox.stop_monitoring_audio()
         self.new_state(SwitchState_A)
@@ -67,7 +67,7 @@ class SwitchState_B(SwitchState):
 class SwitchState_C(SwitchState):
     """New swtitch state"""
 
-    def switchCallback(self, noisebox, oled_menu, oled_helpers):
+    def switchCallback(self, noisebox, oled_menu, oled):
         print('STOP JACKTRIP SESSION')
         noisebox.stop_jacktrip_session()
         self.new_state(SwitchState_A)
@@ -76,8 +76,8 @@ class SwitchState_C(SwitchState):
 class SwitchState_D(SwitchState):
     """New swtitch state"""
 
-    def switchCallback(self, noisebox, oled_menu, oled_helpers):
+    def switchCallback(self, noisebox, oled_menu, oled):
         print('STOP LAYOUT')
-        oled_helpers.stop_layout()
+        oled.stop_layout()
         self.new_state(SwitchState_A)
         oled_menu.draw_menu()
