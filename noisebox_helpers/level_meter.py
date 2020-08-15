@@ -3,7 +3,7 @@ from subprocess import Popen, PIPE
 import math
 
 
-class ChannelMeter:
+class LevelMeter:
     """Helper object for live monitoring the volume level of audio channels"""
 
     def __init__(self, command):
@@ -15,7 +15,7 @@ class ChannelMeter:
         level = float(str(process.stdout.readline().rstrip(), 'utf-8'))
         self.current_meter_value = -62 if math.isinf(level) else level
 
-    def level_monitor(self, command):
+    def level_meter(self, command):
         """Open process and push stdout to queue"""
 
         process = Popen(command, stdout=PIPE)
@@ -29,7 +29,7 @@ class ChannelMeter:
     def run(self):
         """Run producer and consumer threads"""
 
-        t = Thread(target=self.level_monitor, args=(self.command,))
+        t = Thread(target=self.level_meter, args=(self.command,))
         t.start()
 
     def terminate(self):

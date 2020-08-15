@@ -4,7 +4,7 @@ from queue import Empty
 from custom_exceptions import NoiseBoxCustomError
 
 
-class JacktripWait():
+class PyTripWait():
     """Watch jacktrip stdout q and wait on connection otherwise timeout"""
 
     def __init__(self, server_ip, jacktrip_monitor):

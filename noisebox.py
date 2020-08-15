@@ -6,15 +6,9 @@ import configparser
 from threading import Thread
 from time import sleep
 from custom_exceptions import NoiseBoxCustomError
-import jack_helper
 from oled_helpers import OLED
-from helper_jacktrip import PyTrip
 from oled_menu import Menu
-from helper_peers import CheckPeers
-import helper_get_ip
-from helper_jacktrip_monitor import JacktripMonitor
-from helper_jacktrip_wait import JacktripWait
-from helper_channel_meter import ChannelMeter
+import noisebox_helpers
 
 cfg = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
 cfg.read('config.ini')
@@ -36,7 +30,7 @@ class Noisebox:
         self.peers = peers.split(',')
         self.online_peers = peers.split(',')
         self.session_params = default_jacktrip_params
-        self.current_jacktrip = None
+        self.current_pytrip = None
         self.oled = OLED()
         self.jackHelper = jackHelper
         self.NoiseBoxCustomError = NoiseBoxCustomError
@@ -44,14 +38,14 @@ class Noisebox:
     def get_ip(self):
         """Get and return ip"""
 
-        result = helper_get_ip.ip_address()
+        result = noisebox_helpers.ip_address()
 
         return result
 
     def check_peers(self):
         """Check status of all peers and show results"""
 
-        checkPeers = CheckPeers()
+        checkPeers = noisebox_helpers.CheckPeers()
         self.online_peers = checkPeers.run(self.peers)
 
         return self.online_peers
@@ -67,20 +61,20 @@ class Noisebox:
 
             self.jackHelper.make_monitoring_connections()
 
-            jack_meter_threads = []
+            level_meters = []
 
             for port in port_names:
                 command = ["jack_meter", port, "-n"]
-                jack_meter_thread = ChannelMeter(command)
-                jack_meter_thread.run()
-                jack_meter_threads.append(jack_meter_thread)
+                level_meter = noisebox_helpers.LevelMeter(command)
+                level_meter.run()
+                level_meters.append(level_meter)
 
             t = Thread(target=self.oled.start_meters,
-                       args=(jack_meter_threads,))
+                       args=(level_meters,))
 
             t.start()
 
-            self.jack_meter_threads = jack_meter_threads
+            self.level_meters = level_meters
 
         except NoiseBoxCustomError:
             raise
@@ -88,14 +82,14 @@ class Noisebox:
     def start_jacktrip_session(self):
         """Start hubserver JackTrip session"""
 
-        self.current_jacktrip = PyTrip(self.session_params)
-        jacktrip_monitor = JacktripMonitor(self.current_jacktrip)
-        jacktrip_wait = JacktripWait(self.active_server, jacktrip_monitor)
+        self.current_pytrip = noisebox_helpers.PyTrip(self.session_params)
+        pytrip_watch = noisebox_helpers.PyTripWatch(self.current_pytrip)
+        pytrip_wait = noisebox_helpers.PyTripWait(self.active_server, pytrip_watch)
 
         try:
-            self.current_jacktrip.start()
-            jacktrip_monitor.run()
-            jacktrip_wait.run()
+            self.current_pytrip.start()
+            pytrip_watch.run()
+            pytrip_wait.run()
 
         except self.NoiseBoxCustomError:
             print("Could not start JackTrip session")
@@ -106,13 +100,13 @@ class Noisebox:
             self.start_monitoring_audio()
 
         finally:
-            jacktrip_monitor.terminate()
+            pytrip_watch.terminate()
 
     def stop_monitoring_audio(self):
         """Stop monitoring audio"""
 
         self.oled.stop_meters()
-        for thread in self.jack_meter_threads:
+        for thread in self.level_meters:
             thread.terminate()
         self.jackHelper.disconnect_session()
 
@@ -121,7 +115,7 @@ class Noisebox:
 
         self.stop_monitoring_audio()
 
-        self.current_jacktrip.stop()
+        self.current_pytrip.stop()
 
         self.oled.draw_text(0, 26, "JackTrip stopped")
         sleep(1)
@@ -134,7 +128,7 @@ def main():
                   'CONNECTED PEERS',
                   'IP ADDRESS']
 
-    jackHelper = jack_helper.JackHelper()
+    jackHelper = noisebox_helpers.JackHelper()
 
     receive_ports = jackHelper.client.get_ports(is_audio=True, is_output=True)
     for port in receive_ports:

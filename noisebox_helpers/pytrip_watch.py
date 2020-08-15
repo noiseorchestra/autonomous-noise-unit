@@ -2,7 +2,7 @@ from queue import Queue
 from threading import Thread
 
 
-class JacktripMonitor():
+class PyTripMonitor():
     """Helper object for monitoring stdout of jacktrip process"""
 
     def __init__(self, jacktrip):
