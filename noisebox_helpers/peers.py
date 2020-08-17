@@ -38,12 +38,9 @@ class CheckPeers:
         for ping in pings:
             ping_result = ping.result()
             results.append(ping_result)
+
         return results
 
     def run(self, peers):
         peers = self.ping_all(peers)
-        online_peers = []
-        for peer in peers:
-            if peer.rc == 0:
-                online_peers.append(peer.peer)
-        return online_peers
+        return [peer.peer for peer in peers if peer.rc == 0]
