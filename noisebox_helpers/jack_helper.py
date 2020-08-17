@@ -8,9 +8,9 @@ import sys
 class JackHelper:
 
     def __init__(self, oled):
+        self.oled = oled
         self.client = self.start()
         self.jackClient = None
-        self.oled = oled
 
     def start(self):
         """Start JACK with relavent parameters"""
