@@ -41,7 +41,7 @@ class SwitchState_A(SwitchState):
         if (strval == "CONNECTED PEERS"):
             oled.draw_text(0, 26, "Searching for peers...")
             online_peers = noisebox.check_peers()
-            oled.draw_lines(online_peers)
+            oled.draw_lines(["==ONLINE PEERS=="] + online_peers)
 
         if (strval == "IP ADDRESS"):
             title = ["==HOSTNAME & IP=="]
