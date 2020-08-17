@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 
 import RPi.GPIO as GPIO
-from rotary import KY040
 import configparser
 from threading import Thread
 from time import sleep
 from custom_exceptions import NoiseBoxCustomError
+import noisebox_rotary_helpers
 import noisebox_oled
 import noisebox_oled_helpers
 import noisebox_helpers
@@ -139,7 +139,7 @@ def main():
 
     noisebox = Noisebox(jackHelper)
 
-    ky040 = KY040(noisebox, oled_menu)
+    ky040 = noisebox_rotary_helpers.KY040(noisebox, oled_menu)
     ky040.start()
 
     oled_menu.start(noisebox.oled.device)

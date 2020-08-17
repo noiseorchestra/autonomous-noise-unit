@@ -3,7 +3,7 @@
 import RPi.GPIO as GPIO
 import time
 import sys
-from rotary_state import SwitchState
+from noisebox_rotary.rotary_state import SwitchState
 
 
 class KY040:
