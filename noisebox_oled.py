@@ -38,9 +38,8 @@ class OLED:
                 draw.text((0, y), line, fill="white")
                 y += 13
 
-    def start_meters(self, level_threads):
+    def render_meters(self, level_threads):
         print("Start oled_meters")
-        self._meters_running = True
         widget_width = self.device.width // 4
         widget_height = self.device.height
         widgets = []
@@ -61,6 +60,13 @@ class OLED:
             virtual.set_position((0, 0))
             time.sleep(0.1)
         print("oled meters_stopped")
+
+    def start_meters(self, level_threads):
+        print("Start oled_meters")
+        self._meters_running = True
+        oled_meters = Thread(target=self.run_meters,
+                             args=(level_threads,))
+        oled_meters.start()
 
     def stop_meters(self):
         print("stop oled_meters")
