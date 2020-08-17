@@ -5,3 +5,4 @@ from noisebox_helpers.pytrip_wait import PyTripWait
 from noisebox_helpers.level_meter import LevelMeter
 from noisebox_helpers.peers import CheckPeers
 from noisebox_helpers.get_ip import ip_address
+from noisebox_helpers.custom_exceptions import NoiseBoxCustomError

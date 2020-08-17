@@ -1,6 +1,6 @@
 import time
 from queue import Empty
-from custom_exceptions import NoiseBoxCustomError
+from noisebox_helpers import NoiseBoxCustomError
 
 
 class PyTripWait():

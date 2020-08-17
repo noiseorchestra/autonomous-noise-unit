@@ -1,4 +1,4 @@
-from custom_exceptions import NoiseBoxCustomError
+from noisebox_helpers import NoiseBoxCustomError
 
 class SwitchState:
     def __init__(self):

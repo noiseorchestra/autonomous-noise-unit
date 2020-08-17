@@ -4,7 +4,6 @@ import RPi.GPIO as GPIO
 import configparser
 from threading import Thread
 from time import sleep
-from custom_exceptions import NoiseBoxCustomError
 import noisebox_rotary_helpers
 import noisebox_oled
 import noisebox_oled_helpers
@@ -33,7 +32,6 @@ class Noisebox:
         self.current_pytrip = None
         self.oled = oled
         self.jackHelper = jackHelper
-        self.NoiseBoxCustomError = NoiseBoxCustomError
 
     def get_ip(self):
         """Get and return ip"""
@@ -57,7 +55,7 @@ class Noisebox:
             port_names = self.jackHelper.get_input_port_names()
 
             if len(port_names) == 0:
-                raise NoiseBoxCustomError(["==ERROR==", "No audio inputs found"])
+                raise noisebox_helpers.NoiseBoxCustomError(["==ERROR==", "No audio inputs found"])
 
             self.jackHelper.make_monitoring_connections()
 
@@ -76,7 +74,7 @@ class Noisebox:
 
             self.level_meters = level_meters
 
-        except NoiseBoxCustomError:
+        except noisebox_helpers.NoiseBoxCustomError:
             raise
 
     def start_jacktrip_session(self):
@@ -91,7 +89,7 @@ class Noisebox:
             pytrip_watch.run()
             pytrip_wait.run()
 
-        except self.NoiseBoxCustomError:
+        except noisebox_helpers.NoiseBoxCustomError:
             print("Could not start JackTrip session")
             raise
 
