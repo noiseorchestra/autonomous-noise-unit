@@ -1,9 +1,8 @@
 ==TODO==
 
-- refactor modules and move into folders
+- stop level meter dropping below zero
 - account for mono connections
 - adapt jack_monitor & jack_wait to both run in background and handle errors that occur during a session, poll jack_monitor
-- OLED frame rate improvements (HOW?? try new display? best fps is 4.8)
 - function for making p2p connections
 - make p2p connections menu
 - label meters (50%)
@@ -17,6 +16,7 @@
 - hello and goodbye messages
 
 ==DONE==
+- refactor modules and move into folders
 - timeout connection call when fails
 - fix bug when starting jackd subprocess from systemd
 - gracefully close on exit with cleanup script (kill jackd, kill jacktrip)
@@ -29,3 +29,4 @@
 - stop jack_meter when metetring stops
 - check meter orientation and convert to correct range
 - re-write exception catching with custom errors
+- OLED frame rate improvements (HOW?? try new display? best fps is 4.8)

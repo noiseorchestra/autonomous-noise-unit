@@ -1,9 +1,7 @@
 # Based on https://gist.github.com/codelectron/d493d4aaa6fc858ce69f2b335afd0b00#file-oled_rot_menu_rpi-py
 
 import RPi.GPIO as GPIO
-import time
-import sys
-from noisebox_rotary.rotary_state import SwitchState
+from noisebox_rotary_helpers.rotary_state import SwitchState
 
 
 class KY040:
@@ -19,22 +17,15 @@ class KY040:
         self.CLOCKWISE = 0
         self.ANTICLOCKWISE = 1
 
-        try:
-            GPIO.setmode(GPIO.BCM)
-            GPIO.setup(self.clockPin, GPIO.IN)
-            GPIO.setup(self.dataPin, GPIO.IN)
-            GPIO.setup(self.switchPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        except Exception as e:
-            print("Rotary switch error:", e)
-            self.noisebox.oled.draw_lines(["==ERROR==", "rotary switch error"])
-            time.sleep(4)
-            sys.exit("Exited because of rotary switch error")
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(self.clockPin, GPIO.IN)
+        GPIO.setup(self.dataPin, GPIO.IN)
+        GPIO.setup(self.switchPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
     def start(self):
         GPIO.add_event_detect(self.clockPin,
                               GPIO.FALLING,
-                              callback=self._clockCallback,
-                              bouncetime=200)
+                              callback=self._clockCallback)
         GPIO.add_event_detect(self.switchPin,
                               GPIO.FALLING,
                               callback=self._switchCallback,
@@ -45,8 +36,10 @@ class KY040:
         GPIO.remove_event_detect(self.switchPin)
 
     def _clockCallback(self, pin):
+        print(GPIO.input(self.clockPin))
         if GPIO.input(self.clockPin) == 0:
             data = GPIO.input(self.dataPin)
+            print(GPIO.input(self.dataPin))
             if data == 1:
                 self.switchState.rotaryCallback(self.oled_menu, self.ANTICLOCKWISE)
             else:
@@ -54,4 +47,4 @@ class KY040:
 
     def _switchCallback(self, pin):
         if GPIO.input(self.switchPin) == 0:
-            self.switchState.switchCallback(self.noisebox, self.oled_menu, self.oled)
+            self.switchState.switchCallback(self.noisebox, self.oled_menu, self.noisebox.oled)

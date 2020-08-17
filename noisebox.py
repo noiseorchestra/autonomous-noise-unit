@@ -67,14 +67,15 @@ class Noisebox:
                 level_meter.run()
                 level_meters.append(level_meter)
 
-            t = Thread(target=self.oled.start_meters,
+            oled_meters = Thread(target=self.oled.start_meters,
                        args=(level_meters,))
 
-            t.start()
+            oled_meters.start()
 
             self.level_meters = level_meters
 
-        except noisebox_helpers.NoiseBoxCustomError:
+        except noisebox_helpers.NoiseBoxCustomError as e:
+            print("error in start_monitoring_audio: ", e)
             raise
 
     def start_jacktrip_session(self):
@@ -135,7 +136,7 @@ def main():
 
     oled_menu = noisebox_oled_helpers.Menu(menu_items)
 
-    noisebox = Noisebox(jackHelper)
+    noisebox = Noisebox(jackHelper, oled)
 
     ky040 = noisebox_rotary_helpers.KY040(noisebox, oled_menu)
     ky040.start()

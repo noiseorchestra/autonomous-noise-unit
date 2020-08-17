@@ -18,8 +18,8 @@ class OLED:
     def __init__(self):
         self.serial = i2c(port=1, address=0x3C)
         self.device = ssd1306(self.serial, rotate=0)
-        self._meters_running = True
-        self._layout_running = True
+        self._meters_running = False
+        self._layout_running = False
 
     def get_device(self):
         """Return OLED device object"""
@@ -39,6 +39,8 @@ class OLED:
                 y += 13
 
     def start_meters(self, level_threads):
+        print("Start oled_meters")
+        self._meters_running = True
         widget_width = self.device.width // 4
         widget_height = self.device.height
         widgets = []
@@ -58,8 +60,10 @@ class OLED:
         while self._meters_running:
             virtual.set_position((0, 0))
             time.sleep(0.1)
+        print("oled meters_stopped")
 
     def stop_meters(self):
+        print("stop oled_meters")
         self._meters_running = False
 
     def render_layout(self, text_array):
@@ -90,6 +94,7 @@ class OLED:
             time.sleep(0.1)
 
     def start_layout(self, text_array):
+        self._layout_running = True
         t = Thread(target=self.render_layout, args=(text_array,))
         t.start()
 
