@@ -12,12 +12,10 @@ class Menu:
         self.counter = 1
         self.menuindex = 0
         self.menu_items = menu_items
-        self.oled = None
         self.device = None
 
-    def start(self, oled):
-        self.oled = oled
-        self.device = oled.device
+    def start(self, device):
+        self.device = device
         self.draw_menu()
 
     def invert(self, draw, x, y, text):

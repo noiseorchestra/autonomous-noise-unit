@@ -2,10 +2,8 @@ from luma.core.interface.serial import i2c
 from luma.core.render import canvas
 from luma.oled.device import ssd1306
 from PIL import ImageFont, ImageDraw
-from oled_hotspot_layout import Layout
 from luma.core.virtual import viewport
-from oled_meter import Meter
-from oled_hotspot import Panel
+from noisebox_oled_helpers import Meter, ScrollPanel
 from threading import Thread
 import time
 
@@ -75,7 +73,7 @@ class OLED:
         widgets = []
 
         for line in text_array:
-            panel = Panel(panel_width,
+            panel = ScrollPanel(panel_width,
                           panel_height,
                           line, interval=0.1)
 

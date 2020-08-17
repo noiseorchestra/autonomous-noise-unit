@@ -6,8 +6,8 @@ import configparser
 from threading import Thread
 from time import sleep
 from custom_exceptions import NoiseBoxCustomError
-from oled_helpers import OLED
-from oled_menu import Menu
+import noisebox_oled
+import noisebox_oled_helpers
 import noisebox_helpers
 
 cfg = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
@@ -25,13 +25,13 @@ default_jacktrip_params = {
 class Noisebox:
     """Main noisebox object"""
 
-    def __init__(self, jackHelper):
+    def __init__(self, jackHelper, oled):
         self.active_server = default_jacktrip_params['ip']
         self.peers = peers.split(',')
         self.online_peers = peers.split(',')
         self.session_params = default_jacktrip_params
         self.current_pytrip = None
-        self.oled = OLED()
+        self.oled = oled
         self.jackHelper = jackHelper
         self.NoiseBoxCustomError = NoiseBoxCustomError
 
@@ -84,7 +84,7 @@ class Noisebox:
 
         self.current_pytrip = noisebox_helpers.PyTrip(self.session_params)
         pytrip_watch = noisebox_helpers.PyTripWatch(self.current_pytrip)
-        pytrip_wait = noisebox_helpers.PyTripWait(self.active_server, pytrip_watch)
+        pytrip_wait = noisebox_helpers.PyTripWait(self.oled, self.active_server, pytrip_watch)
 
         try:
             self.current_pytrip.start()
@@ -128,21 +128,21 @@ def main():
                   'CONNECTED PEERS',
                   'IP ADDRESS']
 
-    jackHelper = noisebox_helpers.JackHelper()
+    oled = noisebox_oled.OLED()
+    jackHelper = noisebox_helpers.JackHelper(oled)
 
     receive_ports = jackHelper.client.get_ports(is_audio=True, is_output=True)
     for port in receive_ports:
         jackHelper.disconnect_all(port)
 
-    oled = OLED()
-    oled_menu = Menu(menu_items)
+    oled_menu = noisebox_oled_helpers.Menu(menu_items)
 
     noisebox = Noisebox(jackHelper)
 
     ky040 = KY040(noisebox, oled_menu)
     ky040.start()
 
-    oled_menu.start(oled)
+    oled_menu.start(noisebox.oled.device)
 
     try:
         while True:

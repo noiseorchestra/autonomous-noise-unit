@@ -1,4 +1,3 @@
-from oled import OLED
 import time
 from queue import Empty
 from custom_exceptions import NoiseBoxCustomError
@@ -7,11 +6,11 @@ from custom_exceptions import NoiseBoxCustomError
 class PyTripWait():
     """Watch jacktrip stdout q and wait on connection otherwise timeout"""
 
-    def __init__(self, server_ip, jacktrip_monitor):
+    def __init__(self, oled, server_ip, jacktrip_monitor):
         self.jacktrip_monitor = jacktrip_monitor
         self.waiting = True
         self.server_ip = server_ip
-        self.oled = OLED()
+        self.oled = oled
 
     def keep_waiting(self, message):
         self.oled.draw_lines(message)

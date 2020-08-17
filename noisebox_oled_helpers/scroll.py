@@ -13,11 +13,11 @@ def render(draw, width, height, text, i):
     scrollable_panel(draw, 0, 0, width, height, text, i)
 
 
-class Panel(hotspot):
+class ScrollPanel(hotspot):
     """Object for drawing level meter"""
 
     def __init__(self, width, height, text, interval, scroll=False):
-        super(Panel, self).__init__(width, height)
+        super(ScrollPanel, self).__init__(width, height)
         self._interval = interval
         self._last_updated = 0
         self.i = 0
