@@ -3,7 +3,7 @@ import psutil
 import time
 import jack
 import sys
-
+from noisebox_helpers.custom_exceptions import NoiseBoxCustomError
 
 class JackHelper:
 
@@ -40,9 +40,11 @@ class JackHelper:
         """Get an array of input port names"""
 
         ports = self.client.get_ports(is_audio=True, is_output=True)
-        port_names = []
-        for port in ports:
-            port_names.append(port.name)
+        port_names = [port.name for port in ports]
+
+        if len(port_names) == 0:
+            raise NoiseBoxCustomError(["==ERROR==", "No audio inputs found"])
+
         return port_names
 
     def connect_ports(self, receive_ports, send_ports_list):

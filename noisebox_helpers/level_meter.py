@@ -6,11 +6,13 @@ import math
 class LevelMeter:
     """Helper object for live monitoring the volume level of audio channels"""
 
-    def __init__(self, command):
+    def __init__(self, port):
         self.current_meter_value = 0.0
         self.current_meter = None
-        self.command = command
+        self.port = port
         self._running = True
+
+        self.run()
 
     def set_meter_value(self):
         try:
@@ -21,23 +23,24 @@ class LevelMeter:
             print("level_meter value not float")
             pass
 
-    def level_meter(self, command):
+    def get_current_value(self):
+        """Get current value"""
+        return self.current_meter_value
+
+    def level_meter(self, port):
         """Open process and push stdout to queue"""
 
+        command = ["jack_meter", port, "-n"]
         process = Popen(command, stdout=PIPE)
         self.current_meter = process
 
         while self._running:
             self.set_meter_value()
 
-    def get_current_value(self):
-        """Get current value"""
-        return self.current_meter_value
-
     def run(self):
-        """Run producer and consumer threads"""
+        """Run in thread"""
 
-        t = Thread(target=self.level_meter, args=(self.command,))
+        t = Thread(target=self.level_meter, args=(self.port,))
         t.start()
 
     def terminate(self):

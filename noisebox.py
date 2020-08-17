@@ -51,39 +51,22 @@ class Noisebox:
     def start_monitoring_audio(self):
         """Start monitoring audio"""
 
-        try:
-            port_names = self.jackHelper.get_input_port_names()
+        port_names = self.jackHelper.get_input_port_names()
+        self.jackHelper.make_monitoring_connections()
+        self.level_meters = [noisebox_helpers.LevelMeter(port) for port in port_names]
 
-            if len(port_names) == 0:
-                raise noisebox_helpers.NoiseBoxCustomError(["==ERROR==", "No audio inputs found"])
-
-            self.jackHelper.make_monitoring_connections()
-
-            level_meters = []
-
-            for port in port_names:
-                command = ["jack_meter", port, "-n"]
-                level_meter = noisebox_helpers.LevelMeter(command)
-                level_meter.run()
-                level_meters.append(level_meter)
-
-            oled_meters = Thread(target=self.oled.start_meters,
-                       args=(level_meters,))
-
-            oled_meters.start()
-
-            self.level_meters = level_meters
-
-        except noisebox_helpers.NoiseBoxCustomError as e:
-            print("error in start_monitoring_audio: ", e)
-            raise
+        oled_meters = Thread(target=self.oled.start_meters,
+                             args=(self.level_meters,))
+        oled_meters.start()
 
     def start_jacktrip_session(self):
         """Start hubserver JackTrip session"""
 
         self.current_pytrip = noisebox_helpers.PyTrip(self.session_params)
         pytrip_watch = noisebox_helpers.PyTripWatch(self.current_pytrip)
-        pytrip_wait = noisebox_helpers.PyTripWait(self.oled, self.active_server, pytrip_watch)
+        pytrip_wait = noisebox_helpers.PyTripWait(self.oled,
+                                                  self.active_server,
+                                                  pytrip_watch)
 
         try:
             self.current_pytrip.start()
