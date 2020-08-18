@@ -43,9 +43,9 @@ class OLED:
         widget_width = self.device.width // 4
         widget_height = self.device.height
         widgets = []
-
-        for level_thread in level_threads:
-            meter = Meter(widget_width, widget_height,
+        widget_names = ["IN-1", "IN-2", "JT-1", "JT-2"]
+        for i, level_thread in enumerate(level_threads):
+            meter = Meter(widget_names[i], widget_width, widget_height,
                           level_thread, interval=0.2)
             widgets.append(meter)
 
@@ -54,7 +54,7 @@ class OLED:
                            height=widget_height)
 
         for i, widget in enumerate(widgets):
-            virtual.add_hotspot(widget, (i * widget_width, 0))
+            virtual.add_hotspot(widget, (i * widget_width))
 
         while self._meters_running:
             virtual.set_position((0, 0))
