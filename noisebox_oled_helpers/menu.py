@@ -9,7 +9,7 @@ class Menu:
 
     def __init__(self, menu_items):
         # persist values
-        self.counter = 1
+        self.counter = 0
         self.menuindex = 0
         self.menu_items = menu_items
         self.device = None
@@ -38,4 +38,4 @@ class Menu:
     def draw_menu(self):
         """draw menu on convas"""
         with canvas(self.device) as draw:
-            self.menu(self.device, draw, self.menu_items, self.counter % 5)
+            self.menu(self.device, draw, self.menu_items, self.counter % 4)
