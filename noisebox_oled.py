@@ -64,7 +64,7 @@ class OLED:
     def start_meters(self, level_threads):
         print("Start oled_meters")
         self._meters_running = True
-        oled_meters = Thread(target=self.run_meters,
+        oled_meters = Thread(target=self.render_meters,
                              args=(level_threads,))
         oled_meters.start()
 
