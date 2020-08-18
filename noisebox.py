@@ -54,7 +54,7 @@ class Noisebox:
         port_names = self.jackHelper.get_input_port_names()
         self.jackHelper.make_monitoring_connections()
         self.level_meters = [noisebox_helpers.LevelMeter(port) for port in port_names]
-        self.noisebox_oled.start_meters(self.level_meters)
+        self.oled.start_meters(self.level_meters)
 
     def start_jacktrip_session(self):
         """Start hubserver JackTrip session"""
