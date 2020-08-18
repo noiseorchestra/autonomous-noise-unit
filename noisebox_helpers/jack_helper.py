@@ -91,8 +91,8 @@ class JackHelper:
             self.disconnect_all(my_port)
         for my_port in jacktrip_receive_ports:
             self.disconnect_all(my_port)
-        self.connect_ports(local_receive_ports, [jacktrip_send_ports,
-                                                 local_send_ports])
+        self.connect_ports([local_receive_ports[0]], [jacktrip_send_ports,
+                           local_send_ports])
         self.connect_ports(jacktrip_receive_ports, [local_send_ports])
 
     def make_monitoring_connections(self):
@@ -101,7 +101,7 @@ class JackHelper:
         local_receive_ports = self.client.get_ports(is_audio=True,
                                                     is_output=True)
         local_send_ports = self.client.get_ports('system:playback.*')
-        self.connect_ports(local_receive_ports, [local_send_ports])
+        self.connect_ports([local_receive_ports[0]], [local_send_ports])
 
     def disconnect_session(self):
         """Disconnect all receive ports"""
