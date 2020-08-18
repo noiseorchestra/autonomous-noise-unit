@@ -1,6 +1,6 @@
 ==TODO==
 
-- stop level meter dropping below zero
+- Create "update" functionallity
 - account for mono connections
 - adapt jack_monitor & jack_wait to both run in background and handle errors that occur during a session, poll jack_monitor
 - function for making p2p connections
@@ -30,3 +30,5 @@
 - check meter orientation and convert to correct range
 - re-write exception catching with custom errors
 - OLED frame rate improvements (HOW?? try new display? best fps is 4.8)
+- clone noisebox repo when installing on RPi
+- stop level meter dropping below zero

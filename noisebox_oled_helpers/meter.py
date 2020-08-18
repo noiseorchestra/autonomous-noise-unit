@@ -19,13 +19,10 @@ def render(draw, width, height, meter):
     bar_width = 0.5 * width_meter
     bar_margin = (width_meter - bar_width) / 2
 
-    # cpu_height = bar_height * (percentages[0] / 100.0)
-    fraction = (100 + meter.get_current_value()) / 100
-    y2 = height - bottom_margin
-    level = top_margin + (y2 - (y2 * fraction))
+    fraction = (62 + meter.get_current_value()) / 62
+    level = (bar_height - (bar_height * fraction)) - 15 - top_margin
     vertical_bar(draw, bar_margin, bar_height,
                  bar_margin + bar_width, top_margin, level)
-
 
 class Meter(hotspot):
     """Object for drawing level meter"""
