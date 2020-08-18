@@ -28,9 +28,11 @@ class Meter(hotspot):
     """Object for drawing level meter"""
 
     def __init__(self, name, width, height, meter, interval):
-        super(Meter, self).__init__(name, width, height, meter)
+        super(Meter, self).__init__(width, height)
         self._interval = interval
         self._last_updated = 0
+        self.meter = meter
+        self.name = name
 
     def should_redraw(self):
         return time.time() - self._last_updated > self._interval
