@@ -53,8 +53,6 @@ class JackHelper:
 
         print('receive ports:', receive_ports)
         print('send ports:', send_ports_list)
-        for receive_port in receive_ports:
-            self.disconnect_all(receive_port)
 
         for send_ports in send_ports_list:
             for i, port in enumerate(send_ports):
@@ -89,6 +87,10 @@ class JackHelper:
         local_send_ports = self.client.get_ports('system:playback.*')
         jacktrip_send_ports = self.client.get_ports(ip + ':send.*')
         jacktrip_receive_ports = self.client.get_ports(ip + ':receive.*')
+        for my_port in local_receive_ports:
+            self.disconnect_all(my_port)
+        for my_port in jacktrip_receive_ports:
+            self.disconnect_all(my_port)
         self.connect_ports(local_receive_ports, [jacktrip_send_ports,
                                                  local_send_ports])
         self.connect_ports(jacktrip_receive_ports, [local_send_ports])

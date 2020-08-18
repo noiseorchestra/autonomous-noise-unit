@@ -50,9 +50,10 @@ class Noisebox:
 
     def start_monitoring_audio(self):
         """Start monitoring audio"""
-
-        port_names = self.jackHelper.get_input_port_names()
         self.jackHelper.make_monitoring_connections()
+
+    def start_level_meters(self):
+        port_names = self.jackHelper.get_input_port_names()
         self.level_meters = [noisebox_helpers.LevelMeter(port) for port in port_names]
         self.oled.start_meters(self.level_meters)
 
@@ -74,7 +75,7 @@ class Noisebox:
 
         else:
             self.jackHelper.make_jacktrip_connections(self.active_server)
-            self.start_monitoring_audio()
+            self.start_level_meters()
 
         finally:
             pytrip_watch.terminate()

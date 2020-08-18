@@ -9,11 +9,11 @@ class PyTripWatch():
         self.queue = Queue()
         self._running = False
 
-    def monitor(self, out_q, jacktrip):
+    def monitor(self, out_q, pytrip):
         """Monitor jacktrip stdout and push to queue"""
         while self._running:
             try:
-                stdout = str(jacktrip.stdout.readline().rstrip(), 'utf-8')
+                stdout = str(pytrip.current_jacktrip.stdout.readline().rstrip(), 'utf-8')
                 out_q.put(stdout)
             except AttributeError as e:
                 print("JackTrip stdout error: ", e)
