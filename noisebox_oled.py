@@ -54,7 +54,7 @@ class OLED:
                            height=widget_height)
 
         for i, widget in enumerate(widgets):
-            virtual.add_hotspot(widget, (i * widget_width))
+            virtual.add_hotspot(widget, (i * widget_width, 0))
 
         while self._meters_running:
             virtual.set_position((0, 0))
