@@ -51,6 +51,7 @@ class Noisebox:
     def start_monitoring_audio(self):
         """Start monitoring audio"""
         self.jackHelper.make_monitoring_connections()
+        self.start_level_meters()
 
     def start_level_meters(self):
         port_names = self.jackHelper.get_input_port_names()
