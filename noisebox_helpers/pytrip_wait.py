@@ -13,6 +13,7 @@ class PyTripWait():
 
     def keep_waiting(self, message):
         self.oled.draw_lines(message)
+        time.sleep(1)
 
     def stop_waiting_error(self, message):
         print("Error occured stop JackTrip")
