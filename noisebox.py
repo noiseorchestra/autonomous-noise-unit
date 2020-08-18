@@ -60,15 +60,13 @@ class Noisebox:
         """Start hubserver JackTrip session"""
 
         self.current_pytrip = noisebox_helpers.PyTrip(self.session_params)
-        pytrip_watch = noisebox_helpers.PyTripWatch(self.current_pytrip)
-        pytrip_wait = noisebox_helpers.PyTripWait(self.oled,
-                                                  self.active_server,
-                                                  pytrip_watch)
+        pytrip_watch = noisebox_helpers.PyTripWatch()
+        pytrip_wait = noisebox_helpers.PyTripWait(self.oled, self.active_server)
 
         try:
             self.current_pytrip.start()
-            pytrip_watch.run()
-            pytrip_wait.run()
+            pytrip_watch.run(self.current_pytrip)
+            pytrip_wait.run(pytrip_watch)
 
         except noisebox_helpers.NoiseBoxCustomError:
             print("Could not start JackTrip session")

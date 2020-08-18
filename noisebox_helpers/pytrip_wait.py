@@ -6,8 +6,7 @@ from noisebox_helpers.custom_exceptions import NoiseBoxCustomError
 class PyTripWait():
     """Watch jacktrip stdout q and wait on connection otherwise timeout"""
 
-    def __init__(self, oled, server_ip, jacktrip_monitor):
-        self.jacktrip_monitor = jacktrip_monitor
+    def __init__(self, oled, server_ip):
         self.waiting = True
         self.server_ip = server_ip
         self.oled = oled
@@ -64,7 +63,7 @@ class PyTripWait():
                    "Waited too long for peer"]
         self.stop_waiting_error(message)
 
-    def run(self):
+    def run(self, jacktrip_monitor):
         """Check q messages and block until connected or timeout"""
 
         message = ['==STARTING==', 'JackTrip starting...']
@@ -74,7 +73,7 @@ class PyTripWait():
         while self.waiting is True:
             print("Waiting for jacktrip to start")
             try:
-                data = self.jacktrip_monitor.queue.get(True, timeout=10)
+                data = jacktrip_monitor.queue.get(True, timeout=10)
                 print(data)
                 self.check_messages(data)
             except Empty:
