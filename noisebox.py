@@ -9,6 +9,7 @@ import noisebox_oled_helpers
 import noisebox_helpers as nh
 
 cfg = cp.ConfigParser(interpolation=cp.ExtendedInterpolation())
+cfg.read('config.ini')
 
 
 class Noisebox:
