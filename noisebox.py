@@ -109,7 +109,7 @@ def main():
     oled = noisebox_oled.OLED()
     jack_helper = nh.JackHelper(oled)
 
-    receive_ports = jack_helper.client.get_ports(is_audio=True, is_output=True)
+    receive_ports = jack_helper.jackClient.get_ports(is_audio=True, is_output=True)
     for port in receive_ports:
         jack_helper.disconnect_all(port)
 
