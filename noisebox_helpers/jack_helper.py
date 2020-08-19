@@ -68,8 +68,8 @@ class JackHelper:
             receive_ports = connection[0]
             send_ports = connection[1]
             # don't connect a port to itself
-            if receive_ports[0].name.split(':')[0] == send_ports[0].name.split(':')[0]:
-                continue
+            # if receive_ports[0].name.split(':')[0] == send_ports[0].name.split(':')[0]:
+            #     continue
 
             # Make connections depending on stereo or mono clients
             receive_stereo = True if len(receive_ports) == 2 else False
@@ -129,6 +129,5 @@ class JackHelper:
     def disconnect_session(self):
         """Disconnect all receive ports"""
 
-        receive_ports = self.jackClient.get_ports(is_audio=True, is_output=True)
-        for port in receive_ports:
+        for port in self.jackClient.get_ports('system:playback.*'):
             self.disconnect_all(port)
