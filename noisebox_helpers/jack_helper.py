@@ -64,7 +64,7 @@ class JackHelper:
     def connect_all(self, receive_ports_list, send_ports_list):
         # create all possible connections between receive_ports and send_ports.
         for connection in product(receive_ports_list, send_ports_list):
-
+            print(connection)
             receive_ports = connection[0]
             send_ports = connection[1]
             # don't connect a port to itself
@@ -81,6 +81,9 @@ class JackHelper:
             if receive_stereo and not send_stereo:
                 self.connect(receive_ports[0], send_ports[0])
                 self.connect(receive_ports[1], send_ports[0])
+            if not receive_stereo and send_stereo:
+                self.connect(receive_ports[0], send_ports[0])
+                self.connect(receive_ports[0], send_ports[1])
             if not receive_stereo and not send_stereo:
                 self.connect(receive_ports[0], send_ports[0])
 
@@ -110,8 +113,7 @@ class JackHelper:
         if mono:
             local_receive_ports = [local_receive_ports[0]]
 
-        self.connect_all([local_receive_ports],
-                         [local_send_ports, jacktrip_send_ports])
+        self.connect_all([local_receive_ports], [jacktrip_send_ports])
 
         self.connect_all([jacktrip_receive_ports], [local_send_ports])
 
