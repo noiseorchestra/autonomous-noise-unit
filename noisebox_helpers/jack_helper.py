@@ -110,11 +110,12 @@ class JackHelper:
         # needs refactor to account for sessions with > 2 peers
         jacktrip_receive_ports = self.jackClient.get_ports(ip + ':receive.*')
 
+        self.disconnect_all(local_send_ports)
+
         if mono:
             local_receive_ports = [local_receive_ports[0]]
 
-        self.connect_all([local_receive_ports], [jacktrip_send_ports])
-
+        self.connect_all([local_receive_ports], [jacktrip_send_ports, local_send_ports])
         self.connect_all([jacktrip_receive_ports], [local_send_ports])
 
     def make_monitoring_connections(self, mono=True):
