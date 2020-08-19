@@ -108,6 +108,7 @@ def main():
 
     oled = noisebox_oled.OLED()
     jack_helper = nh.JackHelper(oled)
+    jack_helper.start()
 
     receive_ports = jack_helper.jackClient.get_ports(is_audio=True, is_output=True)
     for port in receive_ports:

@@ -28,7 +28,6 @@ class JackHelper:
             sys.exit("Exited because jackd not running")
 
         self.jackClient.activate()
-        return self.jackClient
 
     def stop(self):
         """Stop JACK"""
