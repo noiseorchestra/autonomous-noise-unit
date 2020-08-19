@@ -1,49 +1,48 @@
 #!/usr/bin/python3
 
 import RPi.GPIO as GPIO
-import configparser
-from threading import Thread
+import configparser as cp
 from time import sleep
 import noisebox_rotary_helpers
 import noisebox_oled
 import noisebox_oled_helpers
-import noisebox_helpers
+import noisebox_helpers as nh
 
-cfg = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
-cfg.read('config.ini')
-peers = cfg.get('peers', 'ips')
-default_jacktrip_params = {
-    'hub_mode': cfg.get('jacktrip-default', 'hub_mode'),
-    'server': cfg.get('jacktrip-default', 'server'),
-    'ip': cfg.get('jacktrip-default', 'ip'),
-    'channels': cfg.get('jacktrip-default', 'channels'),
-    'queue': cfg.get('jacktrip-default', 'queue')
-    }
+cfg = cp.ConfigParser(interpolation=cp.ExtendedInterpolation())
 
 
 class Noisebox:
     """Main noisebox object"""
 
-    def __init__(self, jackHelper, oled):
-        self.active_server = default_jacktrip_params['ip']
-        self.peers = peers.split(',')
-        self.online_peers = peers.split(',')
-        self.session_params = default_jacktrip_params
-        self.current_pytrip = None
+    def __init__(self, jack_helper, oled):
+        self.current_server = cfg.get('jacktrip-default', 'ip')
+        self.peers = cfg.get('peers', 'ips').split(',')
+        self.online_peers = None
+        self.session_params = {
+            'hub_mode': cfg.get('jacktrip-default', 'hub_mode'),
+            'server': cfg.get('jacktrip-default', 'server'),
+            'ip': cfg.get('jacktrip-default', 'ip'),
+            'channels': cfg.get('jacktrip-default', 'channels'),
+            'queue': cfg.get('jacktrip-default', 'queue')
+            }
+        self.pytrip = nh.PyTrip()
         self.oled = oled
-        self.jackHelper = jackHelper
+        self.jack_helper = jack_helper
+        self.pytrip_watch = nh.PyTripWatch()
+        self.pytrip_wait = nh.PyTripWait(oled)
+
 
     def get_ip(self):
         """Get and return ip"""
 
-        result = noisebox_helpers.ip_address()
+        result = nh.ip_address()
 
         return result
 
     def check_peers(self):
         """Check status of all peers and show results"""
 
-        checkPeers = noisebox_helpers.CheckPeers()
+        checkPeers = nh.CheckPeers()
         self.online_peers = checkPeers.run(self.peers)
 
         return self.online_peers
@@ -51,35 +50,35 @@ class Noisebox:
     def start_monitoring_audio(self):
         """Start monitoring audio"""
         self.start_level_meters()
-        self.jackHelper.make_monitoring_connections()
+        self.jack_helper.make_monitoring_connections()
 
     def start_level_meters(self):
-        port_names = self.jackHelper.get_input_port_names()
-        self.level_meters = [noisebox_helpers.LevelMeter(port) for port in port_names]
-        self.oled.start_meters(self.level_meters)
+        try:
+            port_names = self.jack_helper.get_input_port_names()
+        except nh.NoiseBoxCustomError:
+            raise
+        else:
+            self.level_meters = [nh.LevelMeter(port) for port in port_names]
+            self.oled.start_meters(self.level_meters)
 
     def start_jacktrip_session(self):
         """Start hubserver JackTrip session"""
 
-        self.current_pytrip = noisebox_helpers.PyTrip(self.session_params)
-        pytrip_watch = noisebox_helpers.PyTripWatch()
-        pytrip_wait = noisebox_helpers.PyTripWait(self.oled, self.active_server)
-
         try:
-            self.current_pytrip.start()
-            pytrip_watch.run(self.current_pytrip)
-            pytrip_wait.run(pytrip_watch)
+            self.pytrip.start(self.session_params)
+            self.pytrip_watch.run(self.pytrip)
+            self.pytrip_wait.run(self.pytrip_watch, self.current_server)
 
-        except noisebox_helpers.NoiseBoxCustomError:
+        except nh.NoiseBoxCustomError:
             print("Could not start JackTrip session")
             raise
 
         else:
             self.start_level_meters()
-            self.jackHelper.make_jacktrip_connections(self.active_server)
+            self.jack_helper.make_jacktrip_connections(self.current_server)
 
         finally:
-            pytrip_watch.terminate()
+            self.pytrip_watch.terminate()
 
     def stop_monitoring_audio(self):
         """Stop monitoring audio"""
@@ -87,14 +86,14 @@ class Noisebox:
         self.oled.stop_meters()
         for thread in self.level_meters:
             thread.terminate()
-        self.jackHelper.disconnect_session()
+        self.jack_helper.disconnect_session()
 
     def stop_jacktrip_session(self):
         """Stop JackTrip session"""
 
         self.stop_monitoring_audio()
 
-        self.current_pytrip.stop()
+        self.pytrip.stop()
 
         self.oled.draw_text(0, 26, "JackTrip stopped")
         sleep(1)
@@ -108,15 +107,15 @@ def main():
                   'IP ADDRESS']
 
     oled = noisebox_oled.OLED()
-    jackHelper = noisebox_helpers.JackHelper(oled)
+    jack_helper = nh.JackHelper(oled)
 
-    receive_ports = jackHelper.client.get_ports(is_audio=True, is_output=True)
+    receive_ports = jack_helper.client.get_ports(is_audio=True, is_output=True)
     for port in receive_ports:
-        jackHelper.disconnect_all(port)
+        jack_helper.disconnect_all(port)
 
     oled_menu = noisebox_oled_helpers.Menu(menu_items)
 
-    noisebox = Noisebox(jackHelper, oled)
+    noisebox = Noisebox(jack_helper, oled)
 
     ky040 = noisebox_rotary_helpers.KY040(noisebox, oled_menu)
     ky040.start()

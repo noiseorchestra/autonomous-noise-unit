@@ -3,22 +3,18 @@ from subprocess import Popen, PIPE, STDOUT
 class PyTrip:
     """Helper object to start, monitor and disconnect JackTrip"""
 
-    def __init__(self, params):
-        print(params)
-        self.ip = params["ip"]
-        self.hub_mode = params["hub_mode"]
-        self.server = params["server"]
-        self.channels = "-n" + params["channels"]
-        self.queue = "-q" + params["queue"]
+    def __init__(self):
         self.current_jacktrip = None
         self.connected = False
 
-    def start(self):
+    def start(self, params):
         """Start JackTrip with relevent parameters"""
 
-        command = ["jacktrip", "-C", self.ip, self.channels, self.queue, "-z"]
+        ip = params["ip"]
+        n = "-n" + params["channels"]
+        q = "-q" + params["queue"]
 
-        self.current_jacktrip = Popen(command,
+        self.current_jacktrip = Popen(["jacktrip", "-C", ip, n, q, "-z"],
                                       stdout=PIPE,
                                       stderr=STDOUT)
 
