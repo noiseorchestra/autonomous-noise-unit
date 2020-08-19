@@ -68,7 +68,7 @@ class JackHelper:
             receive_ports = connection[0]
             send_ports = connection[1]
             # don't connect a port to itself
-            if receive_ports[0].split(':')[0] == send_ports[0].split(':')[0]:
+            if receive_ports[0].name.split(':')[0] == send_ports[0].name.split(':')[0]:
                 continue
 
             # Make connections depending on stereo or mono clients
