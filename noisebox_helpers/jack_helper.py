@@ -52,7 +52,7 @@ class JackHelper:
 
         connected_ports = self.jackClient.get_all_connections(receive_port)
         for connected_port in connected_ports:
-            if send_port == connected_port.name:
+            if send_port.name == connected_port.name:
                 return True
         return False
 
