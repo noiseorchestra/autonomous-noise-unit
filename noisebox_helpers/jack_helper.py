@@ -58,7 +58,7 @@ class JackHelper:
 
     def connect(self, receive_port, send_port):
         """connect ports if not already connected"""
-        if not self.is_already_connected(self.jackClient, receive_port, send_port):
+        if not self.is_already_connected(receive_port, send_port):
             self.jackClient.connect(receive_port, send_port)
 
     def connect_all(self, receive_ports_list, send_ports_list):
