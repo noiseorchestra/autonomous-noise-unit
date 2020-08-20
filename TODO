@@ -1,5 +1,6 @@
 ==TODO==
 
+- Tidy and consistency check code, add descriptions where missing
 - show "not connected to internet error" somewhere, when checking IP etc...
 - Write unit tests! (10%)
 - refactor pytrip_wait to return True / False and message, deal with this in NoiseBox (disconnect JackTrip connections straight away)
