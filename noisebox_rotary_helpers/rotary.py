@@ -18,8 +18,8 @@ class KY040:
         self.ANTICLOCKWISE = 1
 
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.clockPin, GPIO.IN)
-        GPIO.setup(self.dataPin, GPIO.IN)
+        GPIO.setup(self.clockPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.dataPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.setup(self.switchPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
     def start(self):
