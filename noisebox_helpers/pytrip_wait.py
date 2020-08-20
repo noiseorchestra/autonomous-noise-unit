@@ -1,6 +1,4 @@
-import time
 from queue import Empty
-from noisebox_helpers.custom_exceptions import NoiseBoxCustomError
 
 
 class PyTripWait():
@@ -61,5 +59,3 @@ class PyTripWait():
                 self.check_stdout(data, peer_ip)
             except Empty:
                 self.timeout()
-            except NoiseBoxCustomError:
-                raise
