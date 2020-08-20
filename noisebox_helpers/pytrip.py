@@ -7,16 +7,21 @@ class PyTrip:
         self.current_jacktrip = None
         self.connected = False
 
-    def start(self, params):
-        """Start JackTrip with relevent parameters"""
+    def generate_command(self, params):
+        """Generate JackTrip command"""
 
         ip = params["ip"]
         n = "-n" + params["channels"]
         q = "-q" + params["queue"]
 
-        self.current_jacktrip = Popen(["jacktrip", "-C", ip, n, q, "-z"],
-                                      stdout=PIPE,
-                                      stderr=STDOUT)
+        return ["jacktrip", "-C", ip, n, q, "-z"]
+
+    def start(self, params):
+        """Start JackTrip with relevent parameters"""
+
+        command = self.generate_command(params)
+
+        self.current_jacktrip = Popen(command, stdout=PIPE, stderr=STDOUT)
 
     def stop(self):
         """Stop JackTrip"""
