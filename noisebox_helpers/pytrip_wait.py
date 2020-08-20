@@ -6,24 +6,10 @@ from noisebox_helpers.custom_exceptions import NoiseBoxCustomError
 class PyTripWait():
     """Watch jacktrip stdout q and wait on connection otherwise timeout"""
 
-    def __init__(self, oled):
-        self.waiting = True
-        self.oled = oled
-
-    def keep_waiting(self, message):
-        self.oled.draw_lines(message)
-        time.sleep(1)
-
-    def stop_waiting_error(self, message):
-        print("Error occured stop JackTrip")
+    def __init__(self):
         self.waiting = False
-        print("Raise NoiseBoxCustomError")
-        raise NoiseBoxCustomError(message)
-
-    def stop_waiting_success(self, message):
-        self.oled.draw_lines(message)
-        self.waiting = False
-        time.sleep(1)
+        self.return_message = None
+        self.connected = False
 
     def check_messages(self, data, peer_ip):
 
@@ -38,37 +24,35 @@ class PyTripWait():
                   'Exiting JackTrip']
 
         if success in data:
-            message = ['==SUCCESS==',
-                       'jacktrip connected!']
-            self.stop_waiting_success(message)
+            self.message = ['==SUCCESS==',
+                            'jacktrip connected!']
+            self.connected = True
+            self.waiting = False
 
         if waiting in data:
-            message = ['==CONNECTING==',
-                       waiting]
-            self.keep_waiting(message)
+            self.message = ['==CONNECTING==',
+                            waiting]
 
         for error in errors:
             if error in data:
-                message = ['==ERROR==', error, 'JackTrip stopped']
-                self.stop_waiting_error(message)
+                self.message = ['==ERROR==', error, 'JackTrip stopped']
+                self.waiting = False
 
         if stopped in data:
-            message = ['==ERROR==',
-                       "Could not connect to: " + peer_ip,
-                       stopped]
-            self.stop_waiting_error(message)
+            self.message = ['==ERROR==',
+                            "Could not connect to: " + peer_ip,
+                            stopped]
+            self.waiting = False
 
     def timeout(self):
-        message = ['==TIMEOUT==',
-                   "Waited too long for peer"]
-        self.stop_waiting_error(message)
+        self.message = ['==TIMEOUT==',
+                        "Waited too long for peer"]
+        self.waiting = False
 
     def run(self, jacktrip_watch, peer_ip):
         """Check q messages and block until connected or timeout"""
 
-        message = ['==STARTING==', 'JackTrip starting...']
-        self.oled.draw_lines(message)
-        time.sleep(1)
+        self.waiting = True
 
         while self.waiting is True:
             print("Waiting for jacktrip to start")
