@@ -65,19 +65,25 @@ class Noisebox:
     def start_jacktrip_session(self):
         """Start hubserver JackTrip session"""
 
-        self.pytrip.start(self.session_params)
-        self.pytrip_watch.run(self.pytrip)
-        self.pytrip_wait.run(self.pytrip_watch, self.current_server)
-        message = self.pytrip_wait.message
-
-        if self.pytrip_wait.connected:
-            self.jack_helper.disconnect_session()
-            self.oled.draw_lines(message)
-            self.start_level_meters()
-            self.jack_helper.make_jacktrip_connections(self.current_server)
+        try:
+            self.pytrip.start(self.session_params)
+        except Exception:
+            print("JackTrip did not start")
+            raise
         else:
-            self.pytrip_watch.terminate()
-            raise nh.NoiseBoxCustomError(message)
+            self.oled.draw_lines(["==START JACKTRIP==", "Connecting to:", self.current_server])
+            self.jack_helper.disconnect_session()
+            self.pytrip_watch.run(self.pytrip)
+            self.pytrip_wait.run(self.pytrip_watch, self.current_server)
+            message = self.pytrip_wait.message
+
+            if self.pytrip_wait.connected:
+                self.oled.draw_lines(message)
+                self.start_level_meters()
+                self.jack_helper.make_jacktrip_connections(self.current_server)
+            else:
+                self.pytrip_watch.terminate()
+                raise nh.NoiseBoxCustomError(message)
 
     def stop_monitoring_audio(self):
         """Stop monitoring audio"""

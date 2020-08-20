@@ -55,7 +55,6 @@ class PyTripWait():
         self.waiting = True
 
         while self.waiting is True:
-            print("Waiting for jacktrip to start")
             try:
                 data = jacktrip_watch.queue.get(True, timeout=10)
                 print(data)
