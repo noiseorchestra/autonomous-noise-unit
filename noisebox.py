@@ -66,12 +66,13 @@ class Noisebox:
         """Start hubserver JackTrip session"""
 
         try:
+            self.oled.draw_lines(["==START JACKTRIP==", "Connecting to:", self.current_server])
             self.pytrip.start(self.session_params)
         except Exception:
-            print("JackTrip did not start")
+            self.oled.draw_lines(["==JACKTRIP ERROR==", "JackTrip failed to start"])
+            self.pytrip.stop()
             raise
         else:
-            self.oled.draw_lines(["==START JACKTRIP==", "Connecting to:", self.current_server])
             self.jack_helper.disconnect_session()
             self.pytrip_watch.run(self.pytrip)
             self.pytrip_wait.run(self.pytrip_watch, self.current_server)

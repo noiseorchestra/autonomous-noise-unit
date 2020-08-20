@@ -37,7 +37,7 @@ class OLED:
             for line in lines:
                 draw.text((0, y), line, fill="white")
                 y += 13
-            time.sleep(1)
+        time.sleep(1)
 
     def render_meters(self, level_threads):
         print("Start oled_meters")
