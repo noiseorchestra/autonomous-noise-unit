@@ -54,15 +54,15 @@ class Noisebox:
         self.jack_helper.make_monitoring_connections()
 
     def start_level_meters(self, jacktrip_session=False):
-        port_names = []
+        ports = []
         try:
-            port_names += self.jack_helper.get_inputs()
+            ports += self.jack_helper.get_inputs()
             if jacktrip_session is True:
-                port_names += self.jack_helper.get_jacktrip_receives()
+                ports += self.jack_helper.get_jacktrip_receives()
         except nh.NoiseBoxCustomError:
             raise
         else:
-            self.level_meters = [nh.LevelMeter(port) for port in port_names]
+            self.level_meters = [nh.LevelMeter(port.name) for port in ports]
             self.oled.start_meters(self.level_meters)
 
     def start_jacktrip_session(self):
