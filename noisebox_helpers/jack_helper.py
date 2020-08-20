@@ -148,5 +148,5 @@ class JackHelper:
     def disconnect_session(self):
         """Disconnect all receive ports"""
 
-        for port in self.jackClient.get_ports('system.*'):
+        for port in self.jackClient.get_ports('system.playback*'):
             self.disconnect_all(port)
