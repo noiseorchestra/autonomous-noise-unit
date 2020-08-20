@@ -53,9 +53,12 @@ class Noisebox:
         self.start_level_meters()
         self.jack_helper.make_monitoring_connections()
 
-    def start_level_meters(self):
+    def start_level_meters(self, jacktrip_session=False):
         try:
-            port_names = self.jack_helper.get_input_port_names()
+            port_names = []
+            port_names.append(self.jack_helper.get_inputs())
+            if jacktrip_session is True:
+                port_names.append(self.jack_helper.get_jacktrip_receives())
         except nh.NoiseBoxCustomError:
             raise
         else:
@@ -79,7 +82,7 @@ class Noisebox:
 
             if self.pytrip_wait.connected is True:
                 self.oled.draw_lines(message)
-                self.start_level_meters()
+                self.start_level_meters(jacktrip_session=True)
                 self.jack_helper.make_jacktrip_connections(self.current_server)
             else:
                 self.pytrip_watch.terminate()
