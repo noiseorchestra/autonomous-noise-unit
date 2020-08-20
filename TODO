@@ -1,6 +1,8 @@
 ==TODO==
 
-- Write unit tests!
+- show "not connected to internet error" somewhere, when checking IP etc...
+- Only show single channels in level_meter when in mono
+- Write unit tests! (10%)
 - refactor pytrip_wait to return True / False and message, deal with this in NoiseBox (disconnect JackTrip connections straight away)
 - Create "update" functionallity
 - adapt jack_monitor & jack_wait to both run in background and handle errors that occur during a session, poll jack_monitor
