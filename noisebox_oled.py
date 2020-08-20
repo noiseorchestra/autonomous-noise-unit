@@ -29,6 +29,7 @@ class OLED:
         """Draw one line of standard text"""
         with canvas(self.device) as draw:
             draw.text((x, y), text, fill="white")
+        time.sleep(1)
 
     def draw_lines(self, lines):
         """Draw several lines of standard text"""
@@ -60,17 +61,14 @@ class OLED:
         while self._meters_running:
             virtual.set_position((0, 0))
             time.sleep(0.1)
-        print("oled meters_stopped")
 
     def start_meters(self, level_threads):
-        print("Start oled_meters")
         self._meters_running = True
         oled_meters = Thread(target=self.render_meters,
                              args=(level_threads,))
         oled_meters.start()
 
     def stop_meters(self):
-        print("stop oled_meters")
         self._meters_running = False
 
     def render_layout(self, text_array):
