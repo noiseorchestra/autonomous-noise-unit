@@ -1,7 +1,6 @@
 ==TODO==
 
 - show "not connected to internet error" somewhere, when checking IP etc...
-- Only show single channels in level_meter when in mono
 - Write unit tests! (10%)
 - refactor pytrip_wait to return True / False and message, deal with this in NoiseBox (disconnect JackTrip connections straight away)
 - Create "update" functionallity
@@ -16,6 +15,7 @@
 - hello and goodbye messages
 
 ==DONE==
+- Only show single channels in level_meter when in mono
 - account for mono connections <--- default is mono
 - Stereo return when sending in mono <--- default behaviour
 - label meters
