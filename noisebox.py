@@ -58,12 +58,12 @@ class Noisebox:
         try:
             local_inputs = self.jack_helper.get_inputs()
             for i, port in enumerate(local_inputs):
-                level_meters.append(nh.LevelMeter(port.name, "IN-" + i))
+                level_meters.append(nh.LevelMeter(port.name, "IN-" + str(i)))
 
             if jacktrip_session is True:
                 jacktrip_receives = self.jack_helper.get_jacktrip_receives()
                 for i, port in enumerate(jacktrip_receives):
-                    level_meters.append(nh.LevelMeter(port.name, "JT-" + i))
+                    level_meters.append(nh.LevelMeter(port.name, "JT-" + str(i)))
         except nh.NoiseBoxCustomError:
             raise
         else:
