@@ -30,7 +30,7 @@ class Noisebox:
         self.oled = oled
         self.jack_helper = jack_helper
         self.pytrip_watch = nh.PyTripWatch()
-        self.pytrip_wait = nh.PyTripWait(oled)
+        self.pytrip_wait = nh.PyTripWait()
 
 
     def get_ip(self):
@@ -65,21 +65,19 @@ class Noisebox:
     def start_jacktrip_session(self):
         """Start hubserver JackTrip session"""
 
-        try:
-            self.pytrip.start(self.session_params)
-            self.pytrip_watch.run(self.pytrip)
-            self.pytrip_wait.run(self.pytrip_watch, self.current_server)
+        self.pytrip.start(self.session_params)
+        self.pytrip_watch.run(self.pytrip)
+        self.pytrip_wait.run(self.pytrip_watch, self.current_server)
+        message = self.pytrip_wait.message
 
-        except nh.NoiseBoxCustomError:
-            print("Could not start JackTrip session")
-            raise
-
-        else:
+        if self.pytrip_wait.connected:
+            self.jack_helper.disconnect_session()
+            self.oled.draw_lines(message)
             self.start_level_meters()
             self.jack_helper.make_jacktrip_connections(self.current_server)
-
-        finally:
+        else:
             self.pytrip_watch.terminate()
+            raise nh.NoiseBoxCustomError(message)
 
     def stop_monitoring_audio(self):
         """Stop monitoring audio"""

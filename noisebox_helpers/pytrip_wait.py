@@ -11,7 +11,7 @@ class PyTripWait():
         self.return_message = None
         self.connected = False
 
-    def check_messages(self, data, peer_ip):
+    def check_stdout(self, data, peer_ip):
 
         success = 'Received Connection from Peer!'
         stopped = 'JackTrip Processes STOPPED!'
@@ -59,7 +59,7 @@ class PyTripWait():
             try:
                 data = jacktrip_watch.queue.get(True, timeout=10)
                 print(data)
-                self.check_messages(data, peer_ip)
+                self.check_stdout(data, peer_ip)
             except Empty:
                 self.timeout()
             except NoiseBoxCustomError:
