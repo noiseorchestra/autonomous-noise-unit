@@ -41,13 +41,14 @@ class JackHelper:
 
         local_receive_ports = self.jackClient.get_ports('system:capture.*')
 
+        if len(local_receive_ports) == 0:
+            raise NoiseBoxCustomError(["==ERROR==", "No audio inputs found"])
+
+        port_names = []
         if stereo is not True:
-            port_names = local_receive_ports[0]
+            port_names = [local_receive_ports[0]]
         else:
             port_names = [port.name for port in local_receive_ports]
-
-        if len(port_names) == 0:
-            raise NoiseBoxCustomError(["==ERROR==", "No audio inputs found"])
 
         return port_names
 
