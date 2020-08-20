@@ -44,24 +44,24 @@ class JackHelper:
         if len(local_receive_ports) == 0:
             raise NoiseBoxCustomError(["==ERROR==", "No audio inputs found"])
 
-        port_names = []
+        ports = []
         if stereo is not True:
-            port_names = [local_receive_ports[0]]
+            ports = [local_receive_ports[0]]
         else:
-            port_names = [port.name for port in local_receive_ports]
+            ports = [port for port in local_receive_ports]
 
-        return port_names
+        return ports
 
     def get_jacktrip_receives(self):
         """Get an array of input port names"""
 
         jacktrip_receive_ports = self.jackClient.get_ports('.*:receive.*')
-        port_names = [port.name for port in jacktrip_receive_ports]
+        ports = [port for port in jacktrip_receive_ports]
 
-        if len(port_names) == 0:
+        if len(ports) == 0:
             raise NoiseBoxCustomError(["==ERROR==", "No audio inputs found"])
 
-        return port_names
+        return ports
 
     def is_already_connected(self, receive_port, send_port):
         """check if 2 ports are already connected"""
