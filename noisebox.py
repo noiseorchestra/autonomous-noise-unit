@@ -78,7 +78,7 @@ class Noisebox:
             self.pytrip_wait.run(self.pytrip_watch, self.current_server)
             message = self.pytrip_wait.message
 
-            if self.pytrip_wait.connected:
+            if self.pytrip_wait.connected is True:
                 print("JACKTRIP CONNECTED")
                 self.oled.draw_lines(message)
                 self.start_level_meters()
