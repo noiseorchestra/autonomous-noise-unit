@@ -69,9 +69,8 @@ class Noisebox:
             self.oled.draw_lines(["==START JACKTRIP==", "Connecting to:", self.current_server])
             self.pytrip.start(self.session_params)
         except Exception:
-            self.oled.draw_lines(["==JACKTRIP ERROR==", "JackTrip failed to start"])
             self.pytrip.stop()
-            raise
+            raise nh.NoiseBoxCustomError(["==JACKTRIP ERROR==", "JackTrip failed to start"])
         else:
             self.jack_helper.disconnect_session()
             self.pytrip_watch.run(self.pytrip)
@@ -79,13 +78,10 @@ class Noisebox:
             message = self.pytrip_wait.message
 
             if self.pytrip_wait.connected is True:
-                print("JACKTRIP CONNECTED")
                 self.oled.draw_lines(message)
                 self.start_level_meters()
                 self.jack_helper.make_jacktrip_connections(self.current_server)
             else:
-                print("JACKTRIP NOT CONNECTED")
-                self.oled.draw_lines(message)
                 self.pytrip_watch.terminate()
                 raise nh.NoiseBoxCustomError(message)
 
