@@ -53,13 +53,23 @@ class Noisebox:
         self.start_level_meters()
         self.jack_helper.make_monitoring_connections()
 
-    def start_level_meters(self):
+    def start_level_meters(self, jacktrip_session=False):
+        level_meters = []
         try:
-            port_names = self.jack_helper.get_input_port_names()
+            local_inputs = self.jack_helper.get_inputs()
+            for i, port in enumerate(local_inputs):
+                channel = "IN-" + str(i + 1)
+                level_meters.append(nh.LevelMeter(port.name, channel))
+
+            if jacktrip_session is True:
+                jacktrip_receives = self.jack_helper.get_jacktrip_receives()
+                for i, port in enumerate(jacktrip_receives):
+                    channel = "JT-" + str(i + 1)
+                    level_meters.append(nh.LevelMeter(port.name, channel))
         except nh.NoiseBoxCustomError:
             raise
         else:
-            self.level_meters = [nh.LevelMeter(port) for port in port_names]
+            self.level_meters = level_meters
             self.oled.start_meters(self.level_meters)
 
     def start_jacktrip_session(self):
@@ -72,14 +82,14 @@ class Noisebox:
             self.pytrip.stop()
             raise nh.NoiseBoxCustomError(["==JACKTRIP ERROR==", "JackTrip failed to start"])
         else:
-            self.jack_helper.disconnect_session()
             self.pytrip_watch.run(self.pytrip)
             self.pytrip_wait.run(self.pytrip_watch, self.current_server)
             message = self.pytrip_wait.message
 
             if self.pytrip_wait.connected is True:
+                self.jack_helper.disconnect_session()
                 self.oled.draw_lines(message)
-                self.start_level_meters()
+                self.start_level_meters(jacktrip_session=True)
                 self.jack_helper.make_jacktrip_connections(self.current_server)
             else:
                 self.pytrip_watch.terminate()
@@ -97,6 +107,7 @@ class Noisebox:
         """Stop JackTrip session"""
 
         self.stop_monitoring_audio()
+        self.pytrip_watch.terminate()
         self.pytrip.stop()
         self.oled.draw_lines(["==JACKTRIP STOPPED=="])
 

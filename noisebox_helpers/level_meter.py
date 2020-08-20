@@ -6,11 +6,12 @@ import math
 class LevelMeter:
     """Helper object for live monitoring the volume level of audio channels"""
 
-    def __init__(self, port):
+    def __init__(self, port, name=""):
         self.current_meter_value = 0.0
         self.current_meter = None
         self.port = port
         self._running = True
+        self.name = name
 
         self.run()
 
