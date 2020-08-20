@@ -79,10 +79,13 @@ class Noisebox:
             message = self.pytrip_wait.message
 
             if self.pytrip_wait.connected:
+                print("JACKTRIP CONNECTED")
                 self.oled.draw_lines(message)
                 self.start_level_meters()
                 self.jack_helper.make_jacktrip_connections(self.current_server)
             else:
+                print("JACKTRIP NOT CONNECTED")
+                self.oled.draw_lines(message)
                 self.pytrip_watch.terminate()
                 raise nh.NoiseBoxCustomError(message)
 

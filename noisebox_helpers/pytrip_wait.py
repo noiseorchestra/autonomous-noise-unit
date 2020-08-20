@@ -6,7 +6,7 @@ class PyTripWait():
 
     def __init__(self):
         self.waiting = False
-        self.return_message = None
+        self.message = None
         self.connected = False
 
     def check_stdout(self, data, peer_ip):
@@ -51,6 +51,7 @@ class PyTripWait():
         """Check q messages and block until connected or timeout"""
 
         self.waiting = True
+        self.connected = False
 
         while self.waiting is True:
             try:
