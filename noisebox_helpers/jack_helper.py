@@ -44,7 +44,6 @@ class JackHelper:
         if len(local_receive_ports) == 0:
             raise NoiseBoxCustomError(["==ERROR==", "No audio inputs found"])
 
-        ports = []
         if stereo is not True:
             ports = [local_receive_ports[0]]
         else:
