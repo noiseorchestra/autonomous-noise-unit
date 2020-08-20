@@ -75,12 +75,12 @@ class Noisebox:
             self.pytrip.stop()
             raise nh.NoiseBoxCustomError(["==JACKTRIP ERROR==", "JackTrip failed to start"])
         else:
-            self.jack_helper.disconnect_session()
             self.pytrip_watch.run(self.pytrip)
             self.pytrip_wait.run(self.pytrip_watch, self.current_server)
             message = self.pytrip_wait.message
 
             if self.pytrip_wait.connected is True:
+                self.jack_helper.disconnect_session()
                 self.oled.draw_lines(message)
                 self.start_level_meters(jacktrip_session=True)
                 self.jack_helper.make_jacktrip_connections(self.current_server)
