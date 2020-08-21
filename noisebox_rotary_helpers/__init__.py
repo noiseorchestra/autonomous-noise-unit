@@ -1,2 +1,1 @@
-from noisebox_rotary_helpers.custom_exceptions import NoiseBoxCustomError
 from noisebox_rotary_helpers.rotary import KY040
