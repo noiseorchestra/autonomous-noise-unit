@@ -147,12 +147,14 @@ class RotaryState_SettingsMenu(RotaryState):
         if (strval == "MONO"):
             """Set audio to mono"""
             print("MONO")
+            noisebox.session_params['channels'] = "1"
             oled_menu.new_menu_items(oled_menu.default_menu_items)
             self.new_state(RotaryState_Menu)
 
         if (strval == "STEREO"):
             """Set audio to stereo"""
             print("STEREO")
+            noisebox.session_params['channels'] = "2"
             oled_menu.new_menu_items(oled_menu.default_menu_items)
             self.new_state(RotaryState_Menu)
 
