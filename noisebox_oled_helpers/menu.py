@@ -5,7 +5,7 @@ from PIL import ImageFont
 
 
 class Menu:
-    """Object for drawing OLED menu and managing input with rotary"""
+    """Class for drawing OLED menu"""
 
     def __init__(self, menu_items):
         # persist values
@@ -15,17 +15,21 @@ class Menu:
         self.device = None
 
     def start(self, device):
+        """Start menu"""
+
         self.device = device
         self.draw_menu()
 
     def invert(self, draw, x, y, text):
         """invert selected menue item"""
+
         font = ImageFont.load_default()
         draw.rectangle((x, y, x+120, y+12), outline=255, fill=255)
         draw.text((x, y), text, font=font, outline=0, fill="black")
 
     def menu(self, device, draw, menustr, index):
         """return prepared menu"""
+
         font = ImageFont.load_default()
         draw.rectangle(self.device.bounding_box, outline="white", fill="black")
         for i in range(len(menustr)):
@@ -37,5 +41,6 @@ class Menu:
 
     def draw_menu(self):
         """draw menu on convas"""
+
         with canvas(self.device) as draw:
             self.menu(self.device, draw, self.menu_items, self.counter % 4)

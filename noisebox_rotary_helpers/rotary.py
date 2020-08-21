@@ -5,6 +5,7 @@ from noisebox_rotary_helpers.rotary_state import SwitchState
 
 
 class KY040:
+    """Class for initializing rotary switch"""
 
     def __init__(self, noisebox, oled_menu):
 
@@ -23,6 +24,8 @@ class KY040:
         GPIO.setup(self.switchPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
     def start(self):
+        """Start rotary event detection"""
+
         GPIO.add_event_detect(self.clockPin,
                               GPIO.FALLING,
                               callback=self._clockCallback)
@@ -32,10 +35,14 @@ class KY040:
                               bouncetime=300)
 
     def stop(self):
+        """Stop rotary event detection"""
+
         GPIO.remove_event_detect(self.clockPin)
         GPIO.remove_event_detect(self.switchPin)
 
     def _clockCallback(self, pin):
+        """Rotary clock callback"""
+
         print(GPIO.input(self.clockPin))
         if GPIO.input(self.clockPin) == 0:
             data = GPIO.input(self.dataPin)
@@ -46,5 +53,7 @@ class KY040:
                 self.switchState.rotaryCallback(self.oled_menu, self.CLOCKWISE)
 
     def _switchCallback(self, pin):
+        """Rotary switch callback"""
+
         if GPIO.input(self.switchPin) == 0:
             self.switchState.switchCallback(self.noisebox, self.oled_menu, self.noisebox.oled)

@@ -13,40 +13,45 @@ class LevelMeter:
         self._running = True
         self.name = name
 
+        # run meter on init
         self.run()
 
-    def set_meter_value(self):
-        try:
-            level = float(str(self.current_meter.stdout.readline().rstrip(), 'utf-8'))
-            self.current_meter_value = -62 if math.isinf(level) else level
+    def start_meter(self):
+        """Start jack_meter process"""
 
-        except ValueError:
-            print("level_meter value not float")
-            pass
-
-    def get_current_value(self):
-        """Get current value"""
-        return self.current_meter_value
-
-    def level_meter(self, port):
-        """Open process and push stdout to queue"""
-
-        command = ["jack_meter", port, "-n"]
+        command = ["jack_meter", self.port, "-n"]
         process = Popen(command, stdout=PIPE)
         self.current_meter = process
 
+    def monitor_jack_meter(self):
+        """Open monitor jack_meter and set current_meter_value"""
+
         while self._running:
-            self.set_meter_value()
+            try:
+                level = float(str(self.current_meter.stdout.readline().rstrip(), 'utf-8'))
+                self.current_meter_value = -62 if math.isinf(level) else level
+
+            except ValueError:
+                print("level_meter value not float")
+                pass
 
     def run(self):
-        """Run in thread"""
+        """Start meter and run monitor_level_meter in thread"""
 
-        t = Thread(target=self.level_meter, args=(self.port,))
+        self.start_meter()
+
+        t = Thread(target=self.monitor_level_meter)
         t.start()
 
+    def get_current_value(self):
+        """Get current_meter_value"""
+
+        return self.current_meter_value
+
     def terminate(self):
+        """Stop current meter thread"""
+
         self._running = False
         self.current_meter.terminate()
         self.current_meter.wait()
         self.current_meter = None
-        print("level_meter process terminated")

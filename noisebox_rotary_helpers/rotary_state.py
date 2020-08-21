@@ -1,8 +1,11 @@
 from noisebox_helpers import NoiseBoxCustomError
 
-class SwitchState:
+
+class RotaryState:
+    """Base state"""
+
     def __init__(self):
-        self.new_state(SwitchState_A)
+        self.new_state(RotaryState_Menu)
 
     def new_state(self, state):
         self.__class__ = state
@@ -11,32 +14,34 @@ class SwitchState:
         print("switchCallback not set")
 
     def rotaryCallback(self, oled_menu, direction):
-        print("Do nothing")
+        print("rotaryCallback not set")
 
 
-class SwitchState_A(SwitchState):
+class RotaryState_Menu(RotaryState):
+    """Menu state"""
 
     def switchCallback(self, noisebox, oled_menu, oled):
+        """check menu value on button click and run corresponding methods"""
+
         strval = oled_menu.menu_items[oled_menu.menuindex]
 
-        """check menu value when button clicked and run corresponding function"""
         if (strval == "START JACKTRIP"):
             try:
                 noisebox.start_jacktrip_session()
             except NoiseBoxCustomError as e:
-                oled.start_layout(e.args[0])
-                self.new_state(SwitchState_D)
+                oled.start_scrolling_text(e.args[0])
+                self.new_state(RotaryState_Scrolling)
             else:
-                self.new_state(SwitchState_C)
+                self.new_state(RotaryState_JacktripRunning)
 
         if (strval == "LEVEL METER"):
             try:
-                noisebox.start_monitoring_audio()
+                noisebox.start_local_monitoring()
             except NoiseBoxCustomError as e:
-                oled.start_layout(e.args[0])
-                self.new_state(SwitchState_D)
+                oled.start_scrolling_text(e.args[0])
+                self.new_state(RotaryState_Scrolling)
             else:
-                self.new_state(SwitchState_B)
+                self.new_state(RotaryState_Monitoring)
 
         if (strval == "CONNECTED PEERS"):
             oled.draw_text(0, 26, "Searching for peers...")
@@ -48,6 +53,8 @@ class SwitchState_A(SwitchState):
             oled.draw_lines(title + noisebox.get_ip())
 
     def rotaryCallback(self, oled_menu, direction):
+        """Increment menu counter and redraw menu"""
+
         if direction == 1:
             oled_menu.counter += 1
         else:
@@ -55,29 +62,26 @@ class SwitchState_A(SwitchState):
         oled_menu.draw_menu()
 
 
-class SwitchState_B(SwitchState):
-    """New swtitch state"""
+class RotaryState_Monitoring(RotaryState):
+    """Monitoring audio state"""
 
     def switchCallback(self, noisebox, oled_menu, oled):
-        print('STOP MONITORING')
-        noisebox.stop_monitoring_audio()
-        self.new_state(SwitchState_A)
+        noisebox.stop_monitoring()
+        self.new_state(RotaryState_Menu)
         oled_menu.draw_menu()
 
-class SwitchState_C(SwitchState):
-    """New swtitch state"""
+class RotaryState_JacktripRunning(RotaryState):
+    """JackTrip running state"""
 
     def switchCallback(self, noisebox, oled_menu, oled):
-        print('STOP JACKTRIP SESSION')
         noisebox.stop_jacktrip_session()
-        self.new_state(SwitchState_A)
+        self.new_state(RotaryState_Menu)
         oled_menu.draw_menu()
 
-class SwitchState_D(SwitchState):
-    """New swtitch state"""
+class RotaryState_Scrolling(RotaryState):
+    """Scrolling oled text state"""
 
     def switchCallback(self, noisebox, oled_menu, oled):
-        print('STOP LAYOUT')
-        oled.stop_layout()
-        self.new_state(SwitchState_A)
+        oled.stop_scrolling_text()
+        self.new_state(RotaryState_Menu)
         oled_menu.draw_menu()

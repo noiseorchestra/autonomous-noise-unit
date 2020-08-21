@@ -2,14 +2,13 @@ from subprocess import Popen, PIPE
 import psutil
 import time
 import jack
-import sys
 from itertools import product
 from noisebox_helpers.custom_exceptions import NoiseBoxCustomError
 
 class JackHelper:
+    """Helper class for starting/stopping JACK, getting ports & managing connections"""
 
-    def __init__(self, oled):
-        self.oled = oled
+    def __init__(self):
         self.jackClient = None
 
     def start(self):
@@ -18,15 +17,7 @@ class JackHelper:
         command = ['jackd', '-R', '-dalsa', '-r48000', '-p256', '-n2', '-s', '-S']
         Popen(command, stdout=PIPE, stderr=PIPE)
         time.sleep(1)
-
-        try:
-            self.jackClient = jack.Client('noisebox',  no_start_server=True)
-        except Exception as e:
-            print("JACK Client could not start", e)
-            self.oled.draw_lines(["==ERROR==", "JACK didn't start", "Restarting script"])
-            time.sleep(4)
-            sys.exit("Exited because jackd not running")
-
+        self.jackClient = jack.Client('noisebox',  no_start_server=True)
         self.jackClient.activate()
 
     def stop(self):
@@ -73,20 +64,18 @@ class JackHelper:
 
     def connect(self, receive_port, send_port):
         """connect ports if not already connected"""
+
         if not self.is_already_connected(receive_port, send_port):
             self.jackClient.connect(receive_port, send_port)
 
     def connect_all(self, receive_ports_list, send_ports_list):
-        # create all possible connections between receive_ports and send_ports.
+        """Connect a list of receive ports to a list of sends"""
+
         for connection in product(receive_ports_list, send_ports_list):
             print(connection)
             receive_ports = connection[0]
             send_ports = connection[1]
-            # don't connect a port to itself
-            # if receive_ports[0].name.split(':')[0] == send_ports[0].name.split(':')[0]:
-            #     continue
 
-            # Make connections depending on stereo or mono clients
             receive_stereo = True if len(receive_ports) == 2 else False
             send_stereo = True if len(send_ports) == 2 else False
 
@@ -145,7 +134,7 @@ class JackHelper:
         self.connect_all([local_receive_ports], [local_send_ports])
 
     def disconnect_session(self):
-        """Disconnect all receive ports"""
+        """Disconnect all ports from system playback"""
 
         for port in self.jackClient.get_ports('system:playback.*'):
             self.disconnect_all(port)

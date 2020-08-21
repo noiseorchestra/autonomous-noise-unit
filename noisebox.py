@@ -3,8 +3,8 @@
 import RPi.GPIO as GPIO
 import configparser as cp
 from time import sleep
+import sys
 import noisebox_rotary_helpers
-import noisebox_oled
 import noisebox_oled_helpers
 import noisebox_helpers as nh
 
@@ -13,7 +13,7 @@ cfg.read('config.ini')
 
 
 class Noisebox:
-    """Main noisebox object"""
+    """Main noisebox class"""
 
     def __init__(self, jack_helper, oled):
         self.current_server = cfg.get('jacktrip-default', 'ip')
@@ -32,28 +32,21 @@ class Noisebox:
         self.pytrip_watch = nh.PyTripWatch()
         self.pytrip_wait = nh.PyTripWait()
 
-
     def get_ip(self):
-        """Get and return ip"""
+        """Get and return ip and hostname"""
 
         result = nh.ip_address()
-
         return result
 
     def check_peers(self):
-        """Check status of all peers and show results"""
+        """Check status of all peers"""
 
-        checkPeers = nh.CheckPeers()
-        self.online_peers = checkPeers.run(self.peers)
-
+        self.online_peers = nh.get_online_peers(self.peers)
         return self.online_peers
 
-    def start_monitoring_audio(self):
-        """Start monitoring audio"""
-        self.start_level_meters()
-        self.jack_helper.make_monitoring_connections()
-
     def start_level_meters(self, jacktrip_session=False):
+        """Get relevant ports and start level meters"""
+
         level_meters = []
         try:
             local_inputs = self.jack_helper.get_inputs()
@@ -72,6 +65,26 @@ class Noisebox:
             self.level_meters = level_meters
             self.oled.start_meters(self.level_meters)
 
+    def start_local_monitoring(self):
+        """Start monitoring local audio"""
+
+        self.start_level_meters()
+        self.jack_helper.make_monitoring_connections()
+
+    def start_jacktrip_monitoring(self):
+        """Start monitoring jacktrip session audio"""
+
+        self.start_level_meters(jacktrip_session=True)
+        self.jack_helper.make_jacktrip_connections(self.current_server)
+
+    def stop_monitoring(self):
+        """Stop monitoring audio"""
+
+        self.oled.stop_meters()
+        for thread in self.level_meters:
+            thread.terminate()
+        self.jack_helper.disconnect_session()
+
     def start_jacktrip_session(self):
         """Start hubserver JackTrip session"""
 
@@ -89,24 +102,15 @@ class Noisebox:
             if self.pytrip_wait.connected is True:
                 self.jack_helper.disconnect_session()
                 self.oled.draw_lines(message)
-                self.start_level_meters(jacktrip_session=True)
-                self.jack_helper.make_jacktrip_connections(self.current_server)
+                self.start_jacktrip_monitoring()
             else:
                 self.pytrip_watch.terminate()
                 raise nh.NoiseBoxCustomError(message)
 
-    def stop_monitoring_audio(self):
-        """Stop monitoring audio"""
-
-        self.oled.stop_meters()
-        for thread in self.level_meters:
-            thread.terminate()
-        self.jack_helper.disconnect_session()
-
     def stop_jacktrip_session(self):
         """Stop JackTrip session"""
 
-        self.stop_monitoring_audio()
+        self.stop_monitoring()
         self.pytrip_watch.terminate()
         self.pytrip.stop()
         self.oled.draw_lines(["==JACKTRIP STOPPED=="])
@@ -119,20 +123,36 @@ def main():
                   'CONNECTED PEERS',
                   'IP ADDRESS']
 
-    oled = noisebox_oled.OLED()
-    jack_helper = nh.JackHelper(oled)
-    jack_helper.start()
+    try:
+        oled = noisebox_oled_helpers.OLED()
+    except Exception as e:
+        print("OLED error:", e)
+        sys.exit("Exited because OLED not active")
+
+    try:
+        jack_helper = nh.JackHelper()
+        jack_helper.start()
+    except Exception as e:
+        print("JACK Client could not start:", e)
+        oled.draw_lines(["==ERROR==", "JACK didn't start", "Restarting script"])
+        sleep(4)
+        sys.exit("Exited because jackd not running")
 
     receive_ports = jack_helper.jackClient.get_ports(is_audio=True, is_output=True)
     for port in receive_ports:
         jack_helper.disconnect_all(port)
 
     oled_menu = noisebox_oled_helpers.Menu(menu_items)
-
     noisebox = Noisebox(jack_helper, oled)
 
-    ky040 = noisebox_rotary_helpers.KY040(noisebox, oled_menu)
-    ky040.start()
+    try:
+        ky040 = noisebox_rotary_helpers.KY040(noisebox, oled_menu)
+        ky040.start()
+    except Exception as e:
+        print("Rotary switch error: ", e)
+        oled.draw_lines(["==ERROR==", "Rotary switch not found", "Restarting script"])
+        sleep(4)
+        sys.exit("Exited because rotary switch not found")
 
     oled_menu.start(noisebox.oled.device)
 

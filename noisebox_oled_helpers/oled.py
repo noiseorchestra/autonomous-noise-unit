@@ -3,36 +3,31 @@ from luma.core.render import canvas
 from luma.oled.device import ssd1306
 from PIL import ImageFont, ImageDraw
 from luma.core.virtual import viewport
-from noisebox_oled_helpers import Meter, ScrollPanel
+from noisebox_oled_helpers.meter import Meter
+from noisebox_oled_helpers.scroll import ScrollPanel
 from threading import Thread
 import time
 
+
 class OLED:
     """Helper object for OLED functions"""
-    # TODO
-    # draw title
-    # notification bar virtual area
-    # notification icons
-    # scrolling text
 
     def __init__(self):
         self.serial = i2c(port=1, address=0x3C)
         self.device = ssd1306(self.serial, rotate=0)
         self._meters_running = False
-        self._layout_running = False
-
-    def get_device(self):
-        """Return OLED device object"""
-        return self.device
+        self._scrolling_text_running = False
 
     def draw_text(self, x, y, text):
-        """Draw one line of standard text"""
+        """Draw one line of text"""
+
         with canvas(self.device) as draw:
             draw.text((x, y), text, fill="white")
         time.sleep(1)
 
     def draw_lines(self, lines):
         """Draw several lines of standard text"""
+
         with canvas(self.device) as draw:
             y = 0
             for line in lines:
@@ -41,7 +36,8 @@ class OLED:
         time.sleep(1)
 
     def render_meters(self, level_threads):
-        print("Start oled_meters")
+        """Render level meters"""
+
         widget_width = self.device.width // 4
         widget_height = self.device.height
         widgets = []
@@ -62,15 +58,20 @@ class OLED:
             time.sleep(0.1)
 
     def start_meters(self, level_threads):
+        """Start level meters in thread"""
+
         self._meters_running = True
         oled_meters = Thread(target=self.render_meters,
                              args=(level_threads,))
         oled_meters.start()
 
     def stop_meters(self):
+        """Stop level meter thread"""
+
         self._meters_running = False
 
-    def render_layout(self, text_array):
+    def render_scrolling_text(self, text_array):
+        """Render scrolling text"""
 
         y = 0
         panel_width = self.device.width
@@ -93,14 +94,18 @@ class OLED:
 
         virtual.set_position((0, 0))
 
-        while self._layout_running:
+        while self._scrolling_text_running:
             virtual.set_position((0, 0))
             time.sleep(0.1)
 
-    def start_layout(self, text_array):
-        self._layout_running = True
-        t = Thread(target=self.render_layout, args=(text_array,))
+    def start_scrolling_text(self, text_array):
+        """Start scrolling text in thread"""
+
+        self._scrolling_text_running = True
+        t = Thread(target=self.render_scrolling_text, args=(text_array,))
         t.start()
 
-    def stop_layout(self):
-        self._layout_running = False
+    def stop_scrolling_text(self):
+        """STop scrolling text thread"""
+
+        self._scrolling_text_running = False

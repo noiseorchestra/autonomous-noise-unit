@@ -3,6 +3,7 @@ import configparser as cp
 cfg = cp.ConfigParser(interpolation=cp.ExtendedInterpolation())
 cfg.read('../config.ini')
 
+
 def test_generate_command():
     session_params = {
         'hub_mode': cfg.get('jacktrip-default', 'hub_mode'),

@@ -20,10 +20,10 @@ class PyTrip:
         """Start JackTrip with relevent parameters"""
 
         command = self.generate_command(params)
-
         self.current_jacktrip = Popen(command, stdout=PIPE, stderr=STDOUT)
 
     def stop(self):
         """Stop JackTrip"""
+
         self.current_jacktrip.terminate()
         self.current_jacktrip.wait()
