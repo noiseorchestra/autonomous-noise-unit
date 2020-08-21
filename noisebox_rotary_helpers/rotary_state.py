@@ -106,7 +106,7 @@ class SwitchState_PeersMenu(RotaryState):
                 try:
                     noisebox.start_jacktrip_peer_session(menu_item)
                 except NoiseBoxCustomError as e:
-                    oled.start_layout(e.args[0])
+                    oled.start_scrolling_text(e.args[0])
                     self.new_state(RotaryState_Scrolling)
                 else:
                     oled_menu.new_menu_items(oled_menu.default_menu_items)
