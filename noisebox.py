@@ -4,6 +4,7 @@ import RPi.GPIO as GPIO
 import configparser as cp
 from time import sleep
 import sys
+import os
 import noisebox_rotary_helpers
 import noisebox_oled_helpers
 import noisebox_helpers as nh
@@ -123,7 +124,6 @@ class Noisebox:
             self.pytrip.stop()
             raise nh.NoiseBoxCustomError(["==JACKTRIP ERROR==", "JackTrip failed to start"])
         else:
-            self.pytrip.stop()
             self.pytrip_watch.run(self.pytrip)
             self.pytrip_wait.run(self.pytrip_watch, peer_address)
             message = self.pytrip_wait.message
@@ -203,9 +203,9 @@ def main():
         ky040.start()
     except Exception as e:
         print("Rotary switch error: ", e)
-        oled.draw_lines(["==ERROR==", "Rotary switch not found", "Restarting script"])
+        oled.draw_lines(["==ERROR==", "Rotary switch error", "Restarting noisebox"])
         sleep(4)
-        sys.exit("Exited because rotary switch not found")
+        os.system("shutdown /s /t 1");
 
     oled_menu.start(noisebox.oled.device)
 
