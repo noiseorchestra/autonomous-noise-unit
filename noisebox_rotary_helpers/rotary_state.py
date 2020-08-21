@@ -100,11 +100,22 @@ class SwitchState_PeersMenu(RotaryState):
             oled_menu.new_menu_items(oled_menu.default_menu_items)
             self.new_state(RotaryState_Menu)
 
+        if (strval == "start server"):
+            print("go back")
+            try:
+                noisebox.start_jacktrip_peer_session_server()
+            except NoiseBoxCustomError as e:
+                oled.start_scrolling_text(e.args[0])
+                self.new_state(RotaryState_Scrolling)
+            else:
+                oled_menu.new_menu_items(oled_menu.default_menu_items)
+                self.new_state(RotaryState_JacktripRunning)
+
         for menu_item in oled_menu.menu_items:
             if (strval == menu_item):
                 print("connect to: ", menu_item)
                 try:
-                    noisebox.start_jacktrip_peer_session(menu_item)
+                    noisebox.start_jacktrip_peer_session_client(menu_item)
                 except NoiseBoxCustomError as e:
                     oled.start_scrolling_text(e.args[0])
                     self.new_state(RotaryState_Scrolling)
