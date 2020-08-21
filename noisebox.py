@@ -170,7 +170,8 @@ def main():
     menu_items = ['START JACKTRIP',
                   'LEVEL METER',
                   'P2P SESSION',
-                  'IP ADDRESS']
+                  'IP ADDRESS',
+                  'SETTINGS']
 
     try:
         oled = noisebox_oled_helpers.OLED()
