@@ -96,31 +96,32 @@ class SwitchState_PeersMenu(RotaryState):
         strval = oled_menu.menu_items[oled_menu.menuindex]
 
         """check menu value when button clicked and run corresponding function"""
-        for menu_item in oled_menu.menu_items:
-            if (strval == "back"):
+        if (strval == "back"):
+            oled_menu.new_menu_items(oled_menu.default_menu_items)
+            self.new_state(RotaryState_Menu)
+
+        elif (strval == "start server"):
+            try:
+                noisebox.start_jacktrip_peer_session_server()
+            except NoiseBoxCustomError as e:
+                oled.start_scrolling_text(e.args[0])
+                self.new_state(RotaryState_Scrolling)
+            else:
                 oled_menu.new_menu_items(oled_menu.default_menu_items)
-                self.new_state(RotaryState_Menu)
+                self.new_state(RotaryState_JacktripRunning)
 
-            elif (strval == "start server"):
-                try:
-                    noisebox.start_jacktrip_peer_session_server()
-                except NoiseBoxCustomError as e:
-                    oled.start_scrolling_text(e.args[0])
-                    self.new_state(RotaryState_Scrolling)
-                else:
-                    oled_menu.new_menu_items(oled_menu.default_menu_items)
-                    self.new_state(RotaryState_JacktripRunning)
-
-            elif (strval == menu_item):
-                print("connect to: ", menu_item)
-                try:
-                    noisebox.start_jacktrip_peer_session_client(menu_item)
-                except NoiseBoxCustomError as e:
-                    oled.start_scrolling_text(e.args[0])
-                    self.new_state(RotaryState_Scrolling)
-                else:
-                    oled_menu.new_menu_items(oled_menu.default_menu_items)
-                    self.new_state(RotaryState_JacktripRunning)
+        else:
+            for menu_item in oled_menu.menu_items:
+                if (strval == menu_item):
+                    print("connect to: ", menu_item)
+                    try:
+                        noisebox.start_jacktrip_peer_session_client(menu_item)
+                    except NoiseBoxCustomError as e:
+                        oled.start_scrolling_text(e.args[0])
+                        self.new_state(RotaryState_Scrolling)
+                    else:
+                        oled_menu.new_menu_items(oled_menu.default_menu_items)
+                        self.new_state(RotaryState_JacktripRunning)
 
     def rotaryCallback(self, oled_menu, direction):
         if direction == 1:
