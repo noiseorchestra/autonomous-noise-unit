@@ -1,6 +1,6 @@
 ==TODO==
 
-- Tidy and consistency check code, add descriptions where missing
+- Settings menu for mono or stereo selection
 - show "not connected to internet error" somewhere, when checking IP etc...
 - Write unit tests! (10%)
 - refactor pytrip_wait to return True / False and message, deal with this in NoiseBox (disconnect JackTrip connections straight away)
@@ -16,6 +16,7 @@
 - hello and goodbye messages
 
 ==DONE==
+- Tidy and consistency check code, add descriptions where missing
 - Only show single channels in level_meter when in mono
 - account for mono connections <--- default is mono
 - Stereo return when sending in mono <--- default behaviour
