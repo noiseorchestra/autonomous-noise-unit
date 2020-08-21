@@ -107,6 +107,49 @@ class Noisebox:
                 self.pytrip_watch.terminate()
                 raise nh.NoiseBoxCustomError(message)
 
+    def start_jacktrip_peer_session(self, peer_address):
+
+        self.oled.draw_lines(["==START JACKTRIP==", "Connecting as client to:", peer_address])
+        try:
+            self.pytrip.start(self.session_params,
+                              server=False,
+                              p2p=True,
+                              peer_address=peer_address)
+        except Exception:
+            self.pytrip.stop()
+            raise nh.NoiseBoxCustomError(["==JACKTRIP ERROR==", "JackTrip failed to start"])
+        else:
+            self.pytrip_watch.run(self.pytrip)
+            self.pytrip_wait.run(self.pytrip_watch, peer_address)
+            message = self.pytrip_wait.message
+
+            if self.pytrip_wait.connected is True:
+                self.jack_helper.disconnect_session()
+                self.oled.draw_lines(message)
+                self.start_jacktrip_monitoring()
+            else:
+                self.pytrip_watch.terminate()
+                self.oled.draw_lines(["==START JACKTRIP==", "Could not connect as client", "Trying as server"])
+                try:
+                    self.pytrip.start(self.session_params,
+                                      server=True,
+                                      p2p=True)
+                except Exception:
+                    self.pytrip.stop()
+                    raise nh.NoiseBoxCustomError(["==JACKTRIP ERROR==", "JackTrip failed to start"])
+                else:
+                    self.pytrip_watch.run(self.pytrip)
+                    self.pytrip_wait.run(self.pytrip_watch, "server")
+                    message = self.pytrip_wait.message
+
+                    if self.pytrip_wait.connected is True:
+                        self.jack_helper.disconnect_session()
+                        self.oled.draw_lines(message)
+                        self.start_jacktrip_monitoring()
+                    else:
+                        self.pytrip_watch.terminate()
+                        raise nh.NoiseBoxCustomError(message)
+
     def stop_jacktrip_session(self):
         """Stop JackTrip session"""
 
