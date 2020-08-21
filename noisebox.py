@@ -105,6 +105,7 @@ class Noisebox:
                 self.start_jacktrip_monitoring()
             else:
                 self.pytrip_watch.terminate()
+                self.pytrip.stop()
                 raise nh.NoiseBoxCustomError(message)
 
     def start_jacktrip_peer_session(self, peer_address):

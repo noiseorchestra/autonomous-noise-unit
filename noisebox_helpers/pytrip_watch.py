@@ -32,3 +32,4 @@ class PyTripWatch():
         """Terminate watching thread"""
 
         self._running = False
+        self.queue = Queue()

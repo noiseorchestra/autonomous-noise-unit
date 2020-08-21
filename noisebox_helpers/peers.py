@@ -11,7 +11,7 @@ class Ping:
         self.peer = peer
 
 
-def ping(self, peer):
+def ping_peer(peer):
     """Ping individual peer and return result"""
 
     process = subprocess.Popen(['ping', '-c', '1', peer])
@@ -23,7 +23,7 @@ def ping(self, peer):
     return ping_result
 
 
-def ping_all(self, peers):
+def ping_all(peers):
     """Check status of all peers and return result"""
 
     pool = ThreadPoolExecutor(10)
@@ -31,7 +31,7 @@ def ping_all(self, peers):
     results = []
 
     for peer in peers:
-        thread = pool.submit(self.ping, peer)
+        thread = pool.submit(ping_peer, peer)
         pings.append(thread)
 
     for ping in pings:
@@ -41,8 +41,8 @@ def ping_all(self, peers):
     return results
 
 
-def get_online_peers(self, peers):
+def get_online_peers(peers):
     """Run ping_all and return online peers"""
 
-    peers = self.ping_all(peers)
+    peers = ping_all(peers)
     return [peer.peer for peer in peers if peer.rc == 0]
