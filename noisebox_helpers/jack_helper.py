@@ -116,7 +116,7 @@ class JackHelper:
         # needs refactor to account for sessions with > 2 peers
         jacktrip_receive_ports = self.jackClient.get_ports(ip + ':receive.*')
 
-        if not stereo:
+        if stereo is not True:
             local_receive_ports = [local_receive_ports[0]]
 
         self.connect_all([local_receive_ports], [jacktrip_send_ports, local_send_ports])
@@ -128,7 +128,7 @@ class JackHelper:
         local_receive_ports = self.jackClient.get_ports('system:capture.*')
         local_send_ports = self.jackClient.get_ports('system:playback.*')
 
-        if not stereo:
+        if stereo is not True:
             local_receive_ports = [local_receive_ports[0]]
 
         self.connect_all([local_receive_ports], [local_send_ports])
