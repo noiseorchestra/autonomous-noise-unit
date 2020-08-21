@@ -85,3 +85,34 @@ class RotaryState_Scrolling(RotaryState):
         oled.stop_scrolling_text()
         self.new_state(RotaryState_Menu)
         oled_menu.draw_menu()
+
+class SwitchState_P2pJacktripMenu(RotaryState):
+    """New swtitch state"""
+
+    def switchCallback(self, noisebox, oled_menu, oled):
+        strval = oled_menu.menu_items[oled_menu.menuindex]
+
+        """check menu value when button clicked and run corresponding function"""
+        if (strval == "back"):
+            print("go back")
+            oled_menu.new_menu_items(oled_menu.default_menu_items)
+            self.new_state(RotaryState_Menu)
+
+        for menu_item in oled_menu.menu_items:
+            if (strval == menu_item):
+                print("connect to: ", menu_item)
+                try:
+                    noisebox.start_jacktrip_peer_session(menu_item)
+                except NoiseBoxCustomError as e:
+                    oled.start_layout(e.args[0])
+                    self.new_state(RotaryState_Scrolling)
+                else:
+                    oled_menu.new_menu_items(oled_menu.default_menu_items)
+                    self.new_state(RotaryState_JacktripRunning)
+
+    def rotaryCallback(self, oled_menu, direction):
+        if direction == 1:
+            oled_menu.counter += 1
+        else:
+            oled_menu.counter -= 1
+        oled_menu.draw_menu()
