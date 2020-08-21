@@ -120,6 +120,7 @@ class Noisebox:
             self.pytrip.stop()
             raise nh.NoiseBoxCustomError(["==JACKTRIP ERROR==", "JackTrip failed to start"])
         else:
+            self.pytrip.stop()
             self.pytrip_watch.run(self.pytrip)
             self.pytrip_wait.run(self.pytrip_watch, peer_address)
             message = self.pytrip_wait.message
