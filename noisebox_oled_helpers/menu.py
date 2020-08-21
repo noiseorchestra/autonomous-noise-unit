@@ -44,3 +44,11 @@ class Menu:
 
         with canvas(self.device) as draw:
             self.menu(self.device, draw, self.menu_items, self.counter % 4)
+
+    def new_menu_items(self, new_menu_items):
+        """Set new menu items"""
+
+        self.menu_items = new_menu_items
+        self.menuindex = 0
+        self.counter = 0
+        self.draw_menu()
