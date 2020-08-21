@@ -27,6 +27,7 @@ class PyTripWait():
         """Timeout connection attempt"""
 
         self.message = ['==TIMEOUT==', "Waited too long for peer"]
+        self.connected = False
         self.waiting = False
 
     def check_stdout(self, data, peer_ip):
@@ -53,10 +54,12 @@ class PyTripWait():
         for error in errors:
             if error in data:
                 self.message = ['==ERROR==', error, 'JackTrip stopped']
+                self.connected = False
                 self.waiting = False
 
         if stopped in data:
             self.message = ['==ERROR==',
                             "Could not connect to: " + peer_ip,
                             stopped]
+            self.connected = False
             self.waiting = False

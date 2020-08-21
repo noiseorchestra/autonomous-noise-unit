@@ -152,6 +152,7 @@ class Noisebox:
                 self.oled.draw_lines(message)
                 self.start_jacktrip_monitoring()
             else:
+                self.pytrip.stop()
                 self.pytrip_watch.terminate()
                 raise nh.NoiseBoxCustomError(message)
 
