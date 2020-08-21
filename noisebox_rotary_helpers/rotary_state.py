@@ -43,9 +43,10 @@ class RotaryState_Menu(RotaryState):
             else:
                 self.new_state(RotaryState_Monitoring)
 
-        if (strval == "CONNECTED PEERS"):
+        if (strval == "P2P SESSION"):
             oled.draw_text(0, 26, "Searching for peers...")
             online_peers = noisebox.check_peers()
+            online_peers.append("start server")
             online_peers.append("back")
             oled_menu.new_menu_items(online_peers)
             self.new_state(SwitchState_PeersMenu)
@@ -96,12 +97,10 @@ class SwitchState_PeersMenu(RotaryState):
 
         """check menu value when button clicked and run corresponding function"""
         if (strval == "back"):
-            print("go back")
             oled_menu.new_menu_items(oled_menu.default_menu_items)
             self.new_state(RotaryState_Menu)
 
         if (strval == "start server"):
-            print("go back")
             try:
                 noisebox.start_jacktrip_peer_session_server()
             except NoiseBoxCustomError as e:

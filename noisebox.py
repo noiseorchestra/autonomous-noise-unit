@@ -168,7 +168,7 @@ def main():
 
     menu_items = ['START JACKTRIP',
                   'LEVEL METER',
-                  'CONNECTED PEERS',
+                  'P2P SESSION',
                   'IP ADDRESS']
 
     try:
