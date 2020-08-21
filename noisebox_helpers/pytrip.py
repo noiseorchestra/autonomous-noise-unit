@@ -7,7 +7,7 @@ class PyTrip:
         self.current_jacktrip = None
         self.connected = False
 
-    def generate_client_command(self, params, p2p, peer_address):
+    def generate_client_command(self, params, p2p=False, peer_address=None):
         """Generate JackTrip command"""
 
         ip = params["ip"] if p2p is not True else peer_address
