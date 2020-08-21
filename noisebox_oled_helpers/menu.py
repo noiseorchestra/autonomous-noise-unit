@@ -11,6 +11,7 @@ class Menu:
         # persist values
         self.counter = 0
         self.menuindex = 0
+        self.default_menu_items = menu_items
         self.menu_items = menu_items
         self.device = None
 

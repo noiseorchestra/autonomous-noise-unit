@@ -46,7 +46,6 @@ class RotaryState_Menu(RotaryState):
         if (strval == "CONNECTED PEERS"):
             oled.draw_text(0, 26, "Searching for peers...")
             online_peers = noisebox.check_peers()
-            oled.draw_lines(["==ONLINE PEERS=="] + online_peers)
             online_peers.append("back")
             oled_menu.new_menu_items(online_peers)
             self.new_state(SwitchState_PeersMenu)
