@@ -105,7 +105,7 @@ class JackHelper:
                 print('disconnect', send_port.name, 'from', my_port.name)
                 self.jackClient.disconnect(send_port, my_port)
 
-    def make_jacktrip_connections(self, ip, mono=True):
+    def make_jacktrip_connections(self, ip, stereo=False):
         """Make connections for jacktrip session"""
 
         self.disconnect_session()
@@ -116,19 +116,19 @@ class JackHelper:
         # needs refactor to account for sessions with > 2 peers
         jacktrip_receive_ports = self.jackClient.get_ports(ip + ':receive.*')
 
-        if mono:
+        if not stereo:
             local_receive_ports = [local_receive_ports[0]]
 
         self.connect_all([local_receive_ports], [jacktrip_send_ports, local_send_ports])
         self.connect_all([jacktrip_receive_ports], [local_send_ports])
 
-    def make_monitoring_connections(self, mono=True):
+    def make_monitoring_connections(self, stereo=False):
         """Make connections for monitoring local inputs"""
 
         local_receive_ports = self.jackClient.get_ports('system:capture.*')
         local_send_ports = self.jackClient.get_ports('system:playback.*')
 
-        if mono:
+        if not stereo:
             local_receive_ports = [local_receive_ports[0]]
 
         self.connect_all([local_receive_ports], [local_send_ports])

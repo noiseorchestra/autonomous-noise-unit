@@ -44,12 +44,13 @@ class Noisebox:
         self.online_peers = nh.get_online_peers(self.peers)
         return self.online_peers
 
-    def start_level_meters(self, jacktrip_session=False):
+    def start_level_meters(self, stereo=False, jacktrip_session=False):
         """Get relevant ports and start level meters"""
 
         level_meters = []
+
         try:
-            local_inputs = self.jack_helper.get_inputs()
+            local_inputs = self.jack_helper.get_inputs(stereo=stereo)
             for i, port in enumerate(local_inputs):
                 channel = "IN-" + str(i + 1)
                 level_meters.append(nh.LevelMeter(port.name, channel))
@@ -68,14 +69,16 @@ class Noisebox:
     def start_local_monitoring(self):
         """Start monitoring local audio"""
 
-        self.start_level_meters()
-        self.jack_helper.make_monitoring_connections()
+        stereo = False if self.session_params['channels'] == 1 else True
+        self.start_level_meters(stereo=stereo)
+        self.jack_helper.make_monitoring_connections(stereo=stereo)
 
     def start_jacktrip_monitoring(self):
         """Start monitoring jacktrip session audio"""
 
-        self.start_level_meters(jacktrip_session=True)
-        self.jack_helper.make_jacktrip_connections(self.current_server)
+        stereo = False if self.session_params['channels'] == 1 else True
+        self.start_level_meters(stereo=stereo, jacktrip_session=True)
+        self.jack_helper.make_jacktrip_connections(self.current_server, stereo=stereo)
 
     def stop_monitoring(self):
         """Stop monitoring audio"""
