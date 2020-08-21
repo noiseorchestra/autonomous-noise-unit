@@ -129,6 +129,7 @@ class Noisebox:
                 self.oled.draw_lines(message)
                 self.start_jacktrip_monitoring()
             else:
+                self.pytrip.stop()
                 self.pytrip_watch.terminate()
                 self.oled.draw_lines(["==START JACKTRIP==", "Could not connect as client", "Trying as server"])
                 try:
