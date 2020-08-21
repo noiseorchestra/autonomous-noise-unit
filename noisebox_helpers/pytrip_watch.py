@@ -12,6 +12,7 @@ class PyTripWatch():
     def run(self, jacktrip):
         """Run watching in thread"""
 
+        self.queue = Queue()
         self._running = True
         self.watching_thread = Thread(target=self.watch_jacktrip,
                                       args=(self.queue, jacktrip,))
