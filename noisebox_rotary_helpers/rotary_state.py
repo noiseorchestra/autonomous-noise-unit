@@ -55,6 +55,10 @@ class RotaryState_Menu(RotaryState):
             title = ["==HOSTNAME & IP=="]
             oled.draw_lines(title + noisebox.get_ip())
 
+        if (strval == "SETTINGS"):
+            oled_menu.new_menu_items(["MONO", "STEREO"])
+            self.new_state(RotaryState_SettingsMenu)
+
     def rotaryCallback(self, oled_menu, direction):
         """Increment menu counter and redraw menu"""
 
@@ -125,6 +129,36 @@ class SwitchState_PeersMenu(RotaryState):
                         self.new_state(RotaryState_JacktripRunning)
 
     def rotaryCallback(self, oled_menu, direction):
+        if direction == 1:
+            oled_menu.counter += 1
+        else:
+            oled_menu.counter -= 1
+        oled_menu.draw_menu()
+
+
+class RotaryState_SettingsMenu(RotaryState):
+    """Settings menu state"""
+
+    def switchCallback(self, noisebox, oled_menu, oled):
+        """check menu value on button click and run corresponding methods"""
+
+        strval = oled_menu.menu_items[oled_menu.menuindex]
+
+        if (strval == "MONO"):
+            """Set audio to mono"""
+            print("MONO")
+            oled_menu.new_menu_items(oled_menu.default_menu_items)
+            self.new_state(RotaryState_Menu)
+
+        if (strval == "STEREO"):
+            """Set audio to stereo"""
+            print("STEREO")
+            oled_menu.new_menu_items(oled_menu.default_menu_items)
+            self.new_state(RotaryState_Menu)
+
+    def rotaryCallback(self, oled_menu, direction):
+        """Increment menu counter and redraw menu"""
+
         if direction == 1:
             oled_menu.counter += 1
         else:
