@@ -36,11 +36,11 @@ class LevelMeter:
                 pass
 
     def run(self):
-        """Start meter and run monitor_level_meter in thread"""
+        """Start meter and run monitor_jack_meter in thread"""
 
         self.start_meter()
 
-        t = Thread(target=self.monitor_level_meter)
+        t = Thread(target=self.monitor_jack_meter)
         t.start()
 
     def get_current_value(self):
