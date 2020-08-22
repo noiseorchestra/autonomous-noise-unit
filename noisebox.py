@@ -205,7 +205,8 @@ def main():
         print("Rotary switch error: ", e)
         oled.draw_lines(["==ERROR==", "Rotary switch error", "Restarting noisebox"])
         sleep(4)
-        os.system("shutdown /s /t 1");
+        sys.exit("Exited because of rotary error")
+
 
     oled_menu.start(noisebox.oled.device)
 
