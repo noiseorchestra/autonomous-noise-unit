@@ -176,30 +176,14 @@ def main():
                   'IP ADDRESS',
                   'SETTINGS']
 
-    try:
-        oled = noisebox_oled_helpers.OLED()
-    except Exception as e:
-        print("OLED error:", e)
-        sys.exit("Exited because OLED not active")
-
-    try:
-        jack_helper = nh.JackHelper()
-        jack_helper.start()
-    except Exception as e:
-        print("JACK Client could not start:", e)
-        oled.draw_lines(["==ERROR==", "JACK didn't start", "Restarting script"])
-        sleep(4)
-        sys.exit("Exited because jackd not running")
-
-    receive_ports = jack_helper.jackClient.get_ports(is_audio=True, is_output=True)
-    for port in receive_ports:
-        jack_helper.disconnect_all(port)
-
+    oled = noisebox_oled_helpers.OLED()
+    jack_helper = nh.JackHelper()
     oled_menu = noisebox_oled_helpers.Menu(menu_items)
     noisebox = Noisebox(jack_helper, oled)
+    ky040 = noisebox_rotary_helpers.KY040(noisebox, oled_menu)
+    oled_menu.start(noisebox.oled.device)
 
     try:
-        ky040 = noisebox_rotary_helpers.KY040(noisebox, oled_menu)
         ky040.start()
     except Exception as e:
         print("Rotary switch error: ", e)
@@ -207,8 +191,19 @@ def main():
         sleep(4)
         sys.exit("Exited because of rotary error")
 
+    try:
+        oled_menu.start(noisebox.oled.device)
+    except Exception as e:
+        print("OLED error:", e)
+        sys.exit("Exited because of OLED error")
 
-    oled_menu.start(noisebox.oled.device)
+    try:
+        jack_helper.start()
+    except Exception as e:
+        print("JACK Client could not start:", e)
+        oled.draw_lines(["==ERROR==", "JACK didn't start", "Restarting script"])
+        sleep(4)
+        sys.exit("Exited because jackd not running")
 
     try:
         while True:
