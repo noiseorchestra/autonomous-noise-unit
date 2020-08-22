@@ -184,18 +184,18 @@ def main():
     oled_menu.start(noisebox.oled.device)
 
     try:
+        oled_menu.start(noisebox.oled.device)
+    except Exception as e:
+        print("OLED error:", e)
+        sys.exit("Exited because of OLED error")
+
+    try:
         ky040.start()
     except Exception as e:
         print("Rotary switch error: ", e)
         oled.draw_lines(["==ERROR==", "Rotary switch error", "Restarting noisebox"])
         sleep(4)
         sys.exit("Exited because of rotary error")
-
-    try:
-        oled_menu.start(noisebox.oled.device)
-    except Exception as e:
-        print("OLED error:", e)
-        sys.exit("Exited because of OLED error")
 
     try:
         jack_helper.start()
