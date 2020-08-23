@@ -59,6 +59,10 @@ class RotaryState_Menu(RotaryState):
             oled_menu.new_menu_items(["MONO", "STEREO"])
             self.new_state(RotaryState_SettingsMenu)
 
+        if (strval == "TEST IMAGE"):
+            self.noisebox.oled.show_images()
+            self.new_state(RotaryState_ShowingImages)
+
     def rotaryCallback(self, oled_menu, direction):
         """Increment menu counter and redraw menu"""
 
@@ -164,4 +168,12 @@ class RotaryState_SettingsMenu(RotaryState):
             oled_menu.counter += 1
         else:
             oled_menu.counter -= 1
+        oled_menu.draw_menu()
+
+
+class RotaryState_ShowingImages(RotaryState):
+    """Showing images state"""
+
+    def switchCallback(self, noisebox, oled_menu, oled):
+        self.new_state(RotaryState_Menu)
         oled_menu.draw_menu()

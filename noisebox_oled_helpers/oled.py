@@ -1,11 +1,12 @@
 from luma.core.interface.serial import i2c
 from luma.core.render import canvas
 from luma.oled.device import ssd1306
-from PIL import ImageFont, ImageDraw
+from PIL import ImageFont, ImageDraw, Image
 from luma.core.virtual import viewport
 from noisebox_oled_helpers.meter import Meter
 from noisebox_oled_helpers.scroll import ScrollPanel
 from threading import Thread
+import os.path
 import time
 
 
@@ -109,3 +110,27 @@ class OLED:
         """STop scrolling text thread"""
 
         self._scrolling_text_running = False
+
+    def show_images(self):
+        img_path = os.path.abspath(os.path.join(os.path.dirname(__file__),
+            'images', 'pi_logo.png'))
+        logo = Image.open(img_path).convert("RGBA")
+        fff = Image.new(logo.mode, logo.size, (255,) * 4)
+
+        background = Image.new("RGBA", self.device.size, "white")
+        posn = ((self.device.width - logo.width) // 2, 0)
+
+        while True:
+            for angle in range(0, 360, 2):
+                rot = logo.rotate(angle, resample=Image.BILINEAR)
+                img = Image.composite(rot, fff, rot)
+                background.paste(img, posn)
+                self.device.display(background.convert(device.mode))
+
+
+    if __name__ == "__main__":
+        try:
+            device = get_device()
+            main()
+        except KeyboardInterrupt:
+            pass

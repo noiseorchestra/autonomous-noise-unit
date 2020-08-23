@@ -174,7 +174,8 @@ def main():
                   'LEVEL METER',
                   'P2P SESSION',
                   'IP ADDRESS',
-                  'SETTINGS']
+                  'SETTINGS',
+                  'TEST IMAGE']
 
     oled = noisebox_oled_helpers.OLED()
     jack_helper = nh.JackHelper()
