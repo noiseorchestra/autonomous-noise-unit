@@ -1,21 +1,21 @@
 ==TODO==
 
-- Settings menu for mono or stereo selection
+- test showing images and GIFs
 - show "not connected to internet error" somewhere, when checking IP etc...
-- Write unit tests! (10%)
+- Write unit tests! (15%)
 - refactor pytrip_wait to return True / False and message, deal with this in NoiseBox (disconnect JackTrip connections straight away)
 - Create "update" functionallity
 - adapt jack_monitor & jack_wait to both run in background and handle errors that occur during a session, poll jack_monitor
-- function for making p2p connections
-- make p2p connections menu (50%)
 - remove subprocesses which run as shell (25%)
 - move jacktrip and jackd commands to config file
-- move app entry point into own file with noisebox and noise_menu as children
-- install and refactor for use with setuptools
+- install and refactor for use with setuptools?
 - Boost output to headphones (how?? Need to test on hifiberry)
 - hello and goodbye messages
 
 ==DONE==
+- function for making p2p connections
+- make p2p connections menu (50%)
+- Settings menu for mono or stereo selection
 - Tidy and consistency check code, add descriptions where missing
 - Only show single channels in level_meter when in mono
 - account for mono connections <--- default is mono
