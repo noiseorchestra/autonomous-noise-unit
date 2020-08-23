@@ -127,6 +127,8 @@ class OLED:
                 img = Image.composite(rot, fff, rot)
                 background.paste(img, posn)
                 self.device.display(background.convert(self.device.mode))
+                if self._show_images_running is not True:
+                    break
 
     def start_showing_images(self):
         """Start showing images in thread"""
