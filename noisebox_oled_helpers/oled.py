@@ -121,7 +121,7 @@ class OLED:
         background = Image.new("RGBA", self.device.size, "white")
         posn = ((self.device.width - logo.width) // 2, 0)
 
-        while self._show_images_running:
+        while self._show_images_running is True:
             for angle in range(0, 360, 2):
                 rot = logo.rotate(angle, resample=Image.BILINEAR)
                 img = Image.composite(rot, fff, rot)
