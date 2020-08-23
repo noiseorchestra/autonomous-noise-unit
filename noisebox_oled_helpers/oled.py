@@ -1,7 +1,8 @@
 from luma.core.interface.serial import i2c
 from luma.core.render import canvas
 from luma.oled.device import ssd1306
-from PIL import ImageFont, ImageDraw, Image
+from luma.core.sprite_system import framerate_regulator
+from PIL import ImageFont, ImageDraw, Image, ImageSequence
 from luma.core.virtual import viewport
 from noisebox_oled_helpers.meter import Meter
 from noisebox_oled_helpers.scroll import ScrollPanel
@@ -121,6 +122,23 @@ class OLED:
         posn = ((self.device.width - logo_resized.width) // 2, 0)
         background.paste(logo_resized, posn)
         self.device.display(background.convert(self.device.mode))
+
+        time.sleep(3)
+
+        regulator = framerate_regulator(fps=4)
+        img_path = os.path.abspath(os.path.join(os.path.dirname(__file__),
+            'images', 'pylon1.gif'))
+        pylon = Image.open(img_path)
+        size = [min(*self.device.size)] * 2
+        posn = ((self.device.width - size[0]) // 2, self.device.height - size[1])
+
+        while self._show_images_running:
+            for frame in ImageSequence.Iterator(pylon):
+                if self._show_images_running is True:
+                    with regulator:
+                        background = Image.new("RGB", self.device.size, "white")
+                        background.paste(frame.resize(size, resample=Image.LANCZOS), posn)
+                        self.device.display(background.convert(self.device.mode))
 
 
     def start_showing_images(self):
