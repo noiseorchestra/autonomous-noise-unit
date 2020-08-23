@@ -125,7 +125,7 @@ class OLED:
 
         time.sleep(3)
 
-        regulator = framerate_regulator(fps=10)
+        regulator = framerate_regulator(fps=4)
         img_path = os.path.abspath(os.path.join(os.path.dirname(__file__),
             'images', 'pylon1.gif'))
         pylon = Image.open(img_path)
@@ -136,7 +136,7 @@ class OLED:
             for frame in ImageSequence.Iterator(pylon):
                 if self._show_images_running is True:
                     with regulator:
-                        background = Image.new("RGB", self.device.size, "black")
+                        background = Image.new("RGB", self.device.size, "white")
                         background.paste(frame.resize(size, resample=Image.LANCZOS), posn)
                         self.device.display(background.convert(self.device.mode))
 
