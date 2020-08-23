@@ -18,6 +18,7 @@ class OLED:
         self.device = ssd1306(self.serial, rotate=0)
         self._meters_running = False
         self._scrolling_text_running = False
+        self._show_images_running = False
 
     def draw_text(self, x, y, text):
         """Draw one line of text"""
@@ -126,3 +127,15 @@ class OLED:
                 img = Image.composite(rot, fff, rot)
                 background.paste(img, posn)
                 self.device.display(background.convert(self.device.mode))
+
+    def start_showing_images(self):
+        """Start showing images in thread"""
+
+        self._show_images_running = True
+        t = Thread(target=self.show_images)
+        t.start()
+
+    def stop_showing_images(self):
+        """STop scrolling text thread"""
+
+        self._show_images_running = False

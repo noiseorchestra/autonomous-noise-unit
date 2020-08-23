@@ -60,7 +60,7 @@ class RotaryState_Menu(RotaryState):
             self.new_state(RotaryState_SettingsMenu)
 
         if (strval == "TEST IMAGE"):
-            noisebox.oled.show_images()
+            noisebox.oled.oled.start_showing_images()
             self.new_state(RotaryState_ShowingImages)
 
     def rotaryCallback(self, oled_menu, direction):
@@ -175,5 +175,6 @@ class RotaryState_ShowingImages(RotaryState):
     """Showing images state"""
 
     def switchCallback(self, noisebox, oled_menu, oled):
+        noisebox.oled.stop_showing_images()
         self.new_state(RotaryState_Menu)
         oled_menu.draw_menu()
