@@ -125,12 +125,4 @@ class OLED:
                 rot = logo.rotate(angle, resample=Image.BILINEAR)
                 img = Image.composite(rot, fff, rot)
                 background.paste(img, posn)
-                self.device.display(background.convert(device.mode))
-
-
-    if __name__ == "__main__":
-        try:
-            device = get_device()
-            main()
-        except KeyboardInterrupt:
-            pass
+                self.device.display(background.convert(self.device.mode))
