@@ -82,6 +82,7 @@ class RotaryState_JacktripRunning(RotaryState):
 
     def switchCallback(self, noisebox, oled_menu, oled):
         noisebox.stop_jacktrip_session()
+        oled_menu.new_menu_items(oled_menu.default_menu_items)
         self.new_state(RotaryState_Menu)
         oled_menu.draw_menu()
 
@@ -112,7 +113,6 @@ class SwitchState_PeersMenu(RotaryState):
                 self.new_state(RotaryState_Scrolling)
                 oled_menu.new_menu_items(oled_menu.default_menu_items)
             else:
-                oled_menu.new_menu_items(oled_menu.default_menu_items)
                 self.new_state(RotaryState_JacktripRunning)
 
         else:
@@ -123,8 +123,8 @@ class SwitchState_PeersMenu(RotaryState):
                     except NoiseBoxCustomError as e:
                         oled.start_scrolling_text(e.args[0])
                         self.new_state(RotaryState_Scrolling)
-                    else:
                         oled_menu.new_menu_items(oled_menu.default_menu_items)
+                    else:
                         self.new_state(RotaryState_JacktripRunning)
 
     def rotaryCallback(self, oled_menu, direction):
