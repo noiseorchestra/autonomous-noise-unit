@@ -117,19 +117,11 @@ class OLED:
             'images', 'noiseorchestra.jpg'))
         logo = Image.open(img_path).convert("RGBA")
         logo_resized = logo.resize((self.device.height, self.device.height))
-        fff = Image.new(logo_resized.mode, logo_resized.size, (255,) * 4)
-
         background = Image.new("RGBA", self.device.size, "black")
         posn = ((self.device.width - logo_resized.width) // 2, 0)
+        background.paste(logo_resized, posn)
+        self.device.display(background.convert(self.device.mode))
 
-        while self._show_images_running is True:
-            for angle in range(0, 360, 2):
-                rot = logo_resized.rotate(angle, resample=Image.BILINEAR)
-                img = Image.composite(rot, fff, rot)
-                background.paste(img, posn)
-                self.device.display(background.convert(self.device.mode))
-                if self._show_images_running is not True:
-                    break
 
     def start_showing_images(self):
         """Start showing images in thread"""
