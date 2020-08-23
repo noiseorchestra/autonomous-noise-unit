@@ -116,8 +116,7 @@ class OLED:
         img_path = os.path.abspath(os.path.join(os.path.dirname(__file__),
             'images', 'noiseorchestra.jpg'))
         logo = Image.open(img_path).convert("RGBA")
-        fff = Image.new(logo.mode, logo.size, (255,) * 4)
-
+        fff = Image.new(logo.mode, (self.device.height, self.device.height), (255,) * 4)
         background = Image.new("RGBA", self.device.size, "white")
         posn = ((self.device.width - logo.width) // 2, 0)
 
