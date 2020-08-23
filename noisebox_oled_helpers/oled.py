@@ -116,13 +116,15 @@ class OLED:
         img_path = os.path.abspath(os.path.join(os.path.dirname(__file__),
             'images', 'noiseorchestra.jpg'))
         logo = Image.open(img_path).convert("RGBA")
-        fff = Image.new(logo.mode, (self.device.height, self.device.height), (255,) * 4)
-        background = Image.new("RGBA", self.device.size, "white")
-        posn = ((self.device.width - logo.width) // 2, 0)
+        logo_resized = logo.resize((self.device.height, self.device.height))
+        fff = Image.new(logo_resized.mode, logo_resized.size, (255,) * 4)
+
+        background = Image.new("RGBA", self.device.size, "black")
+        posn = ((self.device.width - logo_resized.width) // 2, 0)
 
         while self._show_images_running is True:
             for angle in range(0, 360, 2):
-                rot = logo.rotate(angle, resample=Image.BILINEAR)
+                rot = logo_resized.rotate(angle, resample=Image.BILINEAR)
                 img = Image.composite(rot, fff, rot)
                 background.paste(img, posn)
                 self.device.display(background.convert(self.device.mode))
