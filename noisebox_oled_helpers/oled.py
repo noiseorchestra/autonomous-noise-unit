@@ -114,7 +114,7 @@ class OLED:
 
     def show_images(self):
         img_path = os.path.abspath(os.path.join(os.path.dirname(__file__),
-            'images', 'pi_logo.png'))
+            'images', 'noiseorchestra.jpg'))
         logo = Image.open(img_path).convert("RGBA")
         fff = Image.new(logo.mode, logo.size, (255,) * 4)
 
