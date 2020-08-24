@@ -5,7 +5,7 @@ import configparser as cp
 from time import sleep
 import sys
 import os
-import subprocess
+from shutil import copy
 import noisebox_rotary_helpers
 import noisebox_oled_helpers
 import noisebox_helpers as nh
@@ -168,7 +168,7 @@ class Noisebox:
 def main():
 
     if os.path.isfile('/home/pi/setup/noisebox_config/config.ini'):
-        subprocess.run(["sudo", "cp", "/home/pi/setup/noisebox_config/config.ini", "/home/pi/setup/noisebox/config.ini"])
+        copy("/home/pi/setup/noisebox_config/config.ini", "/home/pi/setup/noisebox/config.ini")
 
     cfg = cp.ConfigParser(interpolation=cp.ExtendedInterpolation())
     cfg.read('config.ini')
