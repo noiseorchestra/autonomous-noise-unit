@@ -5,18 +5,15 @@ import configparser as cp
 from time import sleep
 import sys
 import os
+from shutil import copy
 import noisebox_rotary_helpers
 import noisebox_oled_helpers
 import noisebox_helpers as nh
 
-cfg = cp.ConfigParser(interpolation=cp.ExtendedInterpolation())
-cfg.read('config.ini')
-
-
 class Noisebox:
     """Main noisebox class"""
 
-    def __init__(self, jack_helper, oled):
+    def __init__(self, cfg, jack_helper, oled):
         self.current_server = cfg.get('jacktrip-default', 'ip')
         self.peers = cfg.get('peers', 'ips').split(',')
         self.online_peers = None
@@ -170,6 +167,12 @@ class Noisebox:
 
 def main():
 
+    if os.path.isfile('/home/pi/setup/noisebox_config/config.ini'):
+        copy("/home/pi/setup/noisebox_config/config.ini", "/home/pi/setup/noisebox/config.ini")
+
+    cfg = cp.ConfigParser(interpolation=cp.ExtendedInterpolation())
+    cfg.read('config.ini')
+
     menu_items = ['START JACKTRIP',
                   'LEVEL METER',
                   'P2P SESSION',
@@ -179,7 +182,7 @@ def main():
     oled = noisebox_oled_helpers.OLED()
     jack_helper = nh.JackHelper()
     oled_menu = noisebox_oled_helpers.Menu(menu_items)
-    noisebox = Noisebox(jack_helper, oled)
+    noisebox = Noisebox(cfg, jack_helper, oled)
     ky040 = noisebox_rotary_helpers.KY040(noisebox, oled_menu)
     oled_menu.start(noisebox.oled.device)
 
