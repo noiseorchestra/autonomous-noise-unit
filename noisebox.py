@@ -167,11 +167,15 @@ class Noisebox:
 
 def main():
 
-    if os.path.isfile('/home/pi/setup/noisebox_config/config.ini'):
-        copy("/home/pi/setup/noisebox_config/config.ini", "/home/pi/setup/noisebox/config.ini")
-
     cfg = cp.ConfigParser(interpolation=cp.ExtendedInterpolation())
-    cfg.read('config.ini')
+    if os.path.isfile('./config.ini'):
+        cfg.read('./config.ini')
+    else:
+        print("""
+        config.ini file not found, reading example-config.ini instead,
+        please create your own config.ini file.
+        """)
+        cfg.read('./example-config.ini')
 
     menu_items = ['START JACKTRIP',
                   'LEVEL METER',
