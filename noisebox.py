@@ -15,7 +15,7 @@ class Noisebox:
 
     def __init__(self, cfg, jack_helper, oled):
         self.current_server = cfg.get('jacktrip-default', 'ip')
-        self.peers = cfg.get('peers', 'ips').split(',')
+        self.peers = cfg.get('peers', 'ip_addresses').split(',')
         self.online_peers = None
         self.session_params = {
             'hub_mode': cfg.get('jacktrip-default', 'hub_mode'),
