@@ -31,10 +31,10 @@ $ sudo apt-get install -y python3-dev python-smbus i2c-tools python3-pil libopen
 ```
 
 ## Installation
-Once you have the above requirements installed and necessary RPi audio interface and periferals attached you can install the A-N-U python scripts in one of 2 ways.
+Once you have JACK and JackTrip installed and necessary RPi audio interface and periferals attached (but not configured), you can complete setting up your RPi and installing the remaining requirements in one of 2 ways.
 
 ### Manual installation
-If your audio interface and periferals are already configured correctly to work with your RPi then you can clone ths git repo and install dependencies manually.
+Full manual installation requires you to setup your audio interface and periferals and install the remaining requirements (jack_meter and OLED dependencies). You can then clone this repo and install python dependencies using pip.
 
 ```shell
 $ ssh pi@<rpi-address>.local
@@ -51,7 +51,7 @@ $ python3 autonomous-noise-unit/noisebox.py
 
 ### Install Script
 
-Alternatively, use this install script to clone the repo, install dependencies and setup the RPi & periferals automatically. It will enable the main script to run on startup so you can use your A-N-U as a stand alone headless system. We only recommend doing this if you want a dedicated unit, don't run this this on top of an existing RPi system. This also gives you the option of configuring a Telegraf server for monitoring RPi metrics as well as setting up a mesh VPN which can be used for remote access and making peer-to-peer connections between different A-N-U peers (this feature is experimental).
+Alternatively, use this install script to clone the repo, install the remaining dependencies and setup the RPi & periferals automatically. It will enable the main script to run on startup so you can use your A-N-U as a stand alone headless system. We only recommend doing this if you want a dedicated unit, don't run this this on top of an existing RPi system. This also gives you the option of configuring a Telegraf server for monitoring RPi metrics as well as setting up a mesh VPN which can be used for remote access and making peer-to-peer connections between different A-N-U peers (this feature is experimental).
 
 ```shell
 $ ssh pi@<rpi-address>.local
