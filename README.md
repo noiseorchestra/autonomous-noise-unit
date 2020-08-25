@@ -51,7 +51,7 @@ $ python3 autonomous-noise-unit/noisebox.py
 
 ### Install Script
 
-Alternatively, use this install script to clone the repo, install the remaining dependencies and setup the RPi & periferals automatically. It will enable the main script to run on startup so you can use your A-N-U as a stand alone headless system. We only recommend doing this if you want a dedicated unit, don't run this this on top of an existing RPi system. This also gives you the option of configuring a Telegraf server for monitoring RPi metrics as well as setting up a mesh VPN which can be used for remote access and making peer-to-peer connections between different A-N-U peers (this feature is experimental).
+Alternatively, use this [install script](https://github.com/noiseorchestra/autonomous-noise-unit-install) to clone the repo, install the remaining dependencies and setup the RPi & periferals automatically. It will enable the main script to run on startup so you can use your A-N-U as a stand alone headless system. We only recommend doing this if you want a dedicated unit, don't run this this on top of an existing RPi system. This also gives you the option of configuring a Telegraf server for monitoring RPi metrics as well as setting up a mesh VPN which can be used for remote access and making peer-to-peer connections between different A-N-U peers (this feature is experimental).
 
 ```shell
 $ ssh pi@<rpi-address>.local
