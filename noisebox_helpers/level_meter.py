@@ -29,7 +29,7 @@ class LevelMeter:
         while self._running:
             try:
                 level = float(str(self.current_meter.stdout.readline().rstrip(), 'utf-8'))
-                self.current_meter_value = -50 if math.isinf(level) else level
+                self.current_meter_value = -62 if math.isinf(level) else level
 
             except ValueError:
                 print("level_meter value not float")
