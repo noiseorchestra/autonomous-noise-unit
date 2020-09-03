@@ -113,18 +113,16 @@ class Noisebox:
 
         start_message = ["==START JACKTRIP==", "Starting server", "Waiting for peer.."]
         error_message = ["==JACKTRIP ERROR==", "JackTrip failed to start"]
-        params = [self.session_params, True, True]
         peer_address_or_server = "server"
 
         if server is False:
             start_message = ["==START JACKTRIP==", "Connecting to:", peer_address]
-            params = [self.session_params, True, False, peer_address]
             peer_address_or_server = peer_address
 
         self.oled.draw_lines(start_message)
 
         try:
-            self.pytrip.start(params)
+            self.pytrip.start(self.session_params, p2p=True, server=server, peer_address=peer_address)
         except Exception:
             self.pytrip.stop()
             raise nh.NoiseBoxCustomError(error_message)
