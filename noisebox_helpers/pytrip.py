@@ -25,12 +25,13 @@ class PyTrip:
 
         return ["jacktrip", "-s", n, q, "-z"]
 
-    def start(self, params, p2p=False, server=False, peer_address=None):
+    def start(self, params, server=False, p2p=False, peer_address=None):
         """Start JackTrip with relevent parameters"""
 
-        command = self.generate_client_command(params, p2p, peer_address)
         if server is True:
             command = self.generate_server_command(params)
+        else:
+            command = self.generate_client_command(params, p2p, peer_address)
         self.current_jacktrip = Popen(command, stdout=PIPE, stderr=STDOUT)
 
     def stop(self):
