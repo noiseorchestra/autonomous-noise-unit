@@ -70,14 +70,14 @@ class Noisebox:
 
         stereo_input = False if self.session_params['input-channels'] is "1" else True
         self.start_level_meters(stereo_input=stereo_input)
-        self.jack_helper.make_monitoring_connections(stereo=stereo_input)
+        self.jack_helper.make_monitoring_connections(stereo_input=stereo_input)
 
     def start_jacktrip_monitoring(self):
         """Start monitoring jacktrip session audio"""
 
         stereo_jacktrip = False if self.session_params['jacktrip-channels'] == "1" else True
         stereo_input = False if self.session_params['input-channels'] == "1" else True
-        self.start_level_meters(jacktrip_session=True)
+        self.start_level_meters(stereo_input=stereo_input, jacktrip_session=True)
         self.jack_helper.make_jacktrip_connections(stereo_input=stereo_input)
 
     def stop_monitoring(self):
