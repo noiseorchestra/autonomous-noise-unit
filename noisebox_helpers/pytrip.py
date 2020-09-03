@@ -11,7 +11,7 @@ class PyTrip:
         """Generate JackTrip command"""
 
         ip = params["ip"] if p2p is not True else peer_address
-        n = "-n" + params["channels"]
+        n = "-n" + params["jacktrip-channels"]
         q = "-q" + params["queue"]
         server_type = "-C" if p2p is not True else "-c"
 
@@ -20,7 +20,7 @@ class PyTrip:
     def generate_server_command(self, params):
         """Generate JackTrip command"""
 
-        n = "-n" + params["channels"]
+        n = "-n" + params["jacktrip-channels"]
         q = "-q" + params["queue"]
 
         return ["jacktrip", "-s", n, q, "-z"]

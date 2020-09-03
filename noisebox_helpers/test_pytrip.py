@@ -9,7 +9,7 @@ def test_generate_client_command_peer_session():
         'hub_mode': cfg.get('jacktrip-default', 'hub_mode'),
         'server': cfg.get('jacktrip-default', 'server'),
         'ip': "123.123.123.123",
-        'channels': cfg.get('jacktrip-default', 'channels'),
+        'jacktrip-channels': cfg.get('jacktrip-default', 'jacktrip-channels'),
         'queue': cfg.get('jacktrip-default', 'queue')
         }
     mytrip = PyTrip()
@@ -23,7 +23,7 @@ def test_generate_client_command_hub_server_session():
         'hub_mode': cfg.get('jacktrip-default', 'hub_mode'),
         'server': cfg.get('jacktrip-default', 'server'),
         'ip': "123.123.123.123",
-        'channels': cfg.get('jacktrip-default', 'channels'),
+        'jacktrip-channels': cfg.get('jacktrip-default', 'channels'),
         'queue': cfg.get('jacktrip-default', 'queue')
         }
     mytrip = PyTrip()
@@ -35,7 +35,7 @@ def test_generate_server_command():
         'hub_mode': cfg.get('jacktrip-default', 'hub_mode'),
         'server': cfg.get('jacktrip-default', 'server'),
         'ip': "123.123.123.123",
-        'channels': cfg.get('jacktrip-default', 'channels'),
+        'jacktrip-channels': cfg.get('jacktrip-default', 'channels'),
         'queue': cfg.get('jacktrip-default', 'queue')
         }
     mytrip = PyTrip()

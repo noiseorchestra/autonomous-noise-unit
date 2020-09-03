@@ -151,16 +151,18 @@ class RotaryState_SettingsMenu(RotaryState):
 
         strval = oled_menu.menu_items[oled_menu.menuindex]
 
-        if (strval == "MONO"):
-            """Set audio to mono"""
-            print("MONO")
-            noisebox.session_params['channels'] = "1"
+        if (strval == "MONO INPUT"):
+            """Toggle input channels mono/stereo"""
+
+            next_ch = "1" if noisebox.session_params['input-channels'] == "2" else "2"
+            noisebox.session_params['input-channels'] = next_ch
             self.drawDefaultMenu(oled_menu)
 
-        if (strval == "STEREO"):
-            """Set audio to stereo"""
-            print("STEREO")
-            noisebox.session_params['channels'] = "2"
+        if (strval == "MONO JACKTRIP"):
+            """Toggle jacktrip channels mono/stereo"""
+
+            next_ch = "1" if noisebox.session_params['jacktrip-channels'] == "2" else "2"
+            noisebox.session_params['jacktrip-channels'] = next_ch
             self.drawDefaultMenu(oled_menu)
 
         if (strval == "IP ADDRESS"):

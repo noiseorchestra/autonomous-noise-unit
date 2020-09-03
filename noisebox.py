@@ -21,7 +21,8 @@ class Noisebox:
             'hub_mode': cfg.get('jacktrip-default', 'hub_mode'),
             'server': cfg.get('jacktrip-default', 'server'),
             'ip': cfg.get('jacktrip-default', 'ip'),
-            'channels': cfg.get('jacktrip-default', 'channels'),
+            'jacktrip-channels': cfg.get('jacktrip-default', 'channels'),
+            'input-channels': "2",
             'queue': cfg.get('jacktrip-default', 'queue')
             }
         self.pytrip = nh.PyTrip()
@@ -42,13 +43,13 @@ class Noisebox:
         self.online_peers = nh.get_online_peers(self.peers)
         return self.online_peers
 
-    def start_level_meters(self, stereo=False, jacktrip_session=False):
+    def start_level_meters(self, stereo_input=False, jacktrip_session=False):
         """Get relevant ports and start level meters"""
 
         level_meters = []
 
         try:
-            local_inputs = self.jack_helper.get_inputs(stereo=stereo)
+            local_inputs = self.jack_helper.get_inputs(stereo=stereo_input)
             for i, port in enumerate(local_inputs):
                 channel = "IN-" + str(i + 1)
                 level_meters.append(nh.LevelMeter(port.name, channel))
@@ -67,16 +68,17 @@ class Noisebox:
     def start_local_monitoring(self):
         """Start monitoring local audio"""
 
-        stereo = False if self.session_params['channels'] is "1" else True
-        self.start_level_meters(stereo=stereo)
-        self.jack_helper.make_monitoring_connections(stereo=stereo)
+        stereo_input = False if self.session_params['input-channels'] is "1" else True
+        self.start_level_meters(stereo_input=stereo_input)
+        self.jack_helper.make_monitoring_connections(stereo=stereo_input)
 
     def start_jacktrip_monitoring(self):
         """Start monitoring jacktrip session audio"""
 
-        stereo = False if self.session_params['channels'] == "1" else True
-        self.start_level_meters(stereo=stereo, jacktrip_session=True)
-        self.jack_helper.make_jacktrip_connections(stereo=stereo)
+        stereo_jacktrip = False if self.session_params['jacktrip-channels'] == "1" else True
+        stereo_input = False if self.session_params['input-channels'] == "1" else True
+        self.start_level_meters(jacktrip_session=True)
+        self.jack_helper.make_jacktrip_connections(stereo_input=stereo_input)
 
     def stop_monitoring(self):
         """Stop monitoring audio"""
