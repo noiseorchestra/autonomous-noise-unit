@@ -14,6 +14,7 @@ class Noisebox:
     """Main noisebox class"""
 
     def __init__(self, cfg, jack_helper, oled):
+        self.config = cfg
         self.current_server = cfg.get('jacktrip-default', 'ip')
         self.peers = cfg.get('peers', 'ip_addresses').split(',')
         self.online_peers = None
@@ -165,10 +166,10 @@ def main():
         """)
         cfg.read('./example-config.ini')
 
-    menu_items = ['START JACKTRIP',
+    menu_items = ['CONNECT TO SERVER',
                   'LEVEL METER',
                   'P2P SESSION',
-                  'SETTINGS']
+                  'SETTINGS -->']
 
     oled = noisebox_oled_helpers.OLED()
     jack_helper = nh.JackHelper()

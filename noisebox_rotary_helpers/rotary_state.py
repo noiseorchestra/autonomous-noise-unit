@@ -34,7 +34,7 @@ class RotaryState_Menu(RotaryState):
 
         strval = oled_menu.menu_items[oled_menu.menuindex]
 
-        if (strval == "START JACKTRIP"):
+        if (strval == "CONNECT TO SERVER"):
             try:
                 noisebox.start_jacktrip_session()
             except NoiseBoxCustomError as e:
@@ -55,14 +55,14 @@ class RotaryState_Menu(RotaryState):
         if (strval == "P2P SESSION"):
             oled.draw_text(0, 26, "Searching for peers...")
             online_peers = noisebox.check_peers()
-            online_peers.append("start server")
-            online_peers.append("back")
+            online_peers.append("START SERVER")
+            online_peers.append("<-- BACK")
             oled_menu.new_menu_items(online_peers)
             self.new_state(SwitchState_PeersMenu)
             oled_menu.draw_menu()
 
-        if (strval == "SETTINGS"):
-            oled_menu.new_menu_items(["MONO INPUT", "MONO JACKTRIP", "IP ADDRESS", "BACK"])
+        if (strval == "SETTINGS -->"):
+            oled_menu.new_menu_items(["MONO INPUT", "MONO JACKTRIP", "IP ADDRESS", "<-- BACK"])
             self.new_state(RotaryState_SettingsMenu)
             oled_menu.draw_menu()
 
@@ -111,7 +111,7 @@ class SwitchState_PeersMenu(RotaryState):
         strval = oled_menu.menu_items[oled_menu.menuindex]
 
         """check menu value when button clicked and run corresponding function"""
-        if (strval == "back"):
+        if (strval == "<-- BACK"):
             self.drawDefaultMenu(oled_menu)
 
         elif (strval == "start server"):
@@ -151,7 +151,7 @@ class RotaryState_SettingsMenu(RotaryState):
 
         strval = oled_menu.menu_items[oled_menu.menuindex]
 
-        if (strval == "BACK"):
+        if (strval == "<-- BACK"):
             self.drawDefaultMenu(oled_menu)
 
         elif (strval == "MONO INPUT"):
