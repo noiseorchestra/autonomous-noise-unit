@@ -62,7 +62,7 @@ class RotaryState_Menu(RotaryState):
             oled_menu.draw_menu()
 
         if (strval == "SETTINGS"):
-            oled_menu.new_menu_items(["MONO INPUT", "MONO JACKTRIP", "IP ADDRESS"])
+            oled_menu.new_menu_items(["MONO INPUT", "MONO JACKTRIP", "IP ADDRESS", "BACK"])
             self.new_state(RotaryState_SettingsMenu)
             oled_menu.draw_menu()
 
@@ -151,7 +151,10 @@ class RotaryState_SettingsMenu(RotaryState):
 
         strval = oled_menu.menu_items[oled_menu.menuindex]
 
-        if (strval == "MONO INPUT"):
+        if (strval == "BACK"):
+            self.drawDefaultMenu(oled_menu)
+
+        elif (strval == "MONO INPUT"):
             """Toggle input channels mono/stereo"""
 
             next_ch = "1" if noisebox.session_params['input-channels'] == "2" else "2"
@@ -159,7 +162,7 @@ class RotaryState_SettingsMenu(RotaryState):
             oled_menu.set_selected_item(["MONO INPUT"])
             self.drawDefaultMenu(oled_menu)
 
-        if (strval == "MONO JACKTRIP"):
+        elif (strval == "MONO JACKTRIP"):
             """Toggle jacktrip channels mono/stereo"""
 
             next_ch = "1" if noisebox.session_params['jacktrip-channels'] == "2" else "2"
@@ -167,7 +170,7 @@ class RotaryState_SettingsMenu(RotaryState):
             oled_menu.set_selected_item(["MONO JACKTRIP"])
             self.drawDefaultMenu(oled_menu)
 
-        if (strval == "IP ADDRESS"):
+        elif (strval == "IP ADDRESS"):
             title = ["==HOSTNAME & IP=="]
             oled.draw_lines(title + noisebox.get_ip())
             oled_menu.new_menu_items(oled_menu.default_menu_items)
