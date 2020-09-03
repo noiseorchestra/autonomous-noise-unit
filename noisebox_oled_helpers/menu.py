@@ -13,7 +13,7 @@ class Menu:
         self.menuindex = 0
         self.default_menu_items = menu_items
         self.menu_items = menu_items
-        self.selected_items = ["MONO INPUT"]
+        self.selected_items = []
         self.device = None
 
     def start(self, device):
@@ -59,9 +59,11 @@ class Menu:
         self.menuindex = 0
         self.counter = 0
 
-    def set_selected_item(self, selected_item):
+    def set_selected_item(self, selected_items):
         """Set new menu items"""
-        if selected_item in self.selected_items:
-            self.selected_items.append(selected_item)
-        else:
-            self.selected_items.remove(selected_item)
+
+        for selected_item in selected_items:
+            if selected_item in self.selected_items:
+                self.selected_items.append(selected_item)
+            else:
+                self.selected_items.remove(selected_item)

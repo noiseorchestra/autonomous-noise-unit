@@ -64,6 +64,7 @@ class RotaryState_Menu(RotaryState):
         if (strval == "SETTINGS"):
             oled_menu.new_menu_items(["MONO INPUT", "MONO JACKTRIP", "IP ADDRESS"])
             self.new_state(RotaryState_SettingsMenu)
+            oled_menu.set_selected_item(["MONO INPUT", "MONO JACKTRIP"])
             oled_menu.draw_menu()
 
     def rotaryCallback(self, oled_menu, direction):
@@ -156,6 +157,7 @@ class RotaryState_SettingsMenu(RotaryState):
 
             next_ch = "1" if noisebox.session_params['input-channels'] == "2" else "2"
             noisebox.session_params['input-channels'] = next_ch
+            oled_menu.set_selected_item(["MONO INPUT"])
             self.drawDefaultMenu(oled_menu)
 
         if (strval == "MONO JACKTRIP"):
@@ -163,6 +165,7 @@ class RotaryState_SettingsMenu(RotaryState):
 
             next_ch = "1" if noisebox.session_params['jacktrip-channels'] == "2" else "2"
             noisebox.session_params['jacktrip-channels'] = next_ch
+            oled_menu.set_selected_item(["MONO JACKTRIP"])
             self.drawDefaultMenu(oled_menu)
 
         if (strval == "IP ADDRESS"):
