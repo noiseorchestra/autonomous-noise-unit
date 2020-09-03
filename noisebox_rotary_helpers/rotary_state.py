@@ -16,9 +16,18 @@ class RotaryState:
     def rotaryCallback(self, oled_menu, direction):
         print("rotaryCallback not set")
 
+    def drawDefaultMenu(self, oled_menu):
+        oled_menu.new_menu_items(oled_menu.default_menu_items)
+        self.new_state(RotaryState_Menu)
+        oled_menu.draw_menu()
+
+
 
 class RotaryState_Menu(RotaryState):
     """Menu state"""
+
+    def __init__(self):
+        self.new_state(RotaryState_Menu)
 
     def switchCallback(self, noisebox, oled_menu, oled):
         """check menu value on button click and run corresponding methods"""
@@ -50,6 +59,7 @@ class RotaryState_Menu(RotaryState):
             online_peers.append("back")
             oled_menu.new_menu_items(online_peers)
             self.new_state(SwitchState_PeersMenu)
+            oled_menu.draw_menu()
 
         if (strval == "IP ADDRESS"):
             title = ["==HOSTNAME & IP=="]
@@ -58,6 +68,7 @@ class RotaryState_Menu(RotaryState):
         if (strval == "SETTINGS"):
             oled_menu.new_menu_items(["MONO", "STEREO"])
             self.new_state(RotaryState_SettingsMenu)
+            oled_menu.draw_menu()
 
     def rotaryCallback(self, oled_menu, direction):
         """Increment menu counter and redraw menu"""
@@ -74,25 +85,21 @@ class RotaryState_Monitoring(RotaryState):
 
     def switchCallback(self, noisebox, oled_menu, oled):
         noisebox.stop_monitoring()
-        self.new_state(RotaryState_Menu)
-        oled_menu.draw_menu()
+        self.drawDefaultMenu(oled_menu)
 
 class RotaryState_JacktripRunning(RotaryState):
     """JackTrip running state"""
 
     def switchCallback(self, noisebox, oled_menu, oled):
         noisebox.stop_jacktrip_session()
-        oled_menu.new_menu_items(oled_menu.default_menu_items)
-        self.new_state(RotaryState_Menu)
-        oled_menu.draw_menu()
+        self.drawDefaultMenu(oled_menu)
 
 class RotaryState_Scrolling(RotaryState):
     """Scrolling oled text state"""
 
     def switchCallback(self, noisebox, oled_menu, oled):
         oled.stop_scrolling_text()
-        self.new_state(RotaryState_Menu)
-        oled_menu.draw_menu()
+        self.drawDefaultMenu(oled_menu)
 
 class SwitchState_PeersMenu(RotaryState):
     """New swtitch state"""
@@ -102,8 +109,7 @@ class SwitchState_PeersMenu(RotaryState):
 
         """check menu value when button clicked and run corresponding function"""
         if (strval == "back"):
-            oled_menu.new_menu_items(oled_menu.default_menu_items)
-            self.new_state(RotaryState_Menu)
+            self.drawDefaultMenu(oled_menu)
 
         elif (strval == "start server"):
             try:
@@ -111,7 +117,6 @@ class SwitchState_PeersMenu(RotaryState):
             except NoiseBoxCustomError as e:
                 oled.start_scrolling_text(e.args[0])
                 self.new_state(RotaryState_Scrolling)
-                oled_menu.new_menu_items(oled_menu.default_menu_items)
             else:
                 self.new_state(RotaryState_JacktripRunning)
 
@@ -123,7 +128,6 @@ class SwitchState_PeersMenu(RotaryState):
                     except NoiseBoxCustomError as e:
                         oled.start_scrolling_text(e.args[0])
                         self.new_state(RotaryState_Scrolling)
-                        oled_menu.new_menu_items(oled_menu.default_menu_items)
                     else:
                         self.new_state(RotaryState_JacktripRunning)
 
@@ -147,15 +151,13 @@ class RotaryState_SettingsMenu(RotaryState):
             """Set audio to mono"""
             print("MONO")
             noisebox.session_params['channels'] = "1"
-            oled_menu.new_menu_items(oled_menu.default_menu_items)
-            self.new_state(RotaryState_Menu)
+            self.drawDefaultMenu(oled_menu)
 
         if (strval == "STEREO"):
             """Set audio to stereo"""
             print("STEREO")
             noisebox.session_params['channels'] = "2"
-            oled_menu.new_menu_items(oled_menu.default_menu_items)
-            self.new_state(RotaryState_Menu)
+            self.drawDefaultMenu(oled_menu)
 
     def rotaryCallback(self, oled_menu, direction):
         """Increment menu counter and redraw menu"""

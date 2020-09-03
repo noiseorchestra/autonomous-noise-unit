@@ -5,7 +5,6 @@ import configparser as cp
 from time import sleep
 import sys
 import os
-from shutil import copy
 import noisebox_rotary_helpers
 import noisebox_oled_helpers
 import noisebox_helpers as nh
@@ -132,6 +131,7 @@ class Noisebox:
             else:
                 self.pytrip.stop()
                 self.pytrip_watch.terminate()
+                raise nh.NoiseBoxCustomError(message)
 
     def start_jacktrip_peer_session_server(self):
         self.oled.draw_lines(["==START JACKTRIP==", "Starting server", "Waiting for peer.."])

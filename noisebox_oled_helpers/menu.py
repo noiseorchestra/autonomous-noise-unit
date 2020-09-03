@@ -52,4 +52,3 @@ class Menu:
         self.menu_items = new_menu_items
         self.menuindex = 0
         self.counter = 0
-        self.draw_menu()
