@@ -25,7 +25,7 @@ class PyTrip:
 
         return ["jacktrip", "-s", n, q, "-z"]
 
-    def start(self, params, server=False, p2p=False, peer_address=None):
+    def start(self, params, p2p=False, server=False, peer_address=None):
         """Start JackTrip with relevent parameters"""
 
         if server is True:
