@@ -169,6 +169,12 @@ def main():
                   'P2P SESSION',
                   'SETTINGS -->']
 
+    settings_menu = ["MONO INPUT",
+                     "MONO JACKTRIP",
+                     "SERVER A",
+                     "IP ADDRESS",
+                     "<-- BACK"]
+
     selected_menu_items = []
     if cfg['jacktrip-default']['input-channels'] == '1':
         selected_menu_items.append('MONO INPUT')
@@ -181,10 +187,12 @@ def main():
 
     if cfg['jacktrip-default']['ip'] == cfg['server2']['ip']:
         selected_menu_items.append('SERVER B')
+        settings_menu.remove('SERVER A')
+        settings_menu.insert(2, 'SERVER B')
 
     oled = noisebox_oled_helpers.OLED()
     jack_helper = nh.JackHelper()
-    oled_menu = noisebox_oled_helpers.Menu(menu_items, selected_menu_items)
+    oled_menu = noisebox_oled_helpers.Menu(menu_items, settings_menu, selected_menu_items)
     noisebox = Noisebox(cfg, jack_helper, oled)
     ky040 = noisebox_rotary_helpers.KY040(noisebox, oled_menu)
     oled_menu.start(noisebox.oled.device)

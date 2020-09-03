@@ -62,7 +62,7 @@ class RotaryState_Menu(RotaryState):
             oled_menu.draw_menu()
 
         if (strval == "SETTINGS -->"):
-            oled_menu.new_menu_items(["MONO INPUT", "MONO JACKTRIP", "SERVER A", "SERVER B", "IP ADDRESS", "<-- BACK"])
+            oled_menu.new_menu_items(oled_menu.settings_items)
             self.new_state(RotaryState_SettingsMenu)
             oled_menu.draw_menu()
 
@@ -161,8 +161,7 @@ class RotaryState_SettingsMenu(RotaryState):
             noisebox.session_params['input-channels'] = next_ch
             noisebox.save_settings()
             oled_menu.toggle_selected_items(["MONO INPUT"])
-            oled.draw_lines(["==INPUT==", "Channels: " +  next_ch])
-            self.drawDefaultMenu(oled_menu)
+            oled_menu.draw_menu()
 
         elif (strval == "MONO JACKTRIP"):
             """Toggle jacktrip channels mono/stereo"""
@@ -171,28 +170,27 @@ class RotaryState_SettingsMenu(RotaryState):
             noisebox.session_params['jacktrip-channels'] = next_ch
             noisebox.save_settings()
             oled_menu.toggle_selected_items(["MONO JACKTRIP"])
-            oled.draw_lines(["==JACKTRIP==", "Channels: " +  next_ch])
-            self.drawDefaultMenu(oled_menu)
+            oled_menu.draw_menu()
 
         elif (strval == "SERVER A"):
-            """Select server A"""
-
-            ip = noisebox.config['server1']['ip']
-            noisebox.session_params['ip'] = ip
-            noisebox.save_settings()
-            oled_menu.toggle_selected_items(["SERVER A", "SERVER B"])
-            oled.draw_lines(["==SERVER==", "ip: " + ip])
-            self.drawDefaultMenu(oled_menu)
-
-        elif (strval == "SERVER B"):
-            """Select server B"""
+            """Toggle to server B"""
 
             ip = noisebox.config['server2']['ip']
             noisebox.session_params['ip'] = ip
             noisebox.save_settings()
-            oled_menu.toggle_selected_items(["SERVER A", "SERVER B"])
-            oled.draw_lines(["==SERVER==", "ip: " + ip])
-            self.drawDefaultMenu(oled_menu)
+            oled_menu.menu_items.remove('SERVER A')
+            oled_menu.menu_items.insert(2, 'SERVER B')
+            oled_menu.draw_menu()
+
+        elif (strval == "SERVER B"):
+            """Toggle to server A"""
+
+            ip = noisebox.config['server1']['ip']
+            noisebox.session_params['ip'] = ip
+            noisebox.save_settings()
+            oled_menu.menu_items.remove('SERVER B')
+            oled_menu.menu_items.insert(2, 'SERVER A')
+            oled_menu.draw_menu()
 
         elif (strval == "IP ADDRESS"):
             title = ["==HOSTNAME & IP=="]

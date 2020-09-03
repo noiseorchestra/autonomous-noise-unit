@@ -1,8 +1,6 @@
 ==TODO==
 
-- make stereo default
-- save configuration settings
-- add choice of servers
+- change server names in config file
 - hold button shutdown
 - replace noisebox with ANU
 - show "not connected to internet error" somewhere, when checking IP etc...
@@ -15,6 +13,9 @@
 - hello and goodbye messages
 
 ==DONE==
+- make stereo default
+- save configuration settings
+- add choice of servers
 - loop through images in image branch
 - don't timeout server in p2p mode
 - reconfigure meter levels
