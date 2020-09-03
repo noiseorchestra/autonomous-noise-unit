@@ -61,12 +61,8 @@ class RotaryState_Menu(RotaryState):
             self.new_state(SwitchState_PeersMenu)
             oled_menu.draw_menu()
 
-        if (strval == "IP ADDRESS"):
-            title = ["==HOSTNAME & IP=="]
-            oled.draw_lines(title + noisebox.get_ip())
-
         if (strval == "SETTINGS"):
-            oled_menu.new_menu_items(["MONO", "STEREO"])
+            oled_menu.new_menu_items(["MONO", "STEREO", "IP ADDRESS"])
             self.new_state(RotaryState_SettingsMenu)
             oled_menu.draw_menu()
 
@@ -166,6 +162,12 @@ class RotaryState_SettingsMenu(RotaryState):
             print("STEREO")
             noisebox.session_params['channels'] = "2"
             self.drawDefaultMenu(oled_menu)
+
+        if (strval == "IP ADDRESS"):
+            title = ["==HOSTNAME & IP=="]
+            oled.draw_lines(title + noisebox.get_ip())
+            oled_menu.new_menu_items(oled_menu.default_menu_items)
+            self.new_state(RotaryState_Menu)
 
     def rotaryCallback(self, oled_menu, direction):
         """Increment menu counter and redraw menu"""
