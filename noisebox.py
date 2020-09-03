@@ -175,20 +175,17 @@ def main():
                      "IP ADDRESS",
                      "<-- BACK"]
 
+    if cfg['jacktrip-default']['ip'] == cfg['server2']['ip']:
+        settings_menu.remove('SERVER A')
+        settings_menu.insert(2, 'SERVER B')
+
     selected_menu_items = []
+
     if cfg['jacktrip-default']['input-channels'] == '1':
         selected_menu_items.append('MONO INPUT')
 
     if cfg['jacktrip-default']['jacktrip-channels'] == '1':
         selected_menu_items.append('MONO JACKTRIP')
-
-    if cfg['jacktrip-default']['ip'] == cfg['server1']['ip']:
-        selected_menu_items.append('SERVER A')
-
-    if cfg['jacktrip-default']['ip'] == cfg['server2']['ip']:
-        selected_menu_items.append('SERVER B')
-        settings_menu.remove('SERVER A')
-        settings_menu.insert(2, 'SERVER B')
 
     oled = noisebox_oled_helpers.OLED()
     jack_helper = nh.JackHelper()
