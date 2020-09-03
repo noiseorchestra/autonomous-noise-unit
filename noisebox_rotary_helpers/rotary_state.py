@@ -62,7 +62,7 @@ class RotaryState_Menu(RotaryState):
             oled_menu.draw_menu()
 
         if (strval == "SETTINGS"):
-            oled_menu.new_menu_items(["MONO", "STEREO", "IP ADDRESS"])
+            oled_menu.new_menu_items(["MONO INPUT", "MONO JACKTRIP", "IP ADDRESS"])
             self.new_state(RotaryState_SettingsMenu)
             oled_menu.draw_menu()
 
