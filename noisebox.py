@@ -146,7 +146,10 @@ class Noisebox:
         self.oled.draw_lines(["==JACKTRIP STOPPED=="])
 
     def save_settings(self):
+        print(self.config)
         self.config['jacktrip-default'] = self.session_params
+        print(self.config)
+        print(self.session_params)
         with open('./config.ini', 'w') as configfile:
             self.config.write(configfile)
 
