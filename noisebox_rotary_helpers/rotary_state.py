@@ -195,8 +195,7 @@ class RotaryState_SettingsMenu(RotaryState):
         elif (strval == "IP ADDRESS"):
             title = ["==HOSTNAME & IP=="]
             oled.draw_lines(title + noisebox.get_ip())
-            oled_menu.new_menu_items(oled_menu.default_menu_items)
-            self.new_state(RotaryState_Menu)
+            oled_menu.draw_menu()
 
     def rotaryCallback(self, oled_menu, direction):
         """Increment menu counter and redraw menu"""
