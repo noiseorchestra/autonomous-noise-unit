@@ -15,17 +15,9 @@ class Noisebox:
 
     def __init__(self, cfg, jack_helper, oled):
         self.config = cfg
-        self.current_server = cfg.get('jacktrip-default', 'ip')
         self.peers = cfg.get('peers', 'ip_addresses').split(',')
         self.online_peers = None
-        self.session_params = {
-            'hub_mode': cfg.get('jacktrip-default', 'hub_mode'),
-            'server': cfg.get('jacktrip-default', 'server'),
-            'ip': cfg.get('jacktrip-default', 'ip'),
-            'jacktrip-channels': cfg.get('jacktrip-default', 'jacktrip-channels'),
-            'input-channels': cfg.get('jacktrip-default', 'input-channels'),
-            'queue': cfg.get('jacktrip-default', 'queue')
-            }
+        self.session_params = cfg['jacktrip-default']
         self.pytrip = nh.PyTrip()
         self.oled = oled
         self.jack_helper = jack_helper
@@ -93,14 +85,14 @@ class Noisebox:
         """Start hubserver JackTrip session"""
 
         try:
-            self.oled.draw_lines(["==START JACKTRIP==", "Connecting to:", self.current_server])
+            self.oled.draw_lines(["==START JACKTRIP==", "Connecting to:", self.session_params['ip']])
             self.pytrip.start(self.session_params)
         except Exception:
             self.pytrip.stop()
             raise nh.NoiseBoxCustomError(["==JACKTRIP ERROR==", "JackTrip failed to start"])
         else:
             self.pytrip_watch.run(self.pytrip)
-            self.pytrip_wait.run(self.pytrip_watch, self.current_server)
+            self.pytrip_wait.run(self.pytrip_watch, self.session_params['ip'])
             message = self.pytrip_wait.message
 
             if self.pytrip_wait.connected is True:
@@ -153,6 +145,10 @@ class Noisebox:
         self.pytrip.stop()
         self.oled.draw_lines(["==JACKTRIP STOPPED=="])
 
+    def save_settings(self):
+        self.config['jacktrip-default'] = self.session_params
+        with open('./config.ini', 'w') as configfile:
+            self.config.write(configfile)
 
 def main():
 
@@ -171,9 +167,22 @@ def main():
                   'P2P SESSION',
                   'SETTINGS -->']
 
+    selected_menu_items = []
+    if cfg['default-server']['input-channels'] == '1':
+        selected_menu_items.append('MONO INPUT')
+
+    if cfg['default-server']['jacktrip-channels'] == '1':
+        selected_menu_items.append('MONO JACKTRIP')
+
+    if cfg['default-server']['ip'] == cfg['server1']['ip']:
+        selected_menu_items.append('SERVER A')
+
+    if cfg['default-server']['ip'] == cfg['server2']['ip']:
+        selected_menu_items.append('SERVER B')
+
     oled = noisebox_oled_helpers.OLED()
     jack_helper = nh.JackHelper()
-    oled_menu = noisebox_oled_helpers.Menu(menu_items)
+    oled_menu = noisebox_oled_helpers.Menu(menu_items, selected_menu_items)
     noisebox = Noisebox(cfg, jack_helper, oled)
     ky040 = noisebox_rotary_helpers.KY040(noisebox, oled_menu)
     oled_menu.start(noisebox.oled.device)

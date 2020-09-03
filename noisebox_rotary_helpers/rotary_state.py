@@ -159,6 +159,7 @@ class RotaryState_SettingsMenu(RotaryState):
 
             next_ch = "1" if noisebox.session_params['input-channels'] == "2" else "2"
             noisebox.session_params['input-channels'] = next_ch
+            noisebox.save_settings()
             oled_menu.toggle_selected_items(["MONO INPUT"])
             oled.draw_lines(["==INPUT==", "Channels: " +  next_ch])
             self.drawDefaultMenu(oled_menu)
@@ -168,6 +169,7 @@ class RotaryState_SettingsMenu(RotaryState):
 
             next_ch = "1" if noisebox.session_params['jacktrip-channels'] == "2" else "2"
             noisebox.session_params['jacktrip-channels'] = next_ch
+            noisebox.save_settings()
             oled_menu.toggle_selected_items(["MONO JACKTRIP"])
             oled.draw_lines(["==JACKTRIP==", "Channels: " +  next_ch])
             self.drawDefaultMenu(oled_menu)
