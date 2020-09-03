@@ -151,7 +151,7 @@ class Noisebox:
         self.config['jacktrip-default']['jacktrip-channels'] = self.session_params['jacktrip-channels']
         self.config['jacktrip-default']['input-channels'] = self.session_params['input-channels']
         print(self.config['jacktrip-default']['ip'])
-        print(self.session_params['jacktrip-default']['ip'])
+        print(self.session_params['ip'])
         with open('./config.ini', 'w') as configfile:
             self.config.write(configfile)
 
