@@ -9,15 +9,18 @@ class PyTripWait():
         self.message = None
         self.connected = False
 
-    def run(self, jacktrip_watch, peer_ip):
+    def run(self, jacktrip_watch, peer_ip, long_timeout=False):
         """Run process and block until connection, error or timeout"""
 
         self.waiting = True
         self.connected = False
+        timeout_length = 10
+        if long_timeout is True:
+            timeout_length = 60
 
         while self.waiting is True:
             try:
-                data = jacktrip_watch.queue.get(True, timeout=10)
+                data = jacktrip_watch.queue.get(True, timeout=timeout_length)
                 print(data)
                 self.check_stdout(data, peer_ip)
             except Empty:

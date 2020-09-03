@@ -94,6 +94,13 @@ class RotaryState_JacktripRunning(RotaryState):
         noisebox.stop_jacktrip_session()
         self.drawDefaultMenu(oled_menu)
 
+class RotaryState_JacktripServerWaiting(RotaryState):
+    """JackTrip server waiting state"""
+
+    def switchCallback(self, noisebox, oled_menu, oled):
+        noisebox.stop_jacktrip_session()
+        self.drawDefaultMenu(oled_menu)
+
 class RotaryState_Scrolling(RotaryState):
     """Scrolling oled text state"""
 
@@ -113,7 +120,8 @@ class SwitchState_PeersMenu(RotaryState):
 
         elif (strval == "start server"):
             try:
-                noisebox.start_jacktrip_peer_session()
+                noisebox.start_jacktrip_peer_session(server=True)
+                self.new_state(RotaryState_JacktripServerWaiting)
             except NoiseBoxCustomError as e:
                 oled.start_scrolling_text(e.args[0])
                 self.new_state(RotaryState_Scrolling)
