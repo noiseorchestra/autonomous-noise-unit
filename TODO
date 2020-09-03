@@ -2,12 +2,9 @@
 
 - make stereo default
 - save configuration settings
-- reconfigure meter levels
 - add choice of servers
 - hold button shutdown
 - replace noisebox with ANU
-- don't timeout server in p2p mode
-- loop through images in image branch
 - show "not connected to internet error" somewhere, when checking IP etc...
 - Write unit tests! (15%)
 - refactor pytrip_wait to return True / False and message, deal with this in NoiseBox (disconnect JackTrip connections straight away)
@@ -18,6 +15,9 @@
 - hello and goodbye messages
 
 ==DONE==
+- loop through images in image branch
+- don't timeout server in p2p mode
+- reconfigure meter levels
 - BUG: if p2p connection fails then you get stuck
 - DRY: peer2peer session code
 - BUG: incorrect setting and rendering order with new menu items

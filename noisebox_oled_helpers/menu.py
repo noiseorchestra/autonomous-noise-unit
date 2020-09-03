@@ -25,7 +25,7 @@ class Menu:
         """invert selected menue item"""
 
         font = ImageFont.load_default()
-        draw.rectangle((x, y, x+120, y+12), outline=255, fill=255)
+        draw.rectangle((x, y, x+120, y+10), outline=255, fill=255)
         draw.text((x, y), text, font=font, outline=0, fill="black")
 
     def menu(self, device, draw, menustr, index):
@@ -38,6 +38,7 @@ class Menu:
                 self.menuindex = i
                 self.invert(draw, 2, i*10, menustr[i])
             else:
+                draw.ellipse((100, i*10 + 2, 106, i*10 + 8), outline=255, fill=255)
                 draw.text((2, i*10), menustr[i], font=font, fill=255)
 
     def draw_menu(self):
