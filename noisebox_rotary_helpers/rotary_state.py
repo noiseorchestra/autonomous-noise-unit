@@ -64,7 +64,6 @@ class RotaryState_Menu(RotaryState):
         if (strval == "SETTINGS"):
             oled_menu.new_menu_items(["MONO INPUT", "MONO JACKTRIP", "IP ADDRESS"])
             self.new_state(RotaryState_SettingsMenu)
-            oled_menu.set_selected_item(["MONO INPUT", "MONO JACKTRIP"])
             oled_menu.draw_menu()
 
     def rotaryCallback(self, oled_menu, direction):

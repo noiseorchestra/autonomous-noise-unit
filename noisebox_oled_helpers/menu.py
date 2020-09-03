@@ -60,7 +60,7 @@ class Menu:
         self.counter = 0
 
     def set_selected_item(self, selected_items):
-        """Set new menu items"""
+        """Toggle selected menu items"""
 
         for selected_item in selected_items:
             if selected_item in self.selected_items:
