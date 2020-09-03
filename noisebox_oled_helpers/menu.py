@@ -13,6 +13,7 @@ class Menu:
         self.menuindex = 0
         self.default_menu_items = menu_items
         self.menu_items = menu_items
+        self.selected_items = ["MONO INPUT"]
         self.device = None
 
     def start(self, device):
@@ -37,9 +38,14 @@ class Menu:
             if(i == index):
                 self.menuindex = i
                 self.invert(draw, 2, i*10, menustr[i])
+                if menustr[i] in self.selected_items:
+                    draw.ellipse((100, i*10 + 2, 106, i*10 + 8), outline="black", fill="black")
             else:
                 draw.ellipse((100, i*10 + 2, 106, i*10 + 8), outline=255, fill=255)
                 draw.text((2, i*10), menustr[i], font=font, fill=255)
+                if menustr[i] in self.selected_items:
+                    draw.ellipse((100, i*10 + 2, 106, i*10 + 8), outline="white", fill="white")
+
 
     def draw_menu(self):
         """draw menu on convas"""
@@ -53,3 +59,10 @@ class Menu:
         self.menu_items = new_menu_items
         self.menuindex = 0
         self.counter = 0
+
+    def set_selected_item(self, selected_item):
+        """Set new menu items"""
+        if selected_item in self.selected_items:
+            self.selected_items.append(selected_item)
+        else:
+            self.selected_items.remove(selected_item)
