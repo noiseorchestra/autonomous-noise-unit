@@ -1,7 +1,5 @@
 ==TODO==
 
-- DRY: peer2peer session code
-- BUG: if p2p connection fails then you get stuck
 - make stereo default
 - save configuration settings
 - reconfigure meter levels
@@ -20,6 +18,8 @@
 - hello and goodbye messages
 
 ==DONE==
+- BUG: if p2p connection fails then you get stuck
+- DRY: peer2peer session code
 - BUG: incorrect setting and rendering order with new menu items
 - install and refactor for use with setuptools?
 - test showing images and GIFs
