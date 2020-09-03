@@ -113,7 +113,7 @@ class SwitchState_PeersMenu(RotaryState):
 
         elif (strval == "start server"):
             try:
-                noisebox.start_jacktrip_peer_session_server()
+                noisebox.start_jacktrip_peer_session()
             except NoiseBoxCustomError as e:
                 oled.start_scrolling_text(e.args[0])
                 self.new_state(RotaryState_Scrolling)
@@ -124,7 +124,7 @@ class SwitchState_PeersMenu(RotaryState):
             for menu_item in oled_menu.menu_items:
                 if (strval == menu_item):
                     try:
-                        noisebox.start_jacktrip_peer_session_client(menu_item)
+                        noisebox.start_jacktrip_peer_session(server=False, peer_address=menu_item)
                     except NoiseBoxCustomError as e:
                         oled.start_scrolling_text(e.args[0])
                         self.new_state(RotaryState_Scrolling)

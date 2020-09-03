@@ -9,6 +9,7 @@ import noisebox_rotary_helpers
 import noisebox_oled_helpers
 import noisebox_helpers as nh
 
+
 class Noisebox:
     """Main noisebox class"""
 
@@ -108,43 +109,28 @@ class Noisebox:
                 self.pytrip.stop()
                 raise nh.NoiseBoxCustomError(message)
 
-    def start_jacktrip_peer_session_client(self, peer_address):
+    def start_jacktrip_peer_session(self, server=True, peer_address=None):
 
-        self.oled.draw_lines(["==START JACKTRIP==", "Connecting to:", peer_address])
+        start_message = ["==START JACKTRIP==", "Starting server", "Waiting for peer.."]
+        error_message = ["==JACKTRIP ERROR==", "JackTrip failed to start"]
+        params = [self.session_params, True, True]
+        peer_address_or_server = "server"
+
+        if server is False:
+            start_message = ["==START JACKTRIP==", "Connecting to:", peer_address]
+            params = [self.session_params, True, False, peer_address]
+            peer_address_or_server = peer_address
+
+        self.oled.draw_lines(start_message)
+
         try:
-            self.pytrip.start(self.session_params,
-                              server=False,
-                              p2p=True,
-                              peer_address=peer_address)
+            self.pytrip.start(params)
         except Exception:
             self.pytrip.stop()
-            raise nh.NoiseBoxCustomError(["==JACKTRIP ERROR==", "JackTrip failed to start"])
+            raise nh.NoiseBoxCustomError(error_message)
         else:
             self.pytrip_watch.run(self.pytrip)
-            self.pytrip_wait.run(self.pytrip_watch, peer_address)
-            message = self.pytrip_wait.message
-
-            if self.pytrip_wait.connected is True:
-                self.jack_helper.disconnect_session()
-                self.oled.draw_lines(message)
-                self.start_jacktrip_monitoring()
-            else:
-                self.pytrip.stop()
-                self.pytrip_watch.terminate()
-                raise nh.NoiseBoxCustomError(message)
-
-    def start_jacktrip_peer_session_server(self):
-        self.oled.draw_lines(["==START JACKTRIP==", "Starting server", "Waiting for peer.."])
-        try:
-            self.pytrip.start(self.session_params,
-                              server=True,
-                              p2p=True)
-        except Exception:
-            self.pytrip.stop()
-            raise nh.NoiseBoxCustomError(["==JACKTRIP ERROR==", "JackTrip failed to start"])
-        else:
-            self.pytrip_watch.run(self.pytrip)
-            self.pytrip_wait.run(self.pytrip_watch, "server")
+            self.pytrip_wait.run(self.pytrip_watch, peer_address_or_server)
             message = self.pytrip_wait.message
 
             if self.pytrip_wait.connected is True:
