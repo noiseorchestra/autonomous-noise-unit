@@ -168,16 +168,16 @@ def main():
                   'SETTINGS -->']
 
     selected_menu_items = []
-    if cfg['default-server']['input-channels'] == '1':
+    if cfg['jacktrip-default']['input-channels'] == '1':
         selected_menu_items.append('MONO INPUT')
 
-    if cfg['default-server']['jacktrip-channels'] == '1':
+    if cfg['jacktrip-default']['jacktrip-channels'] == '1':
         selected_menu_items.append('MONO JACKTRIP')
 
-    if cfg['default-server']['ip'] == cfg['server1']['ip']:
+    if cfg['jacktrip-default']['ip'] == cfg['server1']['ip']:
         selected_menu_items.append('SERVER A')
 
-    if cfg['default-server']['ip'] == cfg['server2']['ip']:
+    if cfg['jacktrip-default']['ip'] == cfg['server2']['ip']:
         selected_menu_items.append('SERVER B')
 
     oled = noisebox_oled_helpers.OLED()
