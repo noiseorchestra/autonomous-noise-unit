@@ -21,7 +21,7 @@ def render(draw, name, width, height, meter):
     bar_width = 0.5 * width_meter
     bar_margin = (width_meter - bar_width) / 2
 
-    fraction = (62 + meter.get_current_value()) / 62
+    fraction = (50 + meter.get_current_value()) / 50
     level = (bar_height - (bar_height * (fraction * fraction))) - 15 - top_margin
     vertical_bar(draw, name, bar_margin, bar_height,
                  bar_margin + bar_width, top_margin, level)
