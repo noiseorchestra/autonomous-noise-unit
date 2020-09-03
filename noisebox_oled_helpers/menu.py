@@ -64,6 +64,6 @@ class Menu:
 
         for selected_item in selected_items:
             if selected_item in self.selected_items:
-                self.selected_items.append(selected_item)
-            else:
                 self.selected_items.remove(selected_item)
+            else:
+                self.selected_items.append(selected_item)
