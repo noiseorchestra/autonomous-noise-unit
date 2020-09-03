@@ -59,7 +59,7 @@ class Menu:
         self.menuindex = 0
         self.counter = 0
 
-    def set_selected_item(self, selected_items):
+    def toggle_selected_items(self, selected_items):
         """Toggle selected menu items"""
 
         for selected_item in selected_items:

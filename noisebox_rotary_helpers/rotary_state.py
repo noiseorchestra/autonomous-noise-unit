@@ -114,7 +114,7 @@ class SwitchState_PeersMenu(RotaryState):
         if (strval == "<-- BACK"):
             self.drawDefaultMenu(oled_menu)
 
-        elif (strval == "start server"):
+        elif (strval == "START SERVER"):
             try:
                 noisebox.start_jacktrip_peer_session(server=True)
                 self.new_state(RotaryState_JacktripServerWaiting)
@@ -159,7 +159,7 @@ class RotaryState_SettingsMenu(RotaryState):
 
             next_ch = "1" if noisebox.session_params['input-channels'] == "2" else "2"
             noisebox.session_params['input-channels'] = next_ch
-            oled_menu.set_selected_item(["MONO INPUT"])
+            oled_menu.toggle_selected_items(["MONO INPUT"])
             oled.draw_lines(["==INPUT==", "Channels: " +  next_ch])
             self.drawDefaultMenu(oled_menu)
 
@@ -168,8 +168,16 @@ class RotaryState_SettingsMenu(RotaryState):
 
             next_ch = "1" if noisebox.session_params['jacktrip-channels'] == "2" else "2"
             noisebox.session_params['jacktrip-channels'] = next_ch
-            oled_menu.set_selected_item(["MONO JACKTRIP"])
+            oled_menu.toggle_selected_items(["MONO JACKTRIP"])
             oled.draw_lines(["==JACKTRIP==", "Channels: " +  next_ch])
+            self.drawDefaultMenu(oled_menu)
+
+        elif (strval == "SERVER A"):
+            """Select server A"""
+
+            ip = noisebox.config.get('server1', 'ip')
+            oled_menu.toggle_selected_items(["SERVER A", "SERVER B"])
+            oled.draw_lines(["==SERVER==", "ip: " +  ip])
             self.drawDefaultMenu(oled_menu)
 
         elif (strval == "IP ADDRESS"):
