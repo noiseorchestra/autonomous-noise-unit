@@ -22,8 +22,8 @@ class Noisebox:
             'hub_mode': cfg.get('jacktrip-default', 'hub_mode'),
             'server': cfg.get('jacktrip-default', 'server'),
             'ip': cfg.get('jacktrip-default', 'ip'),
-            'jacktrip-channels': cfg.get('jacktrip-default', 'channels'),
-            'input-channels': "2",
+            'jacktrip-channels': cfg.get('jacktrip-default', 'jacktrip-channels'),
+            'input-channels': cfg.get('jacktrip-default', 'input-channels'),
             'queue': cfg.get('jacktrip-default', 'queue')
             }
         self.pytrip = nh.PyTrip()
