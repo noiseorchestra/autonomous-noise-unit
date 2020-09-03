@@ -62,7 +62,7 @@ class RotaryState_Menu(RotaryState):
             oled_menu.draw_menu()
 
         if (strval == "SETTINGS -->"):
-            oled_menu.new_menu_items(["MONO INPUT", "MONO JACKTRIP", "IP ADDRESS", "<-- BACK"])
+            oled_menu.new_menu_items(["MONO INPUT", "MONO JACKTRIP", "SERVER A", "SERVER B", "IP ADDRESS", "<-- BACK"])
             self.new_state(RotaryState_SettingsMenu)
             oled_menu.draw_menu()
 
@@ -177,9 +177,21 @@ class RotaryState_SettingsMenu(RotaryState):
         elif (strval == "SERVER A"):
             """Select server A"""
 
-            ip = noisebox.config.get('server1', 'ip')
+            ip = noisebox.config['server1']['ip']
+            noisebox.session_params['ip'] = ip
+            noisebox.save_settings()
             oled_menu.toggle_selected_items(["SERVER A", "SERVER B"])
-            oled.draw_lines(["==SERVER==", "ip: " +  ip])
+            oled.draw_lines(["==SERVER==", "ip: " + ip])
+            self.drawDefaultMenu(oled_menu)
+
+        elif (strval == "SERVER B"):
+            """Select server B"""
+
+            ip = noisebox.config['server2']['ip']
+            noisebox.session_params['ip'] = ip
+            noisebox.save_settings()
+            oled_menu.toggle_selected_items(["SERVER A", "SERVER B"])
+            oled.draw_lines(["==SERVER==", "ip: " + ip])
             self.drawDefaultMenu(oled_menu)
 
         elif (strval == "IP ADDRESS"):
