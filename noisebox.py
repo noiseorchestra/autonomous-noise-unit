@@ -3,6 +3,7 @@
 import RPi.GPIO as GPIO
 import configparser as cp
 from time import sleep
+import subprocess
 import sys
 import os
 import noisebox_rotary_helpers
@@ -152,6 +153,13 @@ class Noisebox:
         with open('./config.ini', 'w') as configfile:
             self.config.write(configfile)
 
+    def system_update(self):
+        p = subprocess.run(["git", "pull"])
+        if p.returncode == 1:
+            raise nh.NoiseBoxCustomError(["==ERROR==", "could not update"])
+        self.oled.draw_lines(["==UPDATE==", "Update succesful", "restarting system..."])
+        sys.exit("System restart")
+
 def main():
 
     cfg = cp.ConfigParser(interpolation=cp.ExtendedInterpolation())
@@ -173,6 +181,7 @@ def main():
                      "MONO JACKTRIP",
                      "SERVER A",
                      "IP ADDRESS",
+                     "UPDATE"
                      "<-- BACK"]
 
     if cfg['jacktrip-default']['ip'] == cfg['server2']['ip']:

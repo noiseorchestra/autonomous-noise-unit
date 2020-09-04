@@ -197,6 +197,16 @@ class RotaryState_SettingsMenu(RotaryState):
             oled.draw_lines(title + noisebox.get_ip())
             oled_menu.draw_menu()
 
+        elif (strval == "UPDATE"):
+            oled.draw_lines(["==UPDATE==", "Updating system"])
+            try:
+                noisebox.system_update()
+            except NoiseBoxCustomError as e:
+                oled.start_scrolling_text(e.args[0])
+                self.new_state(RotaryState_Scrolling)
+            finally:
+                oled_menu.draw_menu()
+
     def rotaryCallback(self, oled_menu, direction):
         """Increment menu counter and redraw menu"""
 
