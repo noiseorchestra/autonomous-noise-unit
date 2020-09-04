@@ -172,8 +172,7 @@ def main():
         """)
         cfg.read('./example-config.ini')
 
-    menu_items = ['HELLO!',
-                  'CONNECT TO SERVER',
+    menu_items = ['CONNECT TO SERVER',
                   'LEVEL METER',
                   'P2P SESSION',
                   'SETTINGS -->']

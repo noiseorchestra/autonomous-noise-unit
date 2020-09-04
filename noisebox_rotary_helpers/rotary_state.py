@@ -204,8 +204,6 @@ class RotaryState_SettingsMenu(RotaryState):
             except NoiseBoxCustomError as e:
                 oled.start_scrolling_text(e.args[0])
                 self.new_state(RotaryState_Scrolling)
-            finally:
-                oled_menu.draw_menu()
 
     def rotaryCallback(self, oled_menu, direction):
         """Increment menu counter and redraw menu"""
