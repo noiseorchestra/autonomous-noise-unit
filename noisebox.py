@@ -181,7 +181,7 @@ def main():
                      "MONO JACKTRIP",
                      "SERVER A",
                      "IP ADDRESS",
-                     "UPDATE"
+                     "UPDATE",
                      "<-- BACK"]
 
     if cfg['jacktrip-default']['ip'] == cfg['server2']['ip']:
