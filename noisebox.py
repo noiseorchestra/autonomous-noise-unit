@@ -150,7 +150,7 @@ class Noisebox:
         self.config['jacktrip-default']['ip'] = self.session_params['ip']
         self.config['jacktrip-default']['jacktrip-channels'] = self.session_params['jacktrip-channels']
         self.config['jacktrip-default']['input-channels'] = self.session_params['input-channels']
-        with open('./default-config.ini', 'w') as configfile:
+        with open('./config.ini', 'w') as configfile:
             self.config.write(configfile)
 
     def system_update(self):
@@ -184,6 +184,9 @@ def main():
         cfg['server1']['ip'] = custom_cfg['server1']['ip']
         cfg['server2']['ip'] = custom_cfg['server2']['ip']
         cfg['peers'] = custom_cfg['peers']
+        cfg['jacktrip-default']['input-channels'] = custom_cfg['jacktrip-default']['input-channels']
+        cfg['jacktrip-default']['jacktrip-channels'] = custom_cfg['jacktrip-default']['jacktrip-channels']
+        cfg['jacktrip-default']['ip'] = custom_cfg['jacktrip-default']['ip']
 
     else:
         print("""
