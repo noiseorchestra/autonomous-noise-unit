@@ -169,7 +169,7 @@ def main():
                   'SETTINGS -->']
 
     settings_menu = ["MONO INPUT",
-                     "MONO JACKTRIP",
+                     "MONO OUTPUT",
                      "SERVER A",
                      "IP ADDRESS",
                      "UPDATE",
@@ -204,7 +204,7 @@ def main():
         selected_menu_items.append('MONO INPUT')
 
     if cfg['jacktrip-default']['jacktrip-channels'] == '1':
-        selected_menu_items.append('MONO JACKTRIP')
+        selected_menu_items.append('MONO OUTPUT')
 
     oled = noisebox_oled_helpers.OLED()
     jack_helper = nh.JackHelper()
