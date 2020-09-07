@@ -1,8 +1,6 @@
 ==TODO==
 
-- check github config
 - change server names in config file
-- update button in settings
 - hold button shutdown
 - replace noisebox with ANU
 - show "not connected to internet error" somewhere, when checking IP etc...
@@ -15,6 +13,8 @@
 - hello and goodbye messages
 
 ==DONE==
+- update button in settings
+- check github config
 - fix toggle server inconsistency
 - make stereo default
 - save configuration settings
