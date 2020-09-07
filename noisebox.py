@@ -160,17 +160,8 @@ class Noisebox:
         self.oled.draw_lines(["==UPDATE==", "Update succesful", "restarting system..."])
         sys.exit("System restart")
 
-def main():
 
-    cfg = cp.ConfigParser(interpolation=cp.ExtendedInterpolation())
-    if os.path.isfile('./config.ini'):
-        cfg.read('./config.ini')
-    else:
-        print("""
-        config.ini file not found, reading example-config.ini instead,
-        please create your own config.ini file.
-        """)
-        cfg.read('./example-config.ini')
+def main():
 
     menu_items = ['CONNECT TO SERVER',
                   'LEVEL METER',
@@ -183,6 +174,22 @@ def main():
                      "IP ADDRESS",
                      "UPDATE",
                      "<-- BACK"]
+
+    cfg = cp.ConfigParser(interpolation=cp.ExtendedInterpolation())
+    cfg.read('./default-config.ini')
+
+    if os.path.isfile('./config.ini'):
+        custom_cfg = cp.ConfigParser(interpolation=cp.ExtendedInterpolation())
+        custom_cfg.read('./config.ini')
+        cfg['server1']['ip'] = custom_cfg['server1']['ip']
+        cfg['server2']['ip'] = custom_cfg['server2']['ip']
+        cfg['peers'] = custom_cfg['peers']
+
+    else:
+        print("""
+        config.ini file not found, reading default-config.ini instead,
+        please create your own config.ini file.
+        """)
 
     if cfg['jacktrip-default']['ip'] == cfg['server2']['ip']:
         settings_menu.remove('SERVER A')
