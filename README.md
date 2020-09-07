@@ -64,7 +64,7 @@ $ sudo bash autonomous-noise-unit-install/start.sh
 Once you have installed the scrip you need to edit the config.ini to match your desired JackTrip and JACK session settings. This includes setting the hub server and peer IP addresses.
 
 ```shell
-$ sudo cp autonomous-noise-unit/example-config.ini autonomous-noise-unit/config.ini
+$ sudo cp autonomous-noise-unit/default-config.ini autonomous-noise-unit/config.ini
 ```
 
 ## Features
