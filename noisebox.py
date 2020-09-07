@@ -165,7 +165,6 @@ def main():
 
     menu_items = ['CONNECT TO SERVER',
                   'LEVEL METER',
-                  'HELLO DAVE!',
                   'P2P SESSION',
                   'SETTINGS -->']
 
