@@ -16,7 +16,7 @@ class JackHelper:
 
         command = ['jackd', '-R', '-dalsa', '-r48000', '-p256', '-n2', '-s', '-S']
         Popen(command, stdout=PIPE, stderr=PIPE)
-        time.sleep(1)
+        time.sleep(2)
         self.jackClient = jack.Client('noisebox',  no_start_server=True)
         self.jackClient.activate()
 
