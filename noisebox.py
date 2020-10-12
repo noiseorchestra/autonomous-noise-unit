@@ -6,10 +6,9 @@ from time import sleep
 import subprocess
 import sys
 import os
-import noisebox_rotary_helpers
 import noisebox_oled_helpers
 import noisebox_helpers as nh
-
+from noisebox_rotary_helpers.rotary import KY040
 
 class Noisebox:
     """Main noisebox class"""
@@ -210,7 +209,7 @@ def main():
     jack_helper = nh.JackHelper()
     oled_menu = noisebox_oled_helpers.Menu(menu_items, settings_menu, selected_menu_items)
     noisebox = Noisebox(cfg, jack_helper, oled)
-    ky040 = noisebox_rotary_helpers.KY040(noisebox, oled_menu)
+    ky040 = KY040(noisebox, oled_menu)
     oled_menu.start(noisebox.oled.device)
 
     try:
