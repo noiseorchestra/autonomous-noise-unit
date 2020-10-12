@@ -10,6 +10,7 @@ class JackHelper:
 
     def __init__(self):
         self.jackClient = None
+        self.connections = []
 
     def start(self):
         """Start JACK with relavent parameters"""
@@ -62,9 +63,10 @@ class JackHelper:
         if not self.is_already_connected(receive_port, send_port):
             self.jackClient.connect(receive_port, send_port)
 
-    def connect_all(self, receive_ports_list, send_ports_list):
+    def set_all_connections(self, receive_ports_list, send_ports_list):
         """Connect a list of receive ports to a list of sends"""
 
+        self.connections = []
         for connection in product(receive_ports_list, send_ports_list):
             print(connection)
             receive_ports = connection[0]
@@ -73,17 +75,16 @@ class JackHelper:
             receive_stereo = True if len(receive_ports) == 2 else False
             send_stereo = True if len(send_ports) == 2 else False
 
+            self.connections.append((receive_ports[0], send_ports[0]))
             if receive_stereo and send_stereo:
-                self.connect(receive_ports[0], send_ports[0])
-                self.connect(receive_ports[1], send_ports[1])
-            if receive_stereo and not send_stereo:
-                self.connect(receive_ports[0], send_ports[0])
-                self.connect(receive_ports[1], send_ports[0])
-            if not receive_stereo and send_stereo:
-                self.connect(receive_ports[0], send_ports[0])
-                self.connect(receive_ports[0], send_ports[1])
-            if not receive_stereo and not send_stereo:
-                self.connect(receive_ports[0], send_ports[0])
+                self.connections.append((receive_ports[1], send_ports[1]))
+            elif receive_stereo and not send_stereo:
+                self.connections.append((receive_ports[1], send_ports[0]))
+            elif not receive_stereo and send_stereo:
+                self.connections.append((receive_ports[0], send_ports[1]))
+
+    def make_all_connections(self):
+        [self.connect_ports(c[0], c[1]) for c in self.connections]
 
     def disconnect_all(self, my_port):
         # from madwort py_patcher
@@ -98,6 +99,7 @@ class JackHelper:
                 print('error disconnecting, trying the other way round!', e)
                 print('disconnect', send_port.name, 'from', my_port.name)
                 self.jackClient.disconnect(send_port, my_port)
+        self.connections = []
 
     def make_jacktrip_connections(self, stereo_input=False):
         """Make connections for jacktrip session"""
@@ -113,8 +115,9 @@ class JackHelper:
         if stereo_input is not True:
             local_receive_ports = [local_receive_ports[0]]
 
-        self.connect_all([local_receive_ports], [jacktrip_send_ports, local_send_ports])
-        self.connect_all([jacktrip_receive_ports], [local_send_ports])
+        self.set_all_connections([local_receive_ports], [jacktrip_send_ports, local_send_ports])
+        self.set_all_connections([jacktrip_receive_ports], [local_send_ports])
+        self.make_all_connections()
 
     def make_monitoring_connections(self, stereo_input=False):
         """Make connections for monitoring local inputs"""
@@ -125,7 +128,8 @@ class JackHelper:
         if stereo_input is not True:
             local_receive_ports = [local_receive_ports[0]]
 
-        self.connect_all([local_receive_ports], [local_send_ports])
+        self.set_all_connections([local_receive_ports], [local_send_ports])
+        self.make_all_connections()
 
     def disconnect_session(self):
         """Disconnect all ports from system playback"""
