@@ -27,7 +27,7 @@ class JackHelper:
             if proc.name() == "jackd":
                 proc.kill()
 
-    def check_input_ports(local_receive_ports, stereo):
+    def check_input_ports(self, local_receive_ports, stereo):
         if len(local_receive_ports) == 0:
             raise NoiseBoxCustomError(["==ERROR==", "No audio inputs found"])
 
