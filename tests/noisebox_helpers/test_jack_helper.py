@@ -42,3 +42,68 @@ def test_set_all_connections_monitoring_mono_mono():
     ]
     jack_helper.set_all_connections(receive_ports_list, send_ports_list)
     assert jack_helper.connections == [('system:capture_01', 'system:playback_01')]
+
+def test_set_all_connections_monitoring_stereo_mono():
+    receive_ports_list = [
+        ["system:capture_01", "system:capture_02"]
+    ]
+    send_ports_list = [
+        ["system:playback_01"]
+    ]
+    jack_helper.set_all_connections(receive_ports_list, send_ports_list)
+    assert jack_helper.connections == [('system:capture_01', 'system:playback_01'),
+                                       ('system:capture_02', 'system:playback_01')]
+
+def test_set_all_connections_session_mono_mono():
+    receive_ports_list = [
+        ["system:capture_01"]
+    ]
+    send_ports_list = [
+        ["system:playback_01"],
+        ["jactrip:send_01"],
+    ]
+    jack_helper.set_all_connections(receive_ports_list, send_ports_list)
+    assert jack_helper.connections == [('system:capture_01', 'system:playback_01'),
+                                       ('system:capture_01', 'jactrip:send_01')]
+
+def test_set_all_connections_session_mono_stereo():
+    receive_ports_list = [
+        ["system:capture_01"]
+    ]
+    send_ports_list = [
+        ["system:playback_01", "system:playback_02"],
+        ["jactrip:send_01", "jactrip:send_02"],
+    ]
+    jack_helper.set_all_connections(receive_ports_list, send_ports_list)
+    assert jack_helper.connections == [('system:capture_01', 'system:playback_01'),
+                                       ('system:capture_01', 'system:playback_02'),
+                                       ('system:capture_01', 'jactrip:send_01'),
+                                       ('system:capture_01', 'jactrip:send_02')]
+
+def test_set_all_connections_session_stereo_stereo():
+    receive_ports_list = [
+        ["system:capture_01", "system:capture_02"]
+    ]
+    send_ports_list = [
+        ["system:playback_01", "system:playback_02"],
+        ["jactrip:send_01", "jactrip:send_02"],
+    ]
+    jack_helper.set_all_connections(receive_ports_list, send_ports_list)
+    assert jack_helper.connections == [('system:capture_01', 'system:playback_01'),
+                                       ('system:capture_02', 'system:playback_02'),
+                                       ('system:capture_01', 'jactrip:send_01'),
+                                       ('system:capture_02', 'jactrip:send_02')]
+
+def test_set_all_connections_session_stereo_mono():
+    receive_ports_list = [
+        ["system:capture_01", "system:capture_02"]
+    ]
+    send_ports_list = [
+        ["system:playback_01"],
+        ["jactrip:send_01"],
+    ]
+    jack_helper.set_all_connections(receive_ports_list, send_ports_list)
+    assert jack_helper.connections == [('system:capture_01', 'system:playback_01'),
+                                       ('system:capture_02', 'system:playback_01'),
+                                       ('system:capture_01', 'jactrip:send_01'),
+                                       ('system:capture_02', 'jactrip:send_01')]
