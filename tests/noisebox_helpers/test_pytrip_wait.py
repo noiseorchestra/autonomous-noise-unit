@@ -1,8 +1,8 @@
-from pytrip_wait import PyTripWait
+import noisebox_helpers as nh
 
 
 def test_check_stdout_success():
-    pytrip_wait = PyTripWait()
+    pytrip_wait = nh.PyTripWait()
     errors = []
     stdout = 'Received Connection from Peer!'
 
@@ -18,7 +18,7 @@ def test_check_stdout_success():
 
 
 def test_check_stdout_stopped():
-    pytrip_wait = PyTripWait()
+    pytrip_wait = nh.PyTripWait()
     errors = []
     stdout = 'JackTrip Processes STOPPED!'
     message = ['==ERROR==',
@@ -37,7 +37,7 @@ def test_check_stdout_stopped():
 
 
 def test_check_stdout_error():
-    pytrip_wait = PyTripWait()
+    pytrip_wait = nh.PyTripWait()
     errors = []
     stdout_list = ['Maybe the JACK server is not running',
                    'Unable to connect to JACK server',

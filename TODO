@@ -1,12 +1,18 @@
 ==TODO==
 
+- advanced config menu
+		- p2p IP ADDRESS
+		- hub server ip ADDRESS
+		- q value
+		- p value for jackd??
+- check how config values are set and write tests
+
 - change server names in config file
 - hold button shutdown
 - replace noisebox with ANU
 - show "not connected to internet error" somewhere, when checking IP etc...
 - Write unit tests! (15%)
 - refactor pytrip_wait to return True / False and message, deal with this in NoiseBox (disconnect JackTrip connections straight away)
-- Create "update" functionallity
 - adapt jack_monitor & jack_wait to both run in background and handle errors that occur during a session, poll jack_monitor
 - remove subprocesses which run as shell (25%)
 - move jacktrip and jackd commands to config file
