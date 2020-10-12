@@ -27,11 +27,7 @@ class JackHelper:
             if proc.name() == "jackd":
                 proc.kill()
 
-    def get_inputs(self, stereo=False):
-        """Get an array of input port names"""
-
-        local_receive_ports = self.jackClient.get_ports('system:capture.*')
-
+    def check_input_ports(local_receive_ports, stereo):
         if len(local_receive_ports) == 0:
             raise NoiseBoxCustomError(["==ERROR==", "No audio inputs found"])
 
@@ -41,6 +37,12 @@ class JackHelper:
             ports = [port for port in local_receive_ports]
 
         return ports
+
+    def get_inputs(self, stereo=False):
+        """Get an array of input port names"""
+
+        local_receive_ports = self.jackClient.get_ports('system:capture.*')
+        return self.check_input_ports(local_receive_ports, stereo)
 
     def get_jacktrip_receives(self):
         """Get an array of input port names"""
