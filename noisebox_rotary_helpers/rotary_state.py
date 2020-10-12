@@ -162,6 +162,8 @@ class SwitchState_PeersMenu(RotaryState):
 
 class RotaryState_SettingsMenu(RotaryState):
     """Settings menu state"""
+    def __init__(self):
+        self.new_state(RotaryState_SettingsMenu)
 
     def switchCallback(self, noisebox, oled_menu, oled):
         """check menu value on button click and run corresponding methods"""
