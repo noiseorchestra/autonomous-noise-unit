@@ -26,8 +26,9 @@ class RotaryState:
 class RotaryState_Menu(RotaryState):
     """Menu state"""
 
-    def __init__(self):
+    def __init__(self, debug=False):
         self.new_state(RotaryState_Menu)
+        self.debug = debug
 
     def switchCallback(self, noisebox, oled_menu, oled):
         """check menu value on button click and run corresponding methods"""
@@ -35,35 +36,51 @@ class RotaryState_Menu(RotaryState):
         strval = oled_menu.menu_items[oled_menu.menuindex]
 
         if (strval == "CONNECT TO SERVER"):
+            next_state = RotaryState_JacktripRunning
             try:
                 noisebox.start_jacktrip_session()
             except NoiseBoxCustomError as e:
                 oled.start_scrolling_text(e.args[0])
-                self.new_state(RotaryState_Scrolling)
-            else:
-                self.new_state(RotaryState_JacktripRunning)
+                next_state = RotaryState_Scrolling
+
+            if self.debug is True:
+                return next_state.__name__
+            self.new_state(next_state)
 
         if (strval == "LEVEL METER"):
+            next_state = RotaryState_Monitoring
             try:
                 noisebox.start_local_monitoring()
             except NoiseBoxCustomError as e:
                 oled.start_scrolling_text(e.args[0])
-                self.new_state(RotaryState_Scrolling)
-            else:
-                self.new_state(RotaryState_Monitoring)
+                next_state = RotaryState_Scrolling
+
+            if self.debug is True:
+                return next_state.__name__
+            self.new_state(next_state)
 
         if (strval == "P2P SESSION"):
+            next_state = SwitchState_PeersMenu
             oled.draw_text(0, 26, "Searching for peers...")
             online_peers = noisebox.check_peers()
             online_peers.append("START SERVER")
             online_peers.append("<-- BACK")
             oled_menu.new_menu_items(online_peers)
-            self.new_state(SwitchState_PeersMenu)
+
+            if self.debug is True:
+                return next_state.__name__
+
+            self.new_state(next_state)
             oled_menu.draw_menu()
 
         if (strval == "SETTINGS -->"):
+            next_state = RotaryState_SettingsMenu
             oled_menu.new_menu_items(oled_menu.settings_items)
-            self.new_state(RotaryState_SettingsMenu)
+
+            if self.debug is True:
+                return next_state.__name__
+
+            self.new_state(next_state)
             oled_menu.draw_menu()
 
     def rotaryCallback(self, oled_menu, direction):
