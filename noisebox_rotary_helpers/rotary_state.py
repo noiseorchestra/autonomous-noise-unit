@@ -162,8 +162,9 @@ class SwitchState_PeersMenu(RotaryState):
 
 class RotaryState_SettingsMenu(RotaryState):
     """Settings menu state"""
-    def __init__(self):
+    def __init__(self, debug=False):
         self.new_state(RotaryState_SettingsMenu)
+        self.debug = debug
 
     def switchCallback(self, noisebox, oled_menu, oled):
         """check menu value on button click and run corresponding methods"""
@@ -182,34 +183,34 @@ class RotaryState_SettingsMenu(RotaryState):
             oled_menu.toggle_selected_items(["MONO INPUT"])
             oled_menu.draw_menu()
 
-        elif (strval == "MONO OUTPUT"):
-            """Toggle jacktrip channels mono/stereo"""
-
-            next_ch = "1" if noisebox.session_params['jacktrip-channels'] == "2" else "2"
-            noisebox.session_params['jacktrip-channels'] = next_ch
-            noisebox.save_settings()
-            oled_menu.toggle_selected_items(["MONO OUTPUT"])
-            oled_menu.draw_menu()
-
-        elif (strval == "SERVER A"):
-            """Toggle to server B"""
-
-            ip = noisebox.config['server2']['ip']
-            noisebox.session_params['ip'] = ip
-            noisebox.save_settings()
-            oled_menu.menu_items.remove('SERVER A')
-            oled_menu.menu_items.insert(2, 'SERVER B')
-            oled_menu.draw_menu()
-
-        elif (strval == "SERVER B"):
-            """Toggle to server A"""
-
-            ip = noisebox.config['server1']['ip']
-            noisebox.session_params['ip'] = ip
-            noisebox.save_settings()
-            oled_menu.menu_items.remove('SERVER B')
-            oled_menu.menu_items.insert(2, 'SERVER A')
-            oled_menu.draw_menu()
+        # elif (strval == "MONO OUTPUT"):
+        #     """Toggle jacktrip channels mono/stereo"""
+        #
+        #     next_ch = "1" if noisebox.session_params['jacktrip-channels'] == "2" else "2"
+        #     noisebox.session_params['jacktrip-channels'] = next_ch
+        #     noisebox.save_settings()
+        #     oled_menu.toggle_selected_items(["MONO OUTPUT"])
+        #     oled_menu.draw_menu()
+        #
+        # elif (strval == "SERVER A"):
+        #     """Toggle to server B"""
+        #
+        #     ip = noisebox.config['server2']['ip']
+        #     noisebox.session_params['ip'] = ip
+        #     noisebox.save_settings()
+        #     oled_menu.menu_items.remove('SERVER A')
+        #     oled_menu.menu_items.insert(2, 'SERVER B')
+        #     oled_menu.draw_menu()
+        #
+        # elif (strval == "SERVER B"):
+        #     """Toggle to server A"""
+        #
+        #     ip = noisebox.config['server1']['ip']
+        #     noisebox.session_params['ip'] = ip
+        #     noisebox.save_settings()
+        #     oled_menu.menu_items.remove('SERVER B')
+        #     oled_menu.menu_items.insert(2, 'SERVER A')
+        #     oled_menu.draw_menu()
 
         elif (strval == "IP ADDRESS"):
             title = ["==HOSTNAME & IP=="]
@@ -223,6 +224,40 @@ class RotaryState_SettingsMenu(RotaryState):
             except NoiseBoxCustomError as e:
                 oled.start_scrolling_text(e.args[0])
                 self.new_state(RotaryState_Scrolling)
+
+        elif (strval == "JACKTRIP"):
+            next_state = RotaryState_AdvancedSettingsMenu
+            oled_menu.new_menu_items(oled_menu.advanced_settings_items)
+
+            if self.debug is True:
+                return next_state.__name__
+
+            self.new_state(next_state)
+            oled_menu.draw_advanced_menu()
+
+    def rotaryCallback(self, oled_menu, direction):
+        """Increment menu counter and redraw menu"""
+
+        if direction == 1:
+            oled_menu.counter += 1
+        else:
+            oled_menu.counter -= 1
+        oled_menu.draw_menu()
+
+class RotaryState_AdvancedSettingsMenu(RotaryState):
+    """Settings menu state"""
+    def __init__(self):
+        self.new_state(RotaryState_AdvancedSettingsMenu)
+
+    def switchCallback(self, noisebox, oled_menu, oled):
+        """check menu value on button click and run corresponding methods"""
+
+        strval = oled_menu.advanced_menu_items[oled_menu.menuindex]["name"]
+
+        if (strval == "buffer"):
+            """Toggle input channels mono/stereo"""
+
+            return "buffer"
 
     def rotaryCallback(self, oled_menu, direction):
         """Increment menu counter and redraw menu"""
