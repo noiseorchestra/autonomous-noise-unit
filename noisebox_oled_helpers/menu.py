@@ -7,13 +7,14 @@ from PIL import ImageFont
 class Menu:
     """Class for drawing OLED menu"""
 
-    def __init__(self, menu_items, settings_items, selected_items):
+    def __init__(self, menu_items, settings_items, advanced_settings_items, selected_items):
         # persist values
         self.counter = 0
         self.menuindex = 0
         self.default_menu_items = menu_items
         self.menu_items = menu_items
         self.settings_items = settings_items
+        self.advanced_settings_items = advanced_settings_items
         self.selected_items = selected_items
         self.device = None
 
