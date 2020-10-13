@@ -8,11 +8,12 @@ menu_items = ['CONNECT TO SERVER',
               'SETTINGS -->']
 
 settings_menu = ["MONO INPUT",
-                 "MONO OUTPUT",
-                 "SERVER A",
                  "IP ADDRESS",
+                 "JACKTRIP",
                  "UPDATE",
                  "<-- BACK"]
+
+advanced_menu_items = [{"name": "buffer", "value": "6"}]
 
 selected_menu_items = []
 
@@ -101,65 +102,80 @@ def test_rotarty_state_settings_menu_item_mono_input():
     rotaryState.switchCallback(noisebox, oled_menu, oled)
     assert noisebox.session_params["input-channels"] == "1"
 
-def test_rotarty_state_settings_menu_item_mono_output():
+def test_rotarty_state_settings_menu_item_jacktrip():
 
     oled = Mock()
     oled_menu = Mock()
     noisebox = Mock()
 
-    session_params = {
-        "jacktrip-channels": "1"
-    }
-
     oled_menu.menu_items = settings_menu
-    oled_menu.menuindex = 1
-    noisebox.session_params = session_params
-
-    rotaryState = RotaryState_SettingsMenu()
-    rotaryState.switchCallback(noisebox, oled_menu, oled)
-
-    assert noisebox.session_params["jacktrip-channels"] == "2"
-    oled_menu.toggle_selected_items.assert_called_with(["MONO OUTPUT"])
-
-    rotaryState.switchCallback(noisebox, oled_menu, oled)
-    assert noisebox.session_params["jacktrip-channels"] == "1"
-
-def test_rotarty_state_settings_menu_item_server():
-
-    oled = Mock()
-    oled_menu = Mock()
-    noisebox = Mock()
-
-    config = {
-        "server1": {"ip": "111.111.111.111"},
-        "server2": {"ip": "222.222.222.222"}
-    }
-
-    session_params = {
-        "ip": "111.111.111.111"
-    }
-
-    oled_menu.menu_items = settings_menu
+    oled_menu.advanced_settings_items = advanced_menu_items
     oled_menu.menuindex = 2
-    noisebox.session_params = session_params
-    noisebox.config = config
 
-    rotaryState = RotaryState_SettingsMenu()
-    rotaryState.switchCallback(noisebox, oled_menu, oled)
+    rotaryState = RotaryState_SettingsMenu(debug=True)
 
-    assert noisebox.session_params["ip"] == "222.222.222.222"
-    assert oled_menu.menu_items == ["MONO INPUT",
-                                    "MONO OUTPUT",
-                                    "SERVER B",
-                                    "IP ADDRESS",
-                                    "UPDATE",
-                                    "<-- BACK"]
+    assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "RotaryState_AdvancedSettingsMenu"
+    oled_menu.new_menu_items.assert_called_with(advanced_menu_items)
 
-    rotaryState.switchCallback(noisebox, oled_menu, oled)
-    assert noisebox.session_params["ip"] == "111.111.111.111"
-    assert oled_menu.menu_items == ["MONO INPUT",
-                                    "MONO OUTPUT",
-                                    "SERVER A",
-                                    "IP ADDRESS",
-                                    "UPDATE",
-                                    "<-- BACK"]
+# def test_rotarty_state_settings_menu_item_mono_output():
+#
+#     oled = Mock()
+#     oled_menu = Mock()
+#     noisebox = Mock()
+#
+#     session_params = {
+#         "jacktrip-channels": "1"
+#     }
+#
+#     oled_menu.menu_items = settings_menu
+#     oled_menu.menuindex = 1
+#     noisebox.session_params = session_params
+#
+#     rotaryState = RotaryState_SettingsMenu()
+#     rotaryState.switchCallback(noisebox, oled_menu, oled)
+#
+#     assert noisebox.session_params["jacktrip-channels"] == "2"
+#     oled_menu.toggle_selected_items.assert_called_with(["MONO OUTPUT"])
+#
+#     rotaryState.switchCallback(noisebox, oled_menu, oled)
+#     assert noisebox.session_params["jacktrip-channels"] == "1"
+#
+# def test_rotarty_state_settings_menu_item_server():
+#
+#     oled = Mock()
+#     oled_menu = Mock()
+#     noisebox = Mock()
+#
+#     config = {
+#         "server1": {"ip": "111.111.111.111"},
+#         "server2": {"ip": "222.222.222.222"}
+#     }
+#
+#     session_params = {
+#         "ip": "111.111.111.111"
+#     }
+#
+#     oled_menu.menu_items = settings_menu
+#     oled_menu.menuindex = 2
+#     noisebox.session_params = session_params
+#     noisebox.config = config
+#
+#     rotaryState = RotaryState_SettingsMenu()
+#     rotaryState.switchCallback(noisebox, oled_menu, oled)
+#
+#     assert noisebox.session_params["ip"] == "222.222.222.222"
+#     assert oled_menu.menu_items == ["MONO INPUT",
+#                                     "MONO OUTPUT",
+#                                     "SERVER B",
+#                                     "IP ADDRESS",
+#                                     "UPDATE",
+#                                     "<-- BACK"]
+#
+#     rotaryState.switchCallback(noisebox, oled_menu, oled)
+#     assert noisebox.session_params["ip"] == "111.111.111.111"
+#     assert oled_menu.menu_items == ["MONO INPUT",
+#                                     "MONO OUTPUT",
+#                                     "SERVER A",
+#                                     "IP ADDRESS",
+#                                     "UPDATE",
+#                                     "<-- BACK"]
