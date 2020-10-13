@@ -46,12 +46,29 @@ class Menu:
                 if menustr[i] in self.selected_items:
                     draw.ellipse((100, i*10 + 2, 106, i*10 + 8), outline="white", fill="white")
 
+    def advanced_menu(self, device, draw, menustr, index):
+        """return prepared menu"""
+
+        font = ImageFont.load_default()
+        draw.rectangle(self.device.bounding_box, outline="white", fill="black")
+        for i in range(len(menustr)):
+            if(i == index):
+                self.menuindex = i
+                self.invert(draw, 2, i*10, menustr[i]["name"], menustr[i]["value"])
+            else:
+                draw.text((2, i*10), menustr[i]["name"], menustr[i]["value"], font=font, fill=255)
 
     def draw_menu(self):
         """draw menu on convas"""
 
         with canvas(self.device) as draw:
             self.menu(self.device, draw, self.menu_items, self.counter % len(self.menu_items))
+
+    def draw_advanced_menu(self):
+        """draw menu on convas"""
+
+        with canvas(self.device) as draw:
+            self.advanced_menu(self.device, draw, self.menu_items, self.counter % len(self.menu_items))
 
     def new_menu_items(self, new_menu_items):
         """Set new menu items"""
