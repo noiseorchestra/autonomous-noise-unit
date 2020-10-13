@@ -212,6 +212,16 @@ class RotaryState_SettingsMenu(RotaryState):
         #     oled_menu.menu_items.insert(2, 'SERVER A')
         #     oled_menu.draw_menu()
 
+        elif (strval == "JACKTRIP"):
+            next_state = RotaryState_AdvancedSettingsMenu
+            oled_menu.new_menu_items(oled_menu.advanced_settings_items)
+
+            if self.debug is True:
+                return next_state.__name__
+
+            self.new_state(next_state)
+            oled_menu.draw_advanced_menu()
+
         elif (strval == "IP ADDRESS"):
             title = ["==HOSTNAME & IP=="]
             oled.draw_lines(title + noisebox.get_ip())
@@ -224,16 +234,6 @@ class RotaryState_SettingsMenu(RotaryState):
             except NoiseBoxCustomError as e:
                 oled.start_scrolling_text(e.args[0])
                 self.new_state(RotaryState_Scrolling)
-
-        elif (strval == "JACKTRIP"):
-            next_state = RotaryState_AdvancedSettingsMenu
-            oled_menu.new_menu_items(oled_menu.advanced_settings_items)
-
-            if self.debug is True:
-                return next_state.__name__
-
-            self.new_state(next_state)
-            oled_menu.draw_advanced_menu()
 
     def rotaryCallback(self, oled_menu, direction):
         """Increment menu counter and redraw menu"""
