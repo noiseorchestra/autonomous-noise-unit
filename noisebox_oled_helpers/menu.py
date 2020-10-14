@@ -30,13 +30,10 @@ class Menu:
         draw.rectangle((x, y, x+120, y+10), outline=255, fill=255)
         draw.text((x, y), text, font=font, outline=0, fill="black")
 
-    def get_menu_item_str(menustr, i):
-        name = menustr[i]["name"] if menustr[i]["name"] else menustr[i]
-        value = menustr[i]["value"] if menustr[i]["value"] else False
-
-        if value is not False:
-            return name + ": " + value
-        return name
+    def get_menu_item_str(self, menustr, i):
+        if type(menustr[i]) is dict:
+            return menustr[i]["name"] + ": " + menustr[i]["value"]
+        return menustr[i]
 
     def menu(self, device, draw, menustr, index):
         """return prepared menu"""
