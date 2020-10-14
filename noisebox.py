@@ -196,17 +196,9 @@ def main():
         please create your own config.ini file.
         """)
 
-    selected_menu_items = []
-
-    if cfg['jacktrip-default']['input-channels'] == '1':
-        selected_menu_items.append('MONO INPUT')
-
-    if cfg['jacktrip-default']['jacktrip-channels'] == '1':
-        selected_menu_items.append('MONO OUTPUT')
-
     oled = noisebox_oled_helpers.OLED()
     jack_helper = nh.JackHelper()
-    oled_menu = noisebox_oled_helpers.Menu(menu_items, settings_items, advanced_settings_items, selected_menu_items)
+    oled_menu = noisebox_oled_helpers.Menu(menu_items, settings_items, advanced_settings_items)
     noisebox = Noisebox(cfg, jack_helper, oled)
     ky040 = KY040(noisebox, oled_menu)
     oled_menu.start(noisebox.oled.device)

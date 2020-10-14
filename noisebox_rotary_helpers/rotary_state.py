@@ -177,40 +177,12 @@ class RotaryState_SettingsMenu(RotaryState):
         elif (strval == "MONO INPUT"):
             """Toggle input channels mono/stereo"""
 
+            # this needs figuring out now toggle function is removed in favour of "name", "value" dict
             next_ch = "1" if noisebox.session_params['input-channels'] == "2" else "2"
             noisebox.session_params['input-channels'] = next_ch
             noisebox.save_settings()
-            oled_menu.toggle_selected_items(["MONO INPUT"])
+            # oled_menu.toggle_selected_items(["MONO INPUT"])
             oled_menu.draw_menu()
-
-        # elif (strval == "MONO OUTPUT"):
-        #     """Toggle jacktrip channels mono/stereo"""
-        #
-        #     next_ch = "1" if noisebox.session_params['jacktrip-channels'] == "2" else "2"
-        #     noisebox.session_params['jacktrip-channels'] = next_ch
-        #     noisebox.save_settings()
-        #     oled_menu.toggle_selected_items(["MONO OUTPUT"])
-        #     oled_menu.draw_menu()
-        #
-        # elif (strval == "SERVER A"):
-        #     """Toggle to server B"""
-        #
-        #     ip = noisebox.config['server2']['ip']
-        #     noisebox.session_params['ip'] = ip
-        #     noisebox.save_settings()
-        #     oled_menu.menu_items.remove('SERVER A')
-        #     oled_menu.menu_items.insert(2, 'SERVER B')
-        #     oled_menu.draw_menu()
-        #
-        # elif (strval == "SERVER B"):
-        #     """Toggle to server A"""
-        #
-        #     ip = noisebox.config['server1']['ip']
-        #     noisebox.session_params['ip'] = ip
-        #     noisebox.save_settings()
-        #     oled_menu.menu_items.remove('SERVER B')
-        #     oled_menu.menu_items.insert(2, 'SERVER A')
-        #     oled_menu.draw_menu()
 
         elif (strval == "JACKTRIP"):
             next_state = RotaryState_AdvancedSettingsMenu
