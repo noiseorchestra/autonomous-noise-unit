@@ -257,6 +257,7 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
             oled_menu.draw_menu()
 
         if (strval == "CHANGE IP"):
+            oled_menu.counter = 0
             oled_menu.draw_ip_menu("0", "" )
             self.new_state(RotaryState_IpPicker)
 
@@ -280,19 +281,18 @@ class RotaryState_IpPicker(RotaryState):
         self.new_state(RotaryState_IpPicker)
         self.ip_address = ""
         self.values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", " ->"]
-        self.counter = 0
         self.debug = debug
 
     def switchCallback(self, noisebox, oled_menu, oled):
         self.ip_address = self.ip_address
-        self.counter = 0
+        oled_menu.counter = 0
         oled_menu.draw_ip_menu(self.values[self.counter], self.ip_address)
 
     def rotaryCallback(self, oled_menu, direction):
         """Increment menu counter and redraw menu"""
 
         if direction == 1:
-            self.counter += 1
+            oled_menu.counter += 1
         else:
-            self.counter -= 1
+            oled_menu.counter -= 1
         oled_menu.draw_ip_menu(self.values[self.counter], self.ip_address)
