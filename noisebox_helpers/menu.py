@@ -1,4 +1,4 @@
-import noisebox_helpers.config as config
+from noisebox_helpers.config import Config
 
 main_menu_items = ['CONNECT TO SERVER',
                    'LEVEL METER',
@@ -21,6 +21,7 @@ def get_main_menu_items():
 
 def get_settings_items():
     # need to implement this for every value that may change
+    config = Config()
     settings_items[0]["value"] = config.get_config()["jacktrip-default"]["input-channels"]
     return settings_items
 
