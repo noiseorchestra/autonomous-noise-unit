@@ -37,25 +37,25 @@ def get_custom_only(custom_path=custom_path):
 def change_server_ip(ip):
     cfg = get_custom_only()
     cfg["server1"]["ip"] = ip
-    save(cfg)
+    return cfg
 
 
 def change_input_channels(channels):
     cfg = get_custom_only()
     cfg["jacktrip-default"]["input-channels"] = channels
-    save(cfg)
+    return cfg
 
 
 def change_output_channels(channels):
     cfg = get_custom_only()
     cfg["jacktrip-default"]["output-channels"] = channels
-    save(cfg)
+    return cfg
 
 
 def change_buffer(buffer):
     cfg = get_custom_only()
     cfg["jacktrip-default"]["jacktrip-q"] = buffer
-    save(cfg)
+    return cfg
 
 
 def save(cfg):
