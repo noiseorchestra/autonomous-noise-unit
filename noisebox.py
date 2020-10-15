@@ -159,7 +159,7 @@ def main():
                   'P2P SESSION',
                   'SETTINGS -->']
 
-    settings_items = ["MONO INPUT",
+    settings_items = [{"INPUT", "mono"},
                      "IP ADDRESS",
                      "JACKTRIP",
                      "UPDATE",
