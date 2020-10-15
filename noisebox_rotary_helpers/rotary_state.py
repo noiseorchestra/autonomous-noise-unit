@@ -221,24 +221,31 @@ class RotaryState_SettingsMenu(RotaryState):
 
 class RotaryState_AdvancedSettingsMenu(RotaryState):
     """Settings menu state"""
-    def __init__(self):
+    def __init__(self, debug=False):
         self.new_state(RotaryState_AdvancedSettingsMenu)
+        self.debug = debug
 
     def switchCallback(self, noisebox, oled_menu, oled):
         """check menu value on button click and run corresponding methods"""
 
         if type(oled_menu.menu_items[oled_menu.menuindex]) is dict:
             strval = oled_menu.menu_items[oled_menu.menuindex]["name"]
+            value = oled_menu.menu_items[oled_menu.menuindex]["value"]
         else:
             strval = oled_menu.menu_items[oled_menu.menuindex]
 
-        if (strval == "buffer"):
-            print(strval)
-            return "buffer"
+        if (strval == "BUFFER"):
+            next_buffer_value = menu.next_buffer_value(value)
+            oled_menu.menu_items[oled_menu.menuindex]["value"] = next_buffer_value
+            if self.debug is True:
+                return next_buffer_value
 
-        if (strval == "channels"):
-            print(strval)
-            return "channels"
+
+        if (strval == "CHANNELS"):
+            next_channels_value = menu.next_channels_value(value)
+            oled_menu.menu_items[oled_menu.menuindex]["value"] = next_channels_value
+            if self.debug is True:
+                return next_channels_value
 
         if (strval == "<-- BACK"):
             self.drawDefaultMenu(oled_menu)
