@@ -173,9 +173,7 @@ def main():
                      "UPDATE",
                      "<-- BACK"]
 
-    advanced_settings_items = ["CHANNELS",
-                              "BUFFER",
-                              "<-- BACK"]
+    advanced_settings_items = [{"name": "buffer", "value": "6"}, {"name": "buffer", "value": "6"}, "<-- BACK"]
 
     cfg = cp.ConfigParser(interpolation=cp.ExtendedInterpolation())
     cfg.read('./default-config.ini')
