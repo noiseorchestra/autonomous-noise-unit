@@ -26,7 +26,7 @@ def get_settings_items():
     settings_items[0]["value"] = config.get_config()["jacktrip-default"]["input-channels"]
     return settings_items
 
-def get_settings_items():
+def get_advanced_settings_items():
     # need to implement loading stored config values
     return advanced_settings_items
 
