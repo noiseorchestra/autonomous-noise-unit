@@ -3,7 +3,6 @@
 from luma.core.render import canvas
 from PIL import ImageFont
 
-
 class Menu:
     """Class for drawing OLED menu"""
 
@@ -59,3 +58,6 @@ class Menu:
         self.menu_items = new_menu_items
         self.menuindex = 0
         self.counter = 0
+
+    def update_settings_values(self, settings_items):
+        self.settings_items = settings_items
