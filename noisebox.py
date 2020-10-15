@@ -13,7 +13,6 @@ class Noisebox:
     """Main noisebox class"""
 
     def __init__(self, cfg, jack_helper, oled):
-        self.config = cfg
         self.peers = cfg.get('peers', 'ip_addresses').split(',')
         self.online_peers = None
         self.session_params = cfg['jacktrip-default']
