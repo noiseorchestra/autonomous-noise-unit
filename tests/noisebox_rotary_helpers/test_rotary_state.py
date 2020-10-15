@@ -76,27 +76,27 @@ def test_rotarty_state_menu_item_settings():
     assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "RotaryState_SettingsMenu"
     oled_menu.new_menu_items.assert_called_with(settings_menu)
 
-def test_rotarty_state_settings_menu_item_mono_input():
-
-    oled = Mock()
-    oled_menu = Mock()
-    noisebox = Mock()
-
-    session_params = {
-        "input-channels": "1"
-    }
-
-    oled_menu.menu_items = settings_menu
-    oled_menu.menuindex = 0
-    noisebox.session_params = session_params
-
-    rotaryState = RotaryState_SettingsMenu()
-    rotaryState.switchCallback(noisebox, oled_menu, oled)
-
-    assert noisebox.session_params["input-channels"] == "2"
-
-    rotaryState.switchCallback(noisebox, oled_menu, oled)
-    assert noisebox.session_params["input-channels"] == "1"
+# def test_rotarty_state_settings_menu_item_mono_input():
+#
+#     oled = Mock()
+#     oled_menu = Mock()
+#     noisebox = Mock()
+#
+#     session_params = {
+#         "input-channels": "1"
+#     }
+#
+#     oled_menu.menu_items = settings_menu
+#     oled_menu.menuindex = 0
+#     noisebox.session_params = session_params
+#
+#     rotaryState = RotaryState_SettingsMenu()
+#     rotaryState.switchCallback(noisebox, oled_menu, oled)
+#
+#     assert noisebox.session_params["input-channels"] == "2"
+#
+#     rotaryState.switchCallback(noisebox, oled_menu, oled)
+#     assert noisebox.session_params["input-channels"] == "1"
 
 def test_rotarty_state_settings_menu_item_jacktrip():
 

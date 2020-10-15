@@ -83,3 +83,27 @@ def test_get_custom_config():
     my_config_parser_dict = {s:dict(config.items(s)) for s in config.sections()}
 
     assert my_config_parser_dict == custom_config
+
+def test_change_server_ip():
+    new_ip = "444.444.444.444"
+    nh.config.change_server_ip(new_ip)['jacktrip-default']['ip'] == new_ip
+    new_ip = "555.555.555.555"
+    nh.config.change_server_ip(new_ip)['jacktrip-default']['ip'] == new_ip
+
+def test_change_input_channels():
+    channels = "1"
+    nh.config.change_input_channels(channels)['jacktrip-default']['input-channels'] == channels
+    channels = "2"
+    nh.config.change_input_channels(channels)['jacktrip-default']['input-channels'] == channels
+
+def test_change_output_channels():
+    channels = "1"
+    nh.config.change_output_channels(channels)['jacktrip-default']['output-channels'] == channels
+    channels = "2"
+    nh.config.change_output_channels(channels)['jacktrip-default']['output-channels'] == channels
+
+def test_change_buffer():
+    buffer = "12"
+    nh.config.change_buffer(buffer)['jacktrip-default']['jacktrip-q'] == buffer
+    buffer = "6"
+    nh.config.change_buffer(buffer)['jacktrip-default']['jacktrip-q'] == buffer
