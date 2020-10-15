@@ -13,12 +13,12 @@ settings_menu = ["MONO INPUT",
                  "UPDATE",
                  "<-- BACK"]
 
-advanced_settings_items = [{"name": "buffer", "value": "6"}, {"name": "channels", "value": "2"}, "<-- BACK"]
+advanced_settings_items = [{"name": "queue", "value": "6"}, {"name": "channels", "value": "2"}, "<-- BACK"]
 
 def test_get_menu_item_string():
 
     results = [
-        "buffer: 6",
+        "queue: 6",
         "channels: 2",
         "<-- BACK"
     ]

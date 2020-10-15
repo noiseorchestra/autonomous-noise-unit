@@ -3,7 +3,7 @@ from unittest.mock import Mock
 import noisebox_helpers as nh
 
 input_values = ["1", "2"]
-buffer_values = ["2", "4", "6", "8"]
+queue_values = ["2", "4", "6", "8"]
 
 menu_items = ['CONNECT TO SERVER',
               'LEVEL METER',
@@ -16,7 +16,7 @@ settings_menu_items = [{"name": "INPUT", "value": "1"},
                        "UPDATE",
                        "<-- BACK"]
 
-advanced_settings_items = [{"name": "CHANNELS", "value": "1"}, {"name": "BUFFER", "value": "6"}, "<-- BACK"]
+advanced_settings_items = [{"name": "CHANNELS", "value": "1"}, {"name": "QUEUE", "value": "6"}, "<-- BACK"]
 
 def test_rotarty_state_menu_item_connect_server():
 
@@ -122,7 +122,7 @@ def test_rotarty_state_advanced_settings_menu_item_channels():
     assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "1"
     assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "2"
 
-def test_rotarty_state_advanced_settings_menu_item_buffer():
+def test_rotarty_state_advanced_settings_menu_item_queue():
 
     oled = Mock()
     oled_menu = Mock()

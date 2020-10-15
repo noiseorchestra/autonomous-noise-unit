@@ -240,12 +240,12 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
         else:
             strval = oled_menu.menu_items[oled_menu.menuindex]
 
-        if (strval == "BUFFER"):
-            next_buffer_value = menu.next_buffer_value(value)
-            oled_menu.menu_items[oled_menu.menuindex]["value"] = next_buffer_value
+        if (strval == "QUEUE"):
+            next_queue_value = menu.next_queue_value(value)
+            oled_menu.menu_items[oled_menu.menuindex]["value"] = next_queue_value
             if self.debug is True:
-                return next_buffer_value
-            config.save(config.change_buffer(next_buffer_value))
+                return next_queue_value
+            config.save(config.change_queue(next_queue_value))
             oled_menu.draw_menu()
 
         if (strval == "CHANNELS"):

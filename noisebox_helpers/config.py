@@ -50,9 +50,9 @@ class Config:
         cfg["jacktrip-default"]["output-channels"] = channels
         return cfg
 
-    def change_buffer(self, buffer):
+    def change_queue(self, queue):
         cfg = self.get_custom_only()
-        cfg["jacktrip-default"]["jacktrip-q"] = buffer
+        cfg["jacktrip-default"]["jacktrip-q"] = queue
         return cfg
 
     def save(self, cfg):
