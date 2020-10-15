@@ -63,20 +63,23 @@ custom_config = {
         'ip': '222.222.222.222'},
 }
 
+default_path = './tests/test_default_config.ini'
+custom_path = './tests/test_custom_config.ini'
+
 def test_get_config():
-    config = nh.config.get_config(default_config_path='./tests/test_default_config.ini', custom_config_path='./tests/test_custom_config.ini')
+    config = nh.config.get_config(default_path=default_path, custom_path=custom_path)
     my_config_parser_dict = {s:dict(config.items(s)) for s in config.sections()}
 
     assert my_config_parser_dict == combined_config
 
 def test_get_default_config():
-    config = nh.config.get_default_only(default_config_path='./tests/test_default_config.ini')
+    config = nh.config.get_default_only(default_path=default_path)
     my_config_parser_dict = {s:dict(config.items(s)) for s in config.sections()}
 
     assert my_config_parser_dict == default_config
 
 def test_get_custom_config():
-    config = nh.config.get_custom_only(custom_config_path='./tests/test_custom_config.ini')
+    config = nh.config.get_custom_only(custom_path=custom_path)
     my_config_parser_dict = {s:dict(config.items(s)) for s in config.sections()}
 
     assert my_config_parser_dict == custom_config
