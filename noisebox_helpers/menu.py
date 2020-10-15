@@ -11,12 +11,24 @@ settings_items = [{"name": "INPUT", "value": "mono"},
                   "UPDATE",
                   "<-- BACK"]
 
-advanced_settings_items = [{"name": "buffer", "value": "6"}, {"name": "buffer", "value": "6"}, "<-- BACK"]
+advanced_settings_items = [{"name": "INPUT", "value": "1"}, {"name": "BUFFER", "value": "6"}, "<-- BACK"]
 
+input_values = ["1", "2"]
+buffer_values = ["2", "4", "6", "8"]
 
 def get_main_menu_items():
     return main_menu_items
 
 def get_settings_items():
-    settings_items[0]["value"] = config.get_config["jacktrip-default"]["input-channels"]
+    settings_items[0]["value"] = config.get_config()["jacktrip-default"]["input-channels"]
     return settings_items
+
+def next_input_value():
+    current_value = config.get_config()["jacktrip-default"]["input-channels"]
+    return next_value(input_values, current_value)
+
+def next_value(values, current_value):
+    index = values.index(current_value)
+    next_index = index + 1
+    next_index = 0 if next_index == len(values) else next_index
+    return values[next_index]
