@@ -16,7 +16,7 @@ settings_menu_items = [{"name": "INPUT", "value": "1"},
                        "UPDATE",
                        "<-- BACK"]
 
-advanced_settings_items = [{"name": "CHANNELS", "value": "1"}, {"name": "QUEUE", "value": "6"}, "<-- BACK"]
+advanced_settings_items = [{"name": "CHANNELS", "value": "1"}, {"name": "QUEUE", "value": "6"}, "CHANGE IP","<-- BACK"]
 
 def test_rotarty_state_menu_item_connect_server():
 
@@ -133,5 +133,18 @@ def test_rotarty_state_advanced_settings_menu_item_queue():
 
     rotaryState = RotaryState_AdvancedSettingsMenu(debug=True)
     assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "8"
-    assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "2"
-    assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "4"
+    assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "10"
+    assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "12"
+
+def test_rotarty_state_advanced_settings_menu_change_ip():
+
+    oled = Mock()
+    oled_menu = Mock()
+    noisebox = Mock()
+
+    oled_menu.menu_items = advanced_settings_items
+    oled_menu.menuindex = 2
+
+    rotaryState = RotaryState_AdvancedSettingsMenu(debug=True)
+    rotaryState.switchCallback(noisebox, oled_menu, oled)
+    oled.draw_ip_menu.assert_called_with("1", "123.")

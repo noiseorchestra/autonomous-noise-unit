@@ -11,7 +11,7 @@ settings_items = [{"name": "INPUT", "value": "1"},
                   "UPDATE",
                   "<-- BACK"]
 
-advanced_settings_items = [{"name": "CHANNELS", "value": "1"}, {"name": "QUEUE", "value": "6"}, "<-- BACK"]
+advanced_settings_items = [{"name": "CHANNELS", "value": "1"}, {"name": "QUEUE", "value": "6"}, "CHANGE IP","<-- BACK"]
 
 input_values = ["1", "2"]
 channels_values = ["1", "2"]

@@ -256,6 +256,9 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
             config.save(config.change_output_channels(next_channels_value))
             oled_menu.draw_menu()
 
+        if (strval == "CHANGE IP"):
+            oled.draw_ip_menu("1", "123." )
+
         if (strval == "<-- BACK"):
             self.drawDefaultMenu(oled_menu)
             return "<-- BACK"

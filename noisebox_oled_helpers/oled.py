@@ -109,3 +109,6 @@ class OLED:
         """STop scrolling text thread"""
 
         self._scrolling_text_running = False
+
+    def draw_ip_menu(self, picker_value, ip_address):
+        self.draw_text(10, 40, ip_address + picker_value)

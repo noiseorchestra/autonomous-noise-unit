@@ -13,13 +13,14 @@ settings_menu = ["MONO INPUT",
                  "UPDATE",
                  "<-- BACK"]
 
-advanced_settings_items = [{"name": "queue", "value": "6"}, {"name": "channels", "value": "2"}, "<-- BACK"]
+advanced_settings_items = [{"name": "CHANNELS", "value": "1"}, {"name": "QUEUE", "value": "6"}, "CHANGE IP","<-- BACK"]
 
 def test_get_menu_item_string():
 
     results = [
-        "queue: 6",
-        "channels: 2",
+        "CHANNELS: 1",
+        "QUEUE: 6",
+        "CHANGE IP",
         "<-- BACK"
     ]
     oled = Mock()
