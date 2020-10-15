@@ -14,6 +14,8 @@ class Menu:
         self.menu_items = menu_items
         self.settings_items = settings_items
         self.advanced_settings_items = advanced_settings_items
+        self.ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", " ->"]
+        self.ip_address = ""
         self.device = None
 
     def start(self, device):
