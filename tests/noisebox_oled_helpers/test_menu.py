@@ -13,15 +13,20 @@ settings_menu = ["MONO INPUT",
                  "UPDATE",
                  "<-- BACK"]
 
-advanced_menu_items = [{"name": "buffer", "value": "6"}]
+advanced_settings_items = [{"name": "buffer", "value": "6"}, {"name": "channels", "value": "2"}, "<-- BACK"]
 
 def test_get_menu_item_string():
+
+    results = [
+        "buffer: 6",
+        "channels: 2",
+        "<-- BACK"
+    ]
     oled = Mock()
     noisebox = Mock()
-    oled_menu = Menu(menu_items, settings_menu, advanced_menu_items)
+    oled_menu = Menu(menu_items, settings_menu, advanced_settings_items)
     for i in range(len(menu_items)):
         assert oled_menu.get_menu_item_str(menu_items, i) == menu_items[i]
 
-    for i in range(len(advanced_menu_items)):
-        menu_str = advanced_menu_items[i]["name"] + ": " + advanced_menu_items[i]["value"]
-        assert oled_menu.get_menu_item_str(advanced_menu_items, i) == menu_str
+    for i in range(len(advanced_settings_items)):
+        assert oled_menu.get_menu_item_str(advanced_settings_items, i) == results[i]
