@@ -170,12 +170,15 @@ class RotaryState_SettingsMenu(RotaryState):
     def switchCallback(self, noisebox, oled_menu, oled):
         """check menu value on button click and run corresponding methods"""
 
-        strval = oled_menu.menu_items[oled_menu.menuindex]
+        if type(oled_menu.menu_items[oled_menu.menuindex]) is dict:
+            strval = oled_menu.menu_items[oled_menu.menuindex]["name"]
+        else:
+            strval = oled_menu.menu_items[oled_menu.menuindex]
 
         if (strval == "<-- BACK"):
             self.drawDefaultMenu(oled_menu)
 
-        elif (strval == "MONO INPUT"):
+        elif (strval == "INPUT"):
             """Toggle input channels mono/stereo"""
 
             oled_menu.draw_menu()
