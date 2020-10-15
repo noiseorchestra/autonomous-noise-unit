@@ -282,7 +282,7 @@ class RotaryState_IpPicker(RotaryState):
         self.debug = debug
 
     def switchCallback(self, noisebox, oled_menu, oled):
-        oled_menu.ip_address = oled_menu.ip_address
+        oled_menu.ip_address += oled_menu.ip_values[oled_menu.counter]
         oled_menu.counter = 0
         oled_menu.draw_ip_menu(oled_menu.ip_values[oled_menu.counter], oled_menu.ip_address)
 

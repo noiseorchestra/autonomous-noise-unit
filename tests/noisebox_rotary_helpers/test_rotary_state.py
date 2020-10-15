@@ -160,4 +160,10 @@ def test_rotarty_state_ip_picker():
 
     rotaryState = RotaryState_IpPicker(debug=True)
     rotaryState.switchCallback(noisebox, oled_menu, oled)
-    oled_menu.draw_ip_menu.assert_called_with("0", "")
+    oled_menu.draw_ip_menu.assert_called_with("0", "0")
+    oled_menu.counter = 3
+    rotaryState.switchCallback(noisebox, oled_menu, oled)
+    oled_menu.draw_ip_menu.assert_called_with("0", "03")
+    oled_menu.counter = 7
+    rotaryState.switchCallback(noisebox, oled_menu, oled)
+    oled_menu.draw_ip_menu.assert_called_with("0", "037")
