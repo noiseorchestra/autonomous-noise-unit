@@ -1,4 +1,4 @@
-from noisebox_rotary_helpers.rotary_state import RotaryState_Menu, RotaryState_SettingsMenu, RotaryState_AdvancedSettingsMenu
+from noisebox_rotary_helpers.rotary_state import RotaryState_Menu, RotaryState_SettingsMenu, RotaryState_AdvancedSettingsMenu, RotaryState_IpPicker
 from unittest.mock import Mock
 import noisebox_helpers as nh
 
@@ -147,4 +147,13 @@ def test_rotarty_state_advanced_settings_menu_change_ip():
 
     rotaryState = RotaryState_AdvancedSettingsMenu(debug=True)
     rotaryState.switchCallback(noisebox, oled_menu, oled)
-    oled.draw_ip_menu.assert_called_with("1", "123.")
+    oled_menu.draw_ip_menu.assert_called_with("1", "123.")
+
+def test_rotarty_state_ip_picker():
+    oled = Mock()
+    oled_menu = Mock()
+    noisebox = Mock()
+
+    rotaryState = RotaryState_IpPicker(debug=True)
+    rotaryState.switchCallback(noisebox, oled_menu, oled)
+    oled_menu.draw_ip_menu.assert_called_with("0", "")
