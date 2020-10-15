@@ -47,7 +47,7 @@ class Config:
 
     def change_output_channels(self, channels):
         cfg = self.get_custom_only()
-        cfg["jacktrip-default"]["output-channels"] = channels
+        cfg["jacktrip-default"]["jacktrip-channels"] = channels
         return cfg
 
     def change_queue(self, queue):

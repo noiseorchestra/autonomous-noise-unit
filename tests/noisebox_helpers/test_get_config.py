@@ -104,9 +104,9 @@ def test_change_input_channels():
 def test_change_output_channels():
     config = nh.Config(default_path, custom_path)
     channels = "1"
-    config.change_output_channels(channels)['jacktrip-default']['output-channels'] == channels
+    config.change_output_channels(channels)['jacktrip-default']['jacktrip-channels'] == channels
     channels = "2"
-    config.change_output_channels(channels)['jacktrip-default']['output-channels'] == channels
+    config.change_output_channels(channels)['jacktrip-default']['jacktrip-channels'] == channels
 
 def test_change_queue():
     config = nh.Config(default_path, custom_path)
