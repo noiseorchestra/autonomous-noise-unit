@@ -1,4 +1,4 @@
-from noisebox_helpers import NoiseBoxCustomError
+from noisebox_helpers import NoiseBoxCustomError, menu
 
 
 class RotaryState:
@@ -181,7 +181,7 @@ class RotaryState_SettingsMenu(RotaryState):
         elif (strval == "INPUT"):
             """Toggle input channels mono/stereo"""
 
-            oled_menu.draw_menu()
+            return menu.next_input_value()
 
         elif (strval == "JACKTRIP"):
             next_state = RotaryState_AdvancedSettingsMenu

@@ -7,7 +7,7 @@ menu_items = ['CONNECT TO SERVER',
               'P2P SESSION',
               'SETTINGS -->']
 
-settings_menu = [{"name": "INPUT", "value:": "mono"},
+settings_menu = [{"name": "INPUT", "value:": "1"},
                   "IP ADDRESS",
                   "JACKTRIP",
                   "UPDATE",
@@ -83,11 +83,11 @@ def test_rotarty_state_settings_menu_item_mono_input():
     noisebox = Mock()
 
     oled_menu.menu_items = settings_menu
+    oled_menu.settings_items = settings_menu
     oled_menu.menuindex = 0
 
     rotaryState = RotaryState_SettingsMenu()
-    rotaryState.switchCallback(noisebox, oled_menu, oled)
-    oled_menu.draw_menu.assert_called_with()
+    assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "1"
 
 def test_rotarty_state_settings_menu_item_jacktrip():
 
