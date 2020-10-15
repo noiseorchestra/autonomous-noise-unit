@@ -84,7 +84,7 @@ class JackHelper:
                 self.connections.append((receive_ports[0], send_ports[1]))
 
     def make_all_connections(self):
-        [self.connect_ports(c[0], c[1]) for c in self.connections]
+        [self.connect(c[0], c[1]) for c in self.connections]
 
     def disconnect_all(self, my_port):
         # from madwort py_patcher
