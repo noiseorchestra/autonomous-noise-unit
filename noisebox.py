@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import RPi.GPIO as GPIO
-import configparser as cp
 from time import sleep
 import subprocess
 import sys
@@ -175,30 +174,13 @@ def main():
 
     advanced_settings_items = [{"name": "buffer", "value": "6"}, {"name": "buffer", "value": "6"}, "<-- BACK"]
 
-    cfg = cp.ConfigParser(interpolation=cp.ExtendedInterpolation())
-    cfg.read('./default-config.ini')
-
-    if os.path.isfile('./config.ini'):
-        custom_cfg = cp.ConfigParser(interpolation=cp.ExtendedInterpolation())
-        custom_cfg.read('./config.ini')
-        cfg['server1']['ip'] = custom_cfg['server1']['ip']
-        cfg['server2']['ip'] = custom_cfg['server2']['ip']
-        cfg['peers'] = custom_cfg['peers']
-        cfg['jacktrip-default']['input-channels'] = custom_cfg['jacktrip-default']['input-channels']
-        cfg['jacktrip-default']['jacktrip-channels'] = custom_cfg['jacktrip-default']['jacktrip-channels']
-        cfg['jacktrip-default']['ip'] = custom_cfg['jacktrip-default']['ip']
-
-    else:
-        print("""
-        config.ini file not found, reading default-config.ini instead,
-        please create your own config.ini file.
-        """)
-
+    cfg = nh.config.get_config()
     oled = noisebox_oled_helpers.OLED()
     jack_helper = nh.JackHelper()
     oled_menu = noisebox_oled_helpers.Menu(menu_items, settings_items, advanced_settings_items)
     noisebox = Noisebox(cfg, jack_helper, oled)
     ky040 = KY040(noisebox, oled_menu)
+
     oled_menu.start(noisebox.oled.device)
 
     try:
