@@ -33,7 +33,7 @@ class Noisebox:
     def check_peers(self):
         """Check status of all peers"""
 
-        peers = self.config.get_config['peers']['ip_addresses'].split(',')
+        peers = self.config.get_config()['peers']['ip_addresses'].split(',')
         self.online_peers = nh.get_online_peers(peers)
         return self.online_peers
 
