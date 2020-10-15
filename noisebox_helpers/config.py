@@ -57,4 +57,4 @@ class Config:
 
     def save(self, cfg):
         with open('./config.ini', 'w') as configfile:
-            configfile.write(cfg)
+            cfg.write(configfile)
