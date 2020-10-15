@@ -172,6 +172,7 @@ class RotaryState_SettingsMenu(RotaryState):
 
         if type(oled_menu.menu_items[oled_menu.menuindex]) is dict:
             strval = oled_menu.menu_items[oled_menu.menuindex]["name"]
+            value = oled_menu.menu_items[oled_menu.menuindex]["value"]
         else:
             strval = oled_menu.menu_items[oled_menu.menuindex]
 
@@ -181,7 +182,10 @@ class RotaryState_SettingsMenu(RotaryState):
         elif (strval == "INPUT"):
             """Toggle input channels mono/stereo"""
 
-            return menu.next_input_value()
+            next_input_value = menu.next_input_value(value)
+            oled_menu.menu_items[oled_menu.menuindex]["value"] = next_input_value
+            if self.debug is True:
+                return next_input_value
 
         elif (strval == "JACKTRIP"):
             next_state = RotaryState_AdvancedSettingsMenu
