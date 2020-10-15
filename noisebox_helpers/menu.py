@@ -29,8 +29,8 @@ def get_settings_items():
 def get_advanced_settings_items():
     # need to implement loading stored config values
     config = Config()
-    settings_items[0]["value"] = config.get_config()["jacktrip-default"]["jacktrip-channels"]
-    settings_items[1]["value"] = config.get_config()["jacktrip-default"]["jacktrip-q"]
+    advanced_settings_items[0]["value"] = config.get_config()["jacktrip-default"]["jacktrip-channels"]
+    advanced_settings_items[1]["value"] = config.get_config()["jacktrip-default"]["jacktrip-q"]
     return advanced_settings_items
 
 def next_input_value(current_value):
