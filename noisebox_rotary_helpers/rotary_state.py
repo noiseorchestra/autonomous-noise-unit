@@ -4,8 +4,9 @@ from noisebox_helpers import NoiseBoxCustomError
 class RotaryState:
     """Base state"""
 
-    def __init__(self):
+    def __init__(self, debug=False):
         self.new_state(RotaryState_Menu)
+        self.debug = debug
 
     def new_state(self, state):
         self.__class__ = state
