@@ -231,18 +231,15 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
             strval = oled_menu.menu_items[oled_menu.menuindex]
 
         if (strval == "buffer"):
-            """Toggle input channels mono/stereo"""
             print(strval)
             return "buffer"
 
         if (strval == "channels"):
-            """Toggle input channels mono/stereo"""
             print(strval)
             return "channels"
 
         if (strval == "<-- BACK"):
-            """Toggle input channels mono/stereo"""
-            print(strval)
+            self.drawDefaultMenu(oled_menu)
             return "<-- BACK"
 
     def rotaryCallback(self, oled_menu, direction):
