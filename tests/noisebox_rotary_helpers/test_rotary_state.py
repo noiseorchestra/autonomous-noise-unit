@@ -7,11 +7,11 @@ menu_items = ['CONNECT TO SERVER',
               'P2P SESSION',
               'SETTINGS -->']
 
-settings_menu = ["MONO INPUT",
-                 "IP ADDRESS",
-                 "JACKTRIP",
-                 "UPDATE",
-                 "<-- BACK"]
+settings_menu = [{"name": "INPUT", "value:": "mono"},
+                  "IP ADDRESS",
+                  "JACKTRIP",
+                  "UPDATE",
+                  "<-- BACK"]
 
 advanced_menu_items = [{"name": "buffer", "value": "6"}]
 
@@ -76,27 +76,18 @@ def test_rotarty_state_menu_item_settings():
     assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "RotaryState_SettingsMenu"
     oled_menu.new_menu_items.assert_called_with(settings_menu)
 
-# def test_rotarty_state_settings_menu_item_mono_input():
-#
-#     oled = Mock()
-#     oled_menu = Mock()
-#     noisebox = Mock()
-#
-#     session_params = {
-#         "input-channels": "1"
-#     }
-#
-#     oled_menu.menu_items = settings_menu
-#     oled_menu.menuindex = 0
-#     noisebox.session_params = session_params
-#
-#     rotaryState = RotaryState_SettingsMenu()
-#     rotaryState.switchCallback(noisebox, oled_menu, oled)
-#
-#     assert noisebox.session_params["input-channels"] == "2"
-#
-#     rotaryState.switchCallback(noisebox, oled_menu, oled)
-#     assert noisebox.session_params["input-channels"] == "1"
+def test_rotarty_state_settings_menu_item_mono_input():
+
+    oled = Mock()
+    oled_menu = Mock()
+    noisebox = Mock()
+
+    oled_menu.menu_items = settings_menu
+    oled_menu.menuindex = 0
+
+    rotaryState = RotaryState_SettingsMenu()
+    rotaryState.switchCallback(noisebox, oled_menu, oled)
+    oled_menu.draw_menu.assert_called_with()
 
 def test_rotarty_state_settings_menu_item_jacktrip():
 
