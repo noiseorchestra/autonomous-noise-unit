@@ -193,7 +193,7 @@ class RotaryState_SettingsMenu(RotaryState):
                 return next_state.__name__
 
             self.new_state(next_state)
-            oled_menu.draw_advanced_menu()
+            oled_menu.draw_menu()
 
         elif (strval == "IP ADDRESS"):
             title = ["==HOSTNAME & IP=="]
