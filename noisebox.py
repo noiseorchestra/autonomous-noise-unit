@@ -154,18 +154,9 @@ class Noisebox:
 
 def main():
 
-    menu_items = ['CONNECT TO SERVER',
-                  'LEVEL METER',
-                  'P2P SESSION',
-                  'SETTINGS -->']
-
-    settings_items = [{"name": "INPUT", "value": "mono"},
-                     "IP ADDRESS",
-                     "JACKTRIP",
-                     "UPDATE",
-                     "<-- BACK"]
-
-    advanced_settings_items = [{"name": "buffer", "value": "6"}, {"name": "buffer", "value": "6"}, "<-- BACK"]
+    menu_items = nh.menu.get_main_menu_items()
+    settings_items = nh.menu.get_settings_items()
+    advanced_settings_items = nh.menu.get_advanced_settings_items()
 
     config = nh.Config()
     cfg = config.get_config()

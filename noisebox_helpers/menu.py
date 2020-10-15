@@ -21,10 +21,14 @@ def get_main_menu_items():
     return main_menu_items
 
 def get_settings_items():
-    # need to implement this for every value that may change
+    # need to implement loading stored config values
     config = Config()
     settings_items[0]["value"] = config.get_config()["jacktrip-default"]["input-channels"]
     return settings_items
+
+def get_settings_items():
+    # need to implement loading stored config values
+    return advanced_settings_items
 
 def next_input_value(current_value):
     return next_value(input_values, current_value)
