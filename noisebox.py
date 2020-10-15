@@ -167,7 +167,8 @@ def main():
 
     advanced_settings_items = [{"name": "buffer", "value": "6"}, {"name": "buffer", "value": "6"}, "<-- BACK"]
 
-    cfg = nh.config.get_config()
+    config = nh.Config()
+    cfg = config.get_config()
     oled = noisebox_oled_helpers.OLED()
     jack_helper = nh.JackHelper()
     oled_menu = noisebox_oled_helpers.Menu(menu_items, settings_items, advanced_settings_items)
