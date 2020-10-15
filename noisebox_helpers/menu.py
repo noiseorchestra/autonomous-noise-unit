@@ -11,9 +11,10 @@ settings_items = [{"name": "INPUT", "value": "1"},
                   "UPDATE",
                   "<-- BACK"]
 
-advanced_settings_items = [{"name": "INPUT", "value": "1"}, {"name": "BUFFER", "value": "6"}, "<-- BACK"]
+advanced_settings_items = [{"name": "CHANNELS", "value": "1"}, {"name": "BUFFER", "value": "6"}, "<-- BACK"]
 
 input_values = ["1", "2"]
+channels_values = ["1", "2"]
 buffer_values = ["2", "4", "6", "8"]
 
 def get_main_menu_items():
@@ -27,6 +28,12 @@ def get_settings_items():
 
 def next_input_value(current_value):
     return next_value(input_values, current_value)
+
+def next_buffer_value(current_value):
+    return next_value(buffer_values, current_value)
+
+def next_channels_value(current_value):
+    return next_value(channels_values, current_value)
 
 def next_value(values, current_value):
     index = values.index(current_value)

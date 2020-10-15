@@ -1,4 +1,4 @@
-from noisebox_rotary_helpers.rotary_state import RotaryState_Menu, RotaryState_SettingsMenu
+from noisebox_rotary_helpers.rotary_state import RotaryState_Menu, RotaryState_SettingsMenu, RotaryState_AdvancedSettingsMenu
 from unittest.mock import Mock
 import noisebox_helpers as nh
 
@@ -16,7 +16,7 @@ settings_menu_items = [{"name": "INPUT", "value": "1"},
                        "UPDATE",
                        "<-- BACK"]
 
-advanced_settings_items = [{"name": "INPUT", "value": "1"}, {"name": "BUFFER", "value": "6"}, "<-- BACK"]
+advanced_settings_items = [{"name": "CHANNELS", "value": "1"}, {"name": "BUFFER", "value": "6"}, "<-- BACK"]
 
 def test_rotarty_state_menu_item_connect_server():
 
@@ -107,3 +107,31 @@ def test_rotarty_state_settings_menu_item_jacktrip():
 
     assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "RotaryState_AdvancedSettingsMenu"
     oled_menu.new_menu_items.assert_called_with(advanced_settings_items)
+
+def test_rotarty_state_advanced_settings_menu_item_channels():
+
+    oled = Mock()
+    oled_menu = Mock()
+    noisebox = Mock()
+
+    oled_menu.menu_items = advanced_settings_items
+    oled_menu.menuindex = 0
+
+    rotaryState = RotaryState_AdvancedSettingsMenu(debug=True)
+    assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "2"
+    assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "1"
+    assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "2"
+
+def test_rotarty_state_advanced_settings_menu_item_buffer():
+
+    oled = Mock()
+    oled_menu = Mock()
+    noisebox = Mock()
+
+    oled_menu.menu_items = advanced_settings_items
+    oled_menu.menuindex = 1
+
+    rotaryState = RotaryState_AdvancedSettingsMenu(debug=True)
+    assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "8"
+    assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "2"
+    assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "4"
