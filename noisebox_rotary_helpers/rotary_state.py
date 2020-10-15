@@ -178,11 +178,6 @@ class RotaryState_SettingsMenu(RotaryState):
         elif (strval == "MONO INPUT"):
             """Toggle input channels mono/stereo"""
 
-            # this needs figuring out now toggle function is removed in favour of "name", "value" dict
-            next_ch = "1" if noisebox.session_params['input-channels'] == "2" else "2"
-            noisebox.session_params['input-channels'] = next_ch
-            noisebox.save_settings()
-            # oled_menu.toggle_selected_items(["MONO INPUT"])
             oled_menu.draw_menu()
 
         elif (strval == "JACKTRIP"):

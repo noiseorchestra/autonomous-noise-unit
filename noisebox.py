@@ -144,13 +144,6 @@ class Noisebox:
         self.pytrip.stop()
         self.oled.draw_lines(["==JACKTRIP STOPPED=="])
 
-    def save_settings(self):
-        self.config['jacktrip-default']['ip'] = self.session_params['ip']
-        self.config['jacktrip-default']['jacktrip-channels'] = self.session_params['jacktrip-channels']
-        self.config['jacktrip-default']['input-channels'] = self.session_params['input-channels']
-        with open('./config.ini', 'w') as configfile:
-            self.config.write(configfile)
-
     def system_update(self):
         p = subprocess.run(["git", "pull"])
         if p.returncode == 1:
