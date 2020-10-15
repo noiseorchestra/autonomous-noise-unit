@@ -2,18 +2,21 @@ from noisebox_rotary_helpers.rotary_state import RotaryState_Menu, RotaryState_S
 from unittest.mock import Mock
 import noisebox_helpers as nh
 
+input_values = ["1", "2"]
+buffer_values = ["2", "4", "6", "8"]
+
 menu_items = ['CONNECT TO SERVER',
               'LEVEL METER',
               'P2P SESSION',
               'SETTINGS -->']
 
-settings_menu = [{"name": "INPUT", "value:": "1"},
-                  "IP ADDRESS",
-                  "JACKTRIP",
-                  "UPDATE",
-                  "<-- BACK"]
+settings_menu_items = [{"name": "INPUT", "value": "1"},
+                       "IP ADDRESS",
+                       "JACKTRIP",
+                       "UPDATE",
+                       "<-- BACK"]
 
-advanced_menu_items = [{"name": "buffer", "value": "6"}]
+advanced_settings_items = [{"name": "INPUT", "value": "1"}, {"name": "BUFFER", "value": "6"}, "<-- BACK"]
 
 def test_rotarty_state_menu_item_connect_server():
 
@@ -69,12 +72,12 @@ def test_rotarty_state_menu_item_settings():
     noisebox = Mock()
 
     oled_menu.menu_items = menu_items
-    oled_menu.settings_items = settings_menu
+    oled_menu.settings_items = settings_menu_items
     rotaryState = RotaryState_Menu(debug=True)
 
     oled_menu.menuindex = 3
     assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "RotaryState_SettingsMenu"
-    oled_menu.new_menu_items.assert_called_with(settings_menu)
+    oled_menu.new_menu_items.assert_called_with(settings_menu_items)
 
 def test_rotarty_state_settings_menu_item_mono_input():
 
@@ -82,12 +85,13 @@ def test_rotarty_state_settings_menu_item_mono_input():
     oled_menu = Mock()
     noisebox = Mock()
 
-    oled_menu.menu_items = settings_menu
-    oled_menu.settings_items = settings_menu
+    oled_menu.menu_items = settings_menu_items
     oled_menu.menuindex = 0
 
-    rotaryState = RotaryState_SettingsMenu()
+    rotaryState = RotaryState_SettingsMenu(debug=True)
+    assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "2"
     assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "1"
+    assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "2"
 
 def test_rotarty_state_settings_menu_item_jacktrip():
 
@@ -95,11 +99,11 @@ def test_rotarty_state_settings_menu_item_jacktrip():
     oled_menu = Mock()
     noisebox = Mock()
 
-    oled_menu.menu_items = settings_menu
-    oled_menu.advanced_settings_items = advanced_menu_items
+    oled_menu.menu_items = settings_menu_items
+    oled_menu.advanced_settings_items = advanced_settings_items
     oled_menu.menuindex = 2
 
     rotaryState = RotaryState_SettingsMenu(debug=True)
 
     assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "RotaryState_AdvancedSettingsMenu"
-    oled_menu.new_menu_items.assert_called_with(advanced_menu_items)
+    oled_menu.new_menu_items.assert_called_with(advanced_settings_items)

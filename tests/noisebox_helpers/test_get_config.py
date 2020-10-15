@@ -67,43 +67,50 @@ default_path = './tests/test_default_config.ini'
 custom_path = './tests/test_custom_config.ini'
 
 def test_get_config():
-    config = nh.config.get_config(default_path=default_path, custom_path=custom_path)
-    my_config_parser_dict = {s:dict(config.items(s)) for s in config.sections()}
+    config = nh.Config(default_path, custom_path)
+    current_config = config.get_config()
+    my_config_parser_dict = {s:dict(current_config.items(s)) for s in current_config.sections()}
 
     assert my_config_parser_dict == combined_config
 
 def test_get_default_config():
-    config = nh.config.get_default_only(default_path=default_path)
-    my_config_parser_dict = {s:dict(config.items(s)) for s in config.sections()}
+    config = nh.Config(default_path, custom_path)
+    current_config = config.get_default_only()
+    my_config_parser_dict = {s:dict(current_config.items(s)) for s in current_config.sections()}
 
     assert my_config_parser_dict == default_config
 
 def test_get_custom_config():
-    config = nh.config.get_custom_only(custom_path=custom_path)
-    my_config_parser_dict = {s:dict(config.items(s)) for s in config.sections()}
+    config = nh.Config(default_path, custom_path)
+    current_config = config.get_custom_only()
+    my_config_parser_dict = {s:dict(current_config.items(s)) for s in current_config.sections()}
 
     assert my_config_parser_dict == custom_config
 
 def test_change_server_ip():
+    config = nh.Config(default_path, custom_path)
     new_ip = "444.444.444.444"
-    nh.config.change_server_ip(new_ip)['jacktrip-default']['ip'] == new_ip
+    config.change_server_ip(new_ip)['jacktrip-default']['ip'] == new_ip
     new_ip = "555.555.555.555"
-    nh.config.change_server_ip(new_ip)['jacktrip-default']['ip'] == new_ip
+    config.change_server_ip(new_ip)['jacktrip-default']['ip'] == new_ip
 
 def test_change_input_channels():
+    config = nh.Config(default_path, custom_path)
     channels = "1"
-    nh.config.change_input_channels(channels)['jacktrip-default']['input-channels'] == channels
+    config.change_input_channels(channels)['jacktrip-default']['input-channels'] == channels
     channels = "2"
-    nh.config.change_input_channels(channels)['jacktrip-default']['input-channels'] == channels
+    config.change_input_channels(channels)['jacktrip-default']['input-channels'] == channels
 
 def test_change_output_channels():
+    config = nh.Config(default_path, custom_path)
     channels = "1"
-    nh.config.change_output_channels(channels)['jacktrip-default']['output-channels'] == channels
+    config.change_output_channels(channels)['jacktrip-default']['output-channels'] == channels
     channels = "2"
-    nh.config.change_output_channels(channels)['jacktrip-default']['output-channels'] == channels
+    config.change_output_channels(channels)['jacktrip-default']['output-channels'] == channels
 
 def test_change_buffer():
+    config = nh.Config(default_path, custom_path)
     buffer = "12"
-    nh.config.change_buffer(buffer)['jacktrip-default']['jacktrip-q'] == buffer
+    config.change_buffer(buffer)['jacktrip-default']['jacktrip-q'] == buffer
     buffer = "6"
-    nh.config.change_buffer(buffer)['jacktrip-default']['jacktrip-q'] == buffer
+    config.change_buffer(buffer)['jacktrip-default']['jacktrip-q'] == buffer
