@@ -225,16 +225,25 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
     def switchCallback(self, noisebox, oled_menu, oled):
         """check menu value on button click and run corresponding methods"""
 
-        if type(oled_menu[oled_menu.menuindex]) is dict:
-            strval = oled_menu.advanced_settings_items[oled_menu.menuindex]["name"]
+        if type(oled_menu.menu_items[oled_menu.menuindex]) is dict:
+            strval = oled_menu.menu_items[oled_menu.menuindex]["name"]
         else:
-            strval = oled_menu.advanced_settings_items[oled_menu.menuindex]
-
+            strval = oled_menu.menu_items[oled_menu.menuindex]
 
         if (strval == "buffer"):
             """Toggle input channels mono/stereo"""
-
+            print(strval)
             return "buffer"
+
+        if (strval == "channels"):
+            """Toggle input channels mono/stereo"""
+            print(strval)
+            return "channels"
+
+        if (strval == "<-- BACK"):
+            """Toggle input channels mono/stereo"""
+            print(strval)
+            return "<-- BACK"
 
     def rotaryCallback(self, oled_menu, direction):
         """Increment menu counter and redraw menu"""
