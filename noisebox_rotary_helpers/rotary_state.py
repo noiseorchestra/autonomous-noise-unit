@@ -1,4 +1,4 @@
-from noisebox_helpers import NoiseBoxCustomError, menu
+from noisebox_helpers import NoiseBoxCustomError, menu, Config
 
 
 class RotaryState:
@@ -170,6 +170,8 @@ class RotaryState_SettingsMenu(RotaryState):
     def switchCallback(self, noisebox, oled_menu, oled):
         """check menu value on button click and run corresponding methods"""
 
+        config = Config()
+
         if type(oled_menu.menu_items[oled_menu.menuindex]) is dict:
             strval = oled_menu.menu_items[oled_menu.menuindex]["name"]
             value = oled_menu.menu_items[oled_menu.menuindex]["value"]
@@ -186,6 +188,8 @@ class RotaryState_SettingsMenu(RotaryState):
             oled_menu.menu_items[oled_menu.menuindex]["value"] = next_input_value
             if self.debug is True:
                 return next_input_value
+            config.save(config.change_input_channels(next_input_value))
+            oled_menu.draw_menu()
 
         elif (strval == "JACKTRIP"):
             next_state = RotaryState_AdvancedSettingsMenu
@@ -228,6 +232,8 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
     def switchCallback(self, noisebox, oled_menu, oled):
         """check menu value on button click and run corresponding methods"""
 
+        config = Config()
+
         if type(oled_menu.menu_items[oled_menu.menuindex]) is dict:
             strval = oled_menu.menu_items[oled_menu.menuindex]["name"]
             value = oled_menu.menu_items[oled_menu.menuindex]["value"]
@@ -239,13 +245,16 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
             oled_menu.menu_items[oled_menu.menuindex]["value"] = next_buffer_value
             if self.debug is True:
                 return next_buffer_value
-
+            config.save(config.change_buffer(next_buffer_value))
+            oled_menu.draw_menu()
 
         if (strval == "CHANNELS"):
             next_channels_value = menu.next_channels_value(value)
             oled_menu.menu_items[oled_menu.menuindex]["value"] = next_channels_value
             if self.debug is True:
                 return next_channels_value
+            config.save(config.change_output_channels(next_channels_value))
+            oled_menu.draw_menu()
 
         if (strval == "<-- BACK"):
             self.drawDefaultMenu(oled_menu)
