@@ -285,11 +285,12 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
 
 class RotaryState_IpPicker(RotaryState):
     """Change IP address"""
-    def __init__(self, debug=False):
+    def __init__(self, ip="", debug=False):
         self.debug = debug
+        self.config = Config()
         self.counter = 0
         self.ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "<-", " ->"]
-        self.ip_address = ""
+        self.ip_address = self.config.get_config()["jacktrip-default"]["ip"]
 
     def switchCallback(self, noisebox, oled_menu, oled):
 
