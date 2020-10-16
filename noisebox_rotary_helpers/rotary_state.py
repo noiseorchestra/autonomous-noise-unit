@@ -1,5 +1,6 @@
 from noisebox_helpers import NoiseBoxCustomError, menu, Config
 
+ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "<-", " ->"]
 
 class RotaryState:
     """Base state"""
@@ -7,9 +8,6 @@ class RotaryState:
     def __init__(self, debug=False):
         self.new_state(RotaryState_Menu)
         self.debug = debug
-        self.counter = 0
-        self.ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", " ->"]
-        self.ip_address = ""
 
     def new_state(self, state):
         self.__class__ = state
@@ -24,12 +22,6 @@ class RotaryState:
         oled_menu.new_menu_items(oled_menu.default_menu_items)
         self.new_state(RotaryState_Menu)
         oled_menu.draw_menu()
-
-    def ip_picker_attr(self):
-        self.counter = 0
-        self.ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", " ->"]
-        self.ip_address = ""
-
 
 
 class RotaryState_Menu(RotaryState):
@@ -233,9 +225,6 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
     """Settings menu state"""
     def __init__(self, debug=False):
         self.debug = debug
-        self.counter = 0
-        self.ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", " ->"]
-        self.ip_address = ""
 
     def switchCallback(self, noisebox, oled_menu, oled):
         """check menu value on button click and run corresponding methods"""
@@ -267,6 +256,9 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
         if (strval == "CHANGE IP"):
             oled_menu.counter = 0
             self.new_state(RotaryState_IpPicker)
+            self.counter = 0
+            self.ip_values = ip_values
+            self.ip_address = config.get_config()["jacktrip-default"]["ip"]
             oled_menu.draw_ip_menu("0", "" )
 
         if (strval == "<-- BACK"):
@@ -285,12 +277,11 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
 
 class RotaryState_IpPicker(RotaryState):
     """Change IP address"""
-    def __init__(self, ip="", debug=False):
+    def __init__(self, debug=False):
         self.debug = debug
-        self.config = Config()
         self.counter = 0
-        self.ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "<-", " ->"]
-        self.ip_address = self.config.get_config()["jacktrip-default"]["ip"]
+        self.ip_values = ip_values
+        self.ip_address = "111.111.111.111"
 
     def switchCallback(self, noisebox, oled_menu, oled):
 
