@@ -150,9 +150,19 @@ def test_rotarty_state_advanced_settings_menu_change_ip():
     oled_menu.draw_ip_menu.assert_called_with("0", "")
 
 def test_rotarty_state_ip_picker():
+
     oled = Mock()
     oled_menu = Mock()
     noisebox = Mock()
+
+    oled_menu.advanced_settings_items = advanced_settings_items
+    oled_menu.menu_items = advanced_settings_items
+    oled_menu.menuindex = 0
+
+    clicks = [1, 7, 3, 10, 4, 2, 10, 3, 8, 1, 10, 2, 2, 11]
+    maximum_clicks = [1, 7, 3, 10, 4, 2, 1, 10, 3, 8, 1, 10, 2, 2, 2]
+
+    new_state_mock = Mock()
 
     rotaryState = RotaryState_IpPicker(debug=True)
     rotaryState.switchCallback(noisebox, oled_menu, oled)
@@ -163,3 +173,25 @@ def test_rotarty_state_ip_picker():
     rotaryState.counter = 7
     rotaryState.switchCallback(noisebox, oled_menu, oled)
     oled_menu.draw_ip_menu.assert_called_with("0", "037")
+
+    rotaryState = RotaryState_IpPicker(debug=True)
+    rotaryState.ip_address = ""
+    rotaryState.counter = 0
+    rotaryState.new_state = new_state_mock
+
+    for click in clicks:
+        rotaryState.counter = click
+        rotaryState.switchCallback(noisebox, oled_menu, oled)
+    assert rotaryState.ip_address == "173.42.381.22"
+    rotaryState.new_state.assert_called_with(RotaryState_AdvancedSettingsMenu)
+
+    rotaryState = RotaryState_IpPicker(debug=True)
+    rotaryState.ip_address = ""
+    rotaryState.counter = 0
+    rotaryState.new_state = new_state_mock
+
+    for click in maximum_clicks:
+        rotaryState.counter = click
+        rotaryState.switchCallback(noisebox, oled_menu, oled)
+    assert rotaryState.ip_address == "173.421.381.222"
+    rotaryState.new_state.assert_called_with(RotaryState_AdvancedSettingsMenu)
