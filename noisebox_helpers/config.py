@@ -37,7 +37,7 @@ class Config:
 
     def change_server_ip(self, ip):
         cfg = self.get_custom_only()
-        cfg["server1"]["ip"] = ip
+        cfg["jacktrip-default"]["ip"] = ip
         return cfg
 
     def change_input_channels(self, channels):
