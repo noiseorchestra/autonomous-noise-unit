@@ -11,7 +11,7 @@ settings_items = [{"name": "INPUT", "value": "1"},
                   "UPDATE",
                   "<-- BACK"]
 
-advanced_settings_items = [{"name": "CHANNELS", "value": "1"}, {"name": "QUEUE", "value": "6"}, "CHANGE IP","<-- BACK"]
+advanced_settings_items = [{"name": "CHANNELS", "value": "1"}, {"name": "QUEUE", "value": "6"}, {"name": "IP", "value": "123.123.123.123"}, "CHANGE IP","<-- BACK"]
 
 input_values = ["1", "2"]
 channels_values = ["1", "2"]
@@ -31,6 +31,7 @@ def get_advanced_settings_items():
     config = Config()
     advanced_settings_items[0]["value"] = config.get_config()["jacktrip-default"]["jacktrip-channels"]
     advanced_settings_items[1]["value"] = config.get_config()["jacktrip-default"]["jacktrip-q"]
+    advanced_settings_items[2]["value"] = config.get_config()["jacktrip-default"]["ip"]
     return advanced_settings_items
 
 def next_input_value(current_value):

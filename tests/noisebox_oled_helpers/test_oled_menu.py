@@ -13,13 +13,14 @@ settings_menu = ["MONO INPUT",
                  "UPDATE",
                  "<-- BACK"]
 
-advanced_settings_items = [{"name": "CHANNELS", "value": "1"}, {"name": "QUEUE", "value": "6"}, "CHANGE IP","<-- BACK"]
+advanced_settings_items = [{"name": "CHANNELS", "value": "1"}, {"name": "QUEUE", "value": "6"}, {"name": "IP", "value": "123.123.123.123"}, "CHANGE IP","<-- BACK"]
 
 def test_get_menu_item_string():
 
     results = [
         "CHANNELS: 1",
         "QUEUE: 6",
+        "IP: 123.123.123.123",
         "CHANGE IP",
         "<-- BACK"
     ]
