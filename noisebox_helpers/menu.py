@@ -1,4 +1,3 @@
-from noisebox_helpers.config import Config
 
 main_menu_items = ['CONNECT TO SERVER',
                    'LEVEL METER',
@@ -20,17 +19,22 @@ queue_values = ["2", "4", "6", "8", "10", "12", "14", "16"]
 def get_main_menu_items():
     return main_menu_items
 
-def get_settings_items():
+def get_settings_items(config):
     # need to implement loading stored config values
-    config = Config()
     settings_items[0]["value"] = config.get_config()["jacktrip-default"]["input-channels"]
     return settings_items
 
-def get_advanced_settings_items():
+def get_advanced_settings_items(config):
     # need to implement loading stored config values
-    config = Config()
+    try:
+        config.get_config()["jacktrip-default"]["jacktrip-q"]
+        q = config.get_config()["jacktrip-default"]["jacktrip-q"]
+    except KeyError:
+        print("jacktrip-q key does not exisct, setting default value")
+        q = "8"
+
     advanced_settings_items[0]["value"] = config.get_config()["jacktrip-default"]["jacktrip-channels"]
-    advanced_settings_items[1]["value"] = config.get_config()["jacktrip-default"]["jacktrip-q"]
+    advanced_settings_items[1]["value"] = q
     advanced_settings_items[2]["value"] = config.get_config()["jacktrip-default"]["ip"]
     return advanced_settings_items
 

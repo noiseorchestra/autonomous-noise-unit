@@ -12,8 +12,8 @@ from noisebox_rotary_helpers.rotary import KY040
 class Noisebox:
     """Main noisebox class"""
 
-    def __init__(self, jack_helper, oled):
-        self.config = nh.Config()
+    def __init__(self, jack_helper, oled, config):
+        self.config = config
         self.online_peers = None
         self.pytrip = nh.PyTrip()
         self.oled = oled
@@ -156,14 +156,16 @@ class Noisebox:
 
 def main():
 
+    config = nh.Config()
+
     menu_items = nh.menu.get_main_menu_items()
-    settings_items = nh.menu.get_settings_items()
-    advanced_settings_items = nh.menu.get_advanced_settings_items()
+    settings_items = nh.menu.get_settings_items(config)
+    advanced_settings_items = nh.menu.get_advanced_settings_items(config)
 
     oled = noisebox_oled_helpers.OLED()
     jack_helper = nh.JackHelper()
     oled_menu = noisebox_oled_helpers.Menu(menu_items, settings_items, advanced_settings_items)
-    noisebox = Noisebox(jack_helper, oled)
+    noisebox = Noisebox(jack_helper, oled, config)
     ky040 = KY040(noisebox, oled_menu)
 
     oled_menu.start(noisebox.oled.device)

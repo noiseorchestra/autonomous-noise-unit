@@ -75,7 +75,7 @@ class RotaryState_Menu(RotaryState):
 
         if (strval == "SETTINGS -->"):
             next_state = RotaryState_SettingsMenu
-            oled_menu.new_menu_items(oled_menu.settings_items)
+            oled_menu.new_menu_items(menu.get_settings_items(noisebox.config))
 
             if self.debug is True:
                 return next_state.__name__
@@ -168,8 +168,6 @@ class RotaryState_SettingsMenu(RotaryState):
     def switchCallback(self, noisebox, oled_menu, oled):
         """check menu value on button click and run corresponding methods"""
 
-        config = Config()
-
         if type(oled_menu.menu_items[oled_menu.menuindex]) is dict:
             strval = oled_menu.menu_items[oled_menu.menuindex]["name"]
             value = oled_menu.menu_items[oled_menu.menuindex]["value"]
@@ -186,12 +184,12 @@ class RotaryState_SettingsMenu(RotaryState):
             oled_menu.menu_items[oled_menu.menuindex]["value"] = next_input_value
             if self.debug is True:
                 return next_input_value
-            config.save(config.change_input_channels(next_input_value))
+            noisebox.config.save(noisebox.config.change_input_channels(next_input_value))
             oled_menu.draw_menu()
 
         elif (strval == "JACKTRIP"):
             next_state = RotaryState_AdvancedSettingsMenu
-            oled_menu.new_menu_items(oled_menu.advanced_settings_items)
+            oled_menu.new_menu_items(menu.get_advanced_settings_items(noisebox.config))
 
             if self.debug is True:
                 return next_state.__name__
@@ -242,7 +240,7 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
             oled_menu.menu_items[oled_menu.menuindex]["value"] = next_queue_value
             if self.debug is True:
                 return next_queue_value
-            config.save(config.change_queue(next_queue_value))
+            noisebox.config.save(noisebox.config.change_queue(next_queue_value))
             oled_menu.draw_menu()
 
         if (strval == "CHANNELS"):
@@ -250,15 +248,14 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
             oled_menu.menu_items[oled_menu.menuindex]["value"] = next_channels_value
             if self.debug is True:
                 return next_channels_value
-            config.save(config.change_output_channels(next_channels_value))
+            noisebox.config.save(noisebox.config.change_output_channels(next_channels_value))
             oled_menu.draw_menu()
 
         if (strval == "CHANGE IP"):
-            oled_menu.counter = 0
             self.new_state(RotaryState_IpPicker)
             self.counter = -1
             self.ip_values = ip_values
-            self.ip_address = config.get_config()["jacktrip-default"]["ip"]
+            self.ip_address = noisebox.config.get_config()["jacktrip-default"]["ip"]
             oled_menu.draw_ip_menu(self.ip_values[self.counter], self.ip_address )
 
         if (strval == "<-- BACK"):
@@ -279,7 +276,7 @@ class RotaryState_IpPicker(RotaryState):
     """Change IP address"""
     def __init__(self, debug=False):
         self.debug = debug
-        self.counter = 0
+        self.counter = -1
         self.ip_values = ip_values
         self.ip_address = "111.111.111.111"
 
@@ -288,8 +285,8 @@ class RotaryState_IpPicker(RotaryState):
         next_string = self.ip_address + self.ip_values[self.counter]
 
         if self.ip_values[self.counter] is self.ip_values[-1]:
-            self.save_ip()
-            self.advanced_menu(oled_menu)
+            self.save_ip(noisebox)
+            self.advanced_menu(oled_menu, noisebox)
 
         elif self.ip_values[self.counter] is self.ip_values[-2]:
             self.ip_address = self.ip_address[:-1]
@@ -298,8 +295,8 @@ class RotaryState_IpPicker(RotaryState):
 
         elif len(next_string) == 15:
             self.ip_address = next_string
-            self.save_ip()
-            self.advanced_menu(oled_menu)
+            self.save_ip(noisebox)
+            self.advanced_menu(oled_menu, noisebox)
 
         else:
             self.ip_address += self.ip_values[self.counter]
@@ -315,14 +312,13 @@ class RotaryState_IpPicker(RotaryState):
             self.counter -= 1
         oled_menu.draw_ip_menu(self.ip_values[self.counter], self.ip_address)
 
-    def save_ip(self):
-        config = Config()
-        next_config = config.change_server_ip(self.ip_address)
+    def save_ip(self, noisebox):
+        next_config = noisebox.config.change_server_ip(self.ip_address)
         if self.debug is True:
             return
-        config.save(next_config)
+        noisebox.config.save(next_config)
 
-    def advanced_menu(self, oled_menu):
-        oled_menu.new_menu_items(oled_menu.advanced_settings_items)
+    def advanced_menu(self, oled_menu, noisebox):
+        oled_menu.new_menu_items(menu.get_advanced_settings_items(noisebox.config))
         self.new_state(RotaryState_AdvancedSettingsMenu)
         oled_menu.draw_menu()
