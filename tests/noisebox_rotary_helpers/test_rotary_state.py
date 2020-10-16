@@ -148,6 +148,7 @@ def test_rotarty_state_advanced_settings_menu_change_ip():
     rotaryState = RotaryState_AdvancedSettingsMenu(debug=True)
     rotaryState.switchCallback(noisebox, oled_menu, oled)
     oled_menu.draw_ip_menu.assert_called_with("0", "")
+    assert rotaryState.ip_address == ""
 
 def test_rotarty_state_ip_picker():
 
@@ -165,6 +166,8 @@ def test_rotarty_state_ip_picker():
     new_state_mock = Mock()
 
     rotaryState = RotaryState_IpPicker(debug=True)
+    assert rotaryState.ip_address == ""
+
     rotaryState.switchCallback(noisebox, oled_menu, oled)
     oled_menu.draw_ip_menu.assert_called_with("0", "0")
     rotaryState.counter = 3

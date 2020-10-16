@@ -7,6 +7,9 @@ class RotaryState:
     def __init__(self, debug=False):
         self.new_state(RotaryState_Menu)
         self.debug = debug
+        self.counter = 0
+        self.ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", " ->"]
+        self.ip_address = ""
 
     def new_state(self, state):
         self.__class__ = state
@@ -22,13 +25,17 @@ class RotaryState:
         self.new_state(RotaryState_Menu)
         oled_menu.draw_menu()
 
+    def ip_picker_attr(self):
+        self.counter = 0
+        self.ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", " ->"]
+        self.ip_address = ""
+
 
 
 class RotaryState_Menu(RotaryState):
     """Menu state"""
 
     def __init__(self, debug=False):
-        self.new_state(RotaryState_Menu)
         self.debug = debug
 
     def switchCallback(self, noisebox, oled_menu, oled):
@@ -164,7 +171,6 @@ class SwitchState_PeersMenu(RotaryState):
 class RotaryState_SettingsMenu(RotaryState):
     """Settings menu state"""
     def __init__(self, debug=False):
-        self.new_state(RotaryState_SettingsMenu)
         self.debug = debug
 
     def switchCallback(self, noisebox, oled_menu, oled):
@@ -226,8 +232,10 @@ class RotaryState_SettingsMenu(RotaryState):
 class RotaryState_AdvancedSettingsMenu(RotaryState):
     """Settings menu state"""
     def __init__(self, debug=False):
-        self.new_state(RotaryState_AdvancedSettingsMenu)
         self.debug = debug
+        self.counter = 0
+        self.ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", " ->"]
+        self.ip_address = ""
 
     def switchCallback(self, noisebox, oled_menu, oled):
         """check menu value on button click and run corresponding methods"""
@@ -258,8 +266,8 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
 
         if (strval == "CHANGE IP"):
             oled_menu.counter = 0
-            oled_menu.draw_ip_menu("0", "" )
             self.new_state(RotaryState_IpPicker)
+            oled_menu.draw_ip_menu("0", "" )
 
         if (strval == "<-- BACK"):
             self.drawDefaultMenu(oled_menu)
@@ -278,7 +286,6 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
 class RotaryState_IpPicker(RotaryState):
     """Change IP address"""
     def __init__(self, debug=False):
-        self.new_state(RotaryState_IpPicker)
         self.debug = debug
         self.counter = 0
         self.ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", " ->"]
