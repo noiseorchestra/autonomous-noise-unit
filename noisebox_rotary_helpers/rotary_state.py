@@ -280,17 +280,20 @@ class RotaryState_IpPicker(RotaryState):
     def __init__(self, debug=False):
         self.new_state(RotaryState_IpPicker)
         self.debug = debug
+        self.counter = 0
+        self.ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", " ->"]
+        self.ip_address = ""
 
     def switchCallback(self, noisebox, oled_menu, oled):
-        oled_menu.ip_address += oled_menu.ip_values[oled_menu.counter]
-        oled_menu.counter = 0
-        oled_menu.draw_ip_menu(oled_menu.ip_values[oled_menu.counter], oled_menu.ip_address)
+        self.ip_address += self.ip_values[self.counter]
+        self.counter = 0
+        oled_menu.draw_ip_menu(self.ip_values[self.counter], self.ip_address)
 
     def rotaryCallback(self, oled_menu, direction):
         """Increment menu counter and redraw menu"""
 
         if direction == 1:
-            oled_menu.counter += 1
+            self.counter += 1
         else:
-            oled_menu.counter -= 1
-        oled_menu.draw_ip_menu(oled_menu.ip_values[oled_menu.counter], oled_menu.ip_address)
+            self.counter -= 1
+        oled_menu.draw_ip_menu(self.ip_values[self.counter], self.ip_address)
