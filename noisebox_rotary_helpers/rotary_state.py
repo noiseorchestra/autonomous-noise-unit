@@ -256,10 +256,10 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
         if (strval == "CHANGE IP"):
             oled_menu.counter = 0
             self.new_state(RotaryState_IpPicker)
-            self.counter = 0
+            self.counter = -1
             self.ip_values = ip_values
             self.ip_address = config.get_config()["jacktrip-default"]["ip"]
-            oled_menu.draw_ip_menu("", self.ip_address )
+            oled_menu.draw_ip_menu(self.ip_values[self.counter], self.ip_address )
 
         if (strval == "<-- BACK"):
             self.drawDefaultMenu(oled_menu)
@@ -303,8 +303,8 @@ class RotaryState_IpPicker(RotaryState):
 
         else:
             self.ip_address += self.ip_values[self.counter]
-            self.counter = 0
-            oled_menu.draw_ip_menu("", self.ip_address)
+            self.counter = -1
+            oled_menu.draw_ip_menu(self.ip_values[self.counter], self.ip_address)
 
     def rotaryCallback(self, oled_menu, direction):
         """Increment menu counter and redraw menu"""
