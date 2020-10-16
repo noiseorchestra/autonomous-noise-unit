@@ -16,7 +16,7 @@ settings_menu_items = [{"name": "INPUT", "value": "2"},
                        "UPDATE",
                        "<-- BACK"]
 
-advanced_settings_items = [{"name": "CHANNELS", "value": "2"}, {"name": "QUEUE", "value": "8"}, {"name": "IP", "value": "111.111.111.111"}, "CHANGE IP","<-- BACK"]
+advanced_settings_items = [{"name": "CHANNELS", "value": "2"}, {"name": "QUEUE", "value": "6"}, {"name": "IP", "value": "111.111.111.111"}, "CHANGE IP","<-- BACK"]
 
 default_path = './tests/test_default_config.ini'
 custom_path = './tests/test_custom_config.ini'
@@ -141,9 +141,9 @@ def test_rotarty_state_advanced_settings_menu_item_queue():
     noisebox.config = nh.Config(default_path, custom_path)
 
     rotaryState = RotaryState_AdvancedSettingsMenu(debug=True)
+    assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "8"
     assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "10"
     assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "12"
-    assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "14"
 
 def test_rotarty_state_advanced_settings_menu_change_ip():
 

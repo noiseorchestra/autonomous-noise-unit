@@ -7,7 +7,7 @@ dummy_cfg = {
         "server": False,
         "jacktrip-channels": "2",
         "input-channels": "2",
-        "queue": "6"
+        "jacktrip-q": "6"
 
     }
 }

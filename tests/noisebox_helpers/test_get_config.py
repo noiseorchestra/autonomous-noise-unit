@@ -6,7 +6,7 @@ combined_config = {
         'input-channels': '2',
         'ip': '111.111.111.111',
         'jacktrip-channels': '2',
-        'queue': '6',
+        'jacktrip-q': '6',
         'server': 'False'
     },
     'peers': {'ip_addresses': 'pi@raspberry.myvpn,pi@raspberry.myvpn'},
@@ -31,7 +31,7 @@ default_config = {
         'input-channels': '2',
         'ip': '123.123.123.123',
         'jacktrip-channels': '2',
-        'queue': '6',
+        'jacktrip-q': '6',
         'server': 'False'
     },
     'peers': {'ip_addresses': '111.111.111.111,222.222.222.222,333.333.333.333'},
