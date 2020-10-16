@@ -16,7 +16,7 @@ settings_menu_items = [{"name": "INPUT", "value": "2"},
                        "UPDATE",
                        "<-- BACK"]
 
-advanced_settings_items = [{"name": "CHANNELS", "value": "2"}, {"name": "QUEUE", "value": "6"}, {"name": "IP", "value": "111.111.111.111"}, "CHANGE IP","<-- BACK"]
+advanced_settings_items = [{"name": "CHANNELS", "value": "2"}, {"name": "QUEUE", "value": "6"}, {"name": "IP", "value": "111.111.111.111"},"<-- BACK"]
 
 default_path = './tests/test_default_config.ini'
 custom_path = './tests/test_custom_config.ini'
@@ -153,7 +153,7 @@ def test_rotarty_state_advanced_settings_menu_change_ip():
     noisebox.config = nh.Config(default_path, custom_path)
 
     oled_menu.menu_items = advanced_settings_items
-    oled_menu.menuindex = 3
+    oled_menu.menuindex = 2
 
     rotaryState = RotaryState_AdvancedSettingsMenu(debug=True)
     rotaryState.switchCallback(noisebox, oled_menu, oled)

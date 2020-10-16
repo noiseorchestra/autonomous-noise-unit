@@ -251,7 +251,7 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
             noisebox.config.save(noisebox.config.change_output_channels(next_channels_value))
             oled_menu.draw_menu()
 
-        if (strval == "CHANGE IP"):
+        if (strval == "IP"):
             self.new_state(RotaryState_IpPicker)
             self.counter = -1
             self.ip_values = ip_values
