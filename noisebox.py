@@ -5,7 +5,7 @@ from time import sleep
 import subprocess
 import sys
 import os
-import noisebox_oled_helpers
+from noisebox_oled_helpers import Menu, OLED
 import noisebox_helpers as nh
 from noisebox_rotary_helpers.rotary import KY040
 
@@ -16,7 +16,7 @@ class Noisebox:
         self.config = config
         self.online_peers = None
         self.pytrip = nh.PyTrip()
-        self.oled = oled
+        self.oled = OLED()
         self.jack_helper = jack_helper
         self.pytrip_watch = nh.PyTripWatch()
         self.pytrip_wait = nh.PyTripWait()
@@ -162,16 +162,13 @@ def main():
     settings_items = nh.menu.get_settings_items(config)
     advanced_settings_items = nh.menu.get_advanced_settings_items(config)
 
-    oled = noisebox_oled_helpers.OLED()
     jack_helper = nh.JackHelper()
-    oled_menu = noisebox_oled_helpers.Menu(menu_items, settings_items, advanced_settings_items)
-    noisebox = Noisebox(jack_helper, oled, config)
-    ky040 = KY040(noisebox, oled_menu)
-
-    oled_menu.start(noisebox.oled.device)
+    menu = Menu(menu_items, settings_items, advanced_settings_items)
+    noisebox = Noisebox(jack_helper, config)
+    ky040 = KY040(noisebox, menu)
 
     try:
-        oled_menu.start(noisebox.oled.device)
+        menu.start(noisebox.oled.device)
     except Exception as e:
         print("OLED error:", e)
         sys.exit("Exited because of OLED error")
@@ -180,7 +177,7 @@ def main():
         ky040.start()
     except Exception as e:
         print("Rotary switch error: ", e)
-        oled.draw_lines(["==ERROR==", "Rotary switch error", "Restarting noisebox"])
+        noisebox.oled.draw_lines(["==ERROR==", "Rotary switch error", "Restarting noisebox"])
         sleep(4)
         sys.exit("Exited because of rotary error")
 
@@ -188,7 +185,7 @@ def main():
         jack_helper.start()
     except Exception as e:
         print("JACK Client could not start:", e)
-        oled.draw_lines(["==ERROR==", "JACK didn't start", "Restarting script"])
+        noisebox.oled.draw_lines(["==ERROR==", "JACK didn't start", "Restarting script"])
         sleep(4)
         sys.exit("Exited because jackd not running")
 
