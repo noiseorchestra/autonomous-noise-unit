@@ -88,7 +88,7 @@ class Noisebox:
             thread.terminate()
         self.jack_helper.disconnect_session()
 
-    def check_session_status(self, result):
+    def is_session_connected(self, result):
         if result["connected"] is True:
             self.jack_helper.disconnect_session()
             self.oled.draw_lines(result["message"])
@@ -104,7 +104,7 @@ class Noisebox:
         self.oled.draw_lines(["==START JACKTRIP==", "Connecting to:", self.get_session_params()['ip']])
 
         result = self.pytrip.connect_to_hub_server(self.get_session_params())
-        self.check_session_status(result)
+        self.is_session_connected(result)
 
     def start_jacktrip_peer_session(self, server=True, peer_address=None):
 
@@ -114,7 +114,7 @@ class Noisebox:
 
         self.oled.draw_lines(start_message)
         result = self.pytrip.connect_to_peer(self.get_session_params(), server=server, peer_address=peer_address)
-        self.check_session_status(result)
+        self.is_session_connected(result)
 
     def stop_jacktrip_session(self):
         """Stop JackTrip session"""
