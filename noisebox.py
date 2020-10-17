@@ -12,12 +12,26 @@ from noisebox_rotary_helpers.rotary import KY040
 class Noisebox:
     """Main noisebox class"""
 
-    def __init__(self, jack_helper, oled, config):
-        self.config = config
+    def __init__(self, dry_run):
+        self.config = None
         self.online_peers = None
+        self.pytrip = None
+        self.oled = None
+        self.jack_helper = None
+        self.pytrip_watch = None
+        self.pytrip_wait = None
+
+        self.set_attributes(dry_run)
+
+    def set_attributes(self, dry_run):
+        if dry_run is True:
+            self.config = nh.Config(dry_run)
+            return
+
+        self.config = nh.Config()
         self.pytrip = nh.PyTrip()
         self.oled = OLED()
-        self.jack_helper = jack_helper
+        self.jack_helper = nh.JackHelper()
         self.pytrip_watch = nh.PyTripWatch()
         self.pytrip_wait = nh.PyTripWait()
 
@@ -156,15 +170,13 @@ class Noisebox:
 
 def main():
 
-    config = nh.Config()
+    noisebox = Noisebox(dry_run=False)
 
     menu_items = nh.menu.get_main_menu_items()
-    settings_items = nh.menu.get_settings_items(config)
-    advanced_settings_items = nh.menu.get_advanced_settings_items(config)
+    settings_items = nh.menu.get_settings_items(noisebox.config)
+    advanced_settings_items = nh.menu.get_advanced_settings_items(noisebox.config)
 
-    jack_helper = nh.JackHelper()
     menu = Menu(menu_items, settings_items, advanced_settings_items)
-    noisebox = Noisebox(jack_helper, config)
     ky040 = KY040(noisebox, menu)
 
     try:
@@ -182,7 +194,7 @@ def main():
         sys.exit("Exited because of rotary error")
 
     try:
-        jack_helper.start()
+        noisebox.jack_helper.start()
     except Exception as e:
         print("JACK Client could not start:", e)
         noisebox.oled.draw_lines(["==ERROR==", "JACK didn't start", "Restarting script"])
