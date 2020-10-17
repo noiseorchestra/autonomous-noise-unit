@@ -11,12 +11,13 @@ class Noisebox:
 
     def __init__(self, dry_run):
         self.config = None
-        self.online_peers = None
+        self.online_peers = []
         self.pytrip = None
         self.oled = None
         self.jack_helper = None
         self.pytrip_watch = None
         self.pytrip_wait = None
+        self.level_meters = []
 
         self.set_attributes(dry_run)
 
