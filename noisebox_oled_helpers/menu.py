@@ -1,19 +1,16 @@
 # Based on https://gist.github.com/codelectron/d493d4aaa6fc858ce69f2b335afd0b00#file-oled_rot_menu_rpi-py
 
+from noisebox_oled_helpers.menu_items import MenuItems
 from luma.core.render import canvas
 from PIL import ImageFont
 
-class Menu:
+class Menu(MenuItems):
     """Class for drawing OLED menu"""
 
-    def __init__(self, menu_items, settings_items, advanced_settings_items):
+    def __init__(self):
         # persist values
         self.counter = 0
         self.menuindex = 0
-        self.default_menu_items = menu_items
-        self.menu_items = menu_items
-        self.settings_items = settings_items
-        self.advanced_settings_items = advanced_settings_items
         self.device = None
 
     def start(self, device):

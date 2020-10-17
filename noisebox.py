@@ -29,6 +29,7 @@ class Noisebox:
         self.pytrip = nh.PyTrip()
         self.oled = OLED()
         self.jack_helper = nh.JackHelper()
+        self.menu = Menu()
 
     def get_ip(self):
         """Get and return ip and hostname"""
@@ -138,16 +139,10 @@ def main():
     from noisebox_rotary_helpers.rotary import KY040
 
     noisebox = Noisebox(dry_run=False)
-
-    menu_items = nh.menu.get_main_menu_items()
-    settings_items = nh.menu.get_settings_items(noisebox.config)
-    advanced_settings_items = nh.menu.get_advanced_settings_items(noisebox.config)
-
-    menu = Menu(menu_items, settings_items, advanced_settings_items)
-    ky040 = KY040(noisebox, menu)
+    ky040 = KY040(noisebox, noisebox.menu)
 
     try:
-        menu.start(noisebox.oled.device)
+        noisebox.menu.start(noisebox.oled.device)
     except Exception as e:
         print("OLED error:", e)
         sys.exit("Exited because of OLED error")
