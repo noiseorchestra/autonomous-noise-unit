@@ -1,13 +1,10 @@
 #!/usr/bin/python3
-
-import RPi.GPIO as GPIO
 from time import sleep
 import subprocess
 import sys
-import os
 from noisebox_oled_helpers import Menu, OLED
 import noisebox_helpers as nh
-from noisebox_rotary_helpers.rotary import KY040
+
 
 class Noisebox:
     """Main noisebox class"""
@@ -28,6 +25,7 @@ class Noisebox:
             self.config = nh.Config(dry_run)
             return
 
+        self.nh = nh
         self.config = nh.Config()
         self.pytrip = nh.PyTrip()
         self.oled = OLED()
@@ -38,7 +36,7 @@ class Noisebox:
     def get_ip(self):
         """Get and return ip and hostname"""
 
-        result = nh.ip_address()
+        result = self.nh.ip_address()
         return result
 
     def get_session_params(self):
@@ -48,7 +46,7 @@ class Noisebox:
         """Check status of all peers"""
 
         peers = self.config.get_config()['peers']['ip_addresses'].split(',')
-        self.online_peers = nh.get_online_peers(peers)
+        self.online_peers = self.nh.get_online_peers(peers)
         return self.online_peers
 
     def start_level_meters(self, stereo_input=False, jacktrip_session=False):
@@ -60,14 +58,14 @@ class Noisebox:
             local_inputs = self.jack_helper.get_inputs(stereo=stereo_input)
             for i, port in enumerate(local_inputs):
                 channel = "IN-" + str(i + 1)
-                level_meters.append(nh.LevelMeter(port.name, channel))
+                level_meters.append(self.nh.LevelMeter(port.name, channel))
 
             if jacktrip_session is True:
                 jacktrip_receives = self.jack_helper.get_jacktrip_receives()
                 for i, port in enumerate(jacktrip_receives):
                     channel = "JT-" + str(i + 1)
-                    level_meters.append(nh.LevelMeter(port.name, channel))
-        except nh.NoiseBoxCustomError:
+                    level_meters.append(self.nh.LevelMeter(port.name, channel))
+        except self.nh.NoiseBoxCustomError:
             raise
         else:
             self.level_meters = level_meters
@@ -104,7 +102,7 @@ class Noisebox:
             self.pytrip.start(self.get_session_params())
         except Exception:
             self.pytrip.stop()
-            raise nh.NoiseBoxCustomError(["==JACKTRIP ERROR==", "JackTrip failed to start"])
+            raise self.nh.NoiseBoxCustomError(["==JACKTRIP ERROR==", "JackTrip failed to start"])
         else:
             self.pytrip_watch.run(self.pytrip)
             self.pytrip_wait.run(self.pytrip_watch, self.get_session_params()['ip'])
@@ -117,7 +115,7 @@ class Noisebox:
             else:
                 self.pytrip_watch.terminate()
                 self.pytrip.stop()
-                raise nh.NoiseBoxCustomError(message)
+                raise self.nh.NoiseBoxCustomError(message)
 
     def start_jacktrip_peer_session(self, server=True, peer_address=None):
 
@@ -137,7 +135,7 @@ class Noisebox:
             self.pytrip.start(self.get_session_params(), p2p=True, server=server, peer_address=peer_address)
         except Exception:
             self.pytrip.stop()
-            raise nh.NoiseBoxCustomError(error_message)
+            raise self.nh.NoiseBoxCustomError(error_message)
         else:
             self.pytrip_watch.run(self.pytrip)
             self.pytrip_wait.run(self.pytrip_watch, peer_address_or_server, long_timeout=long_timeout)
@@ -150,7 +148,7 @@ class Noisebox:
             else:
                 self.pytrip.stop()
                 self.pytrip_watch.terminate()
-                raise nh.NoiseBoxCustomError(message)
+                raise self.nh.NoiseBoxCustomError(message)
 
     def stop_jacktrip_session(self):
         """Stop JackTrip session"""
@@ -163,12 +161,15 @@ class Noisebox:
     def system_update(self):
         p = subprocess.run(["git", "pull"])
         if p.returncode == 1:
-            raise nh.NoiseBoxCustomError(["==ERROR==", "could not update"])
+            raise self.nh.NoiseBoxCustomError(["==ERROR==", "could not update"])
         self.oled.draw_lines(["==UPDATE==", "Update succesful", "restarting system..."])
         sys.exit("System restart")
 
 
 def main():
+
+    import RPi.GPIO as GPIO
+    from noisebox_rotary_helpers.rotary import KY040
 
     noisebox = Noisebox(dry_run=False)
 
