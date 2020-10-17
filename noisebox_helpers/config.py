@@ -4,9 +4,20 @@ import os
 
 class Config:
 
-    def __init__(self, default_path='./default-config.ini', custom_path='./config.ini'):
-        self.default_path = default_path
-        self.custom_path = custom_path
+    def __init__(self, dry_run=False):
+        self.default_path = None
+        self.custom_path = None
+
+        self.set_paths(dry_run)
+
+    def set_paths(self, dry_run):
+        if dry_run is True:
+            self.default_path = './tests/test_default_config.ini'
+            self.custom_path = './tests/test_custom_config.ini'
+            return
+
+        self.default_path = './default-config.ini'
+        self.custom_path = './config.ini'
 
     def get_config(self):
         cfg = cp.ConfigParser(interpolation=cp.ExtendedInterpolation())
