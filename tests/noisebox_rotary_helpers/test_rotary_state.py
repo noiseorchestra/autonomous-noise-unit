@@ -62,7 +62,7 @@ def test_rotarty_state_menu_item_p2p():
     oled_menu.menu_items = menu_items
     rotaryState = RotaryState_Menu(debug=True)
     noisebox.check_peers.return_value = ['123.123.123.123']
-    noisebox.config = nh.Config(default_path, custom_path)
+    noisebox.config = nh.Config(dry_run=True)
 
     oled_menu.menuindex = 2
     assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "SwitchState_PeersMenu"
@@ -77,7 +77,7 @@ def test_rotarty_state_menu_item_settings():
 
     oled_menu.menu_items = menu_items
     oled_menu.settings_items = settings_menu_items
-    noisebox.config = nh.Config(default_path, custom_path)
+    noisebox.config = nh.Config(dry_run=True)
     rotaryState = RotaryState_Menu(debug=True)
 
     oled_menu.menuindex = 3
@@ -92,7 +92,7 @@ def test_rotarty_state_settings_menu_item_mono_input():
 
     oled_menu.menu_items = settings_menu_items
     oled_menu.menuindex = 0
-    noisebox.config = nh.Config(default_path, custom_path)
+    noisebox.config = nh.Config(dry_run=True)
 
     rotaryState = RotaryState_SettingsMenu(debug=True)
     assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "1"
@@ -108,7 +108,7 @@ def test_rotarty_state_settings_menu_item_jacktrip():
     oled_menu.menu_items = settings_menu_items
     oled_menu.advanced_settings_items = advanced_settings_items
     oled_menu.menuindex = 2
-    noisebox.config = nh.Config(default_path, custom_path)
+    noisebox.config = nh.Config(dry_run=True)
 
     rotaryState = RotaryState_SettingsMenu(debug=True)
 
@@ -123,7 +123,7 @@ def test_rotarty_state_advanced_settings_menu_item_channels():
 
     oled_menu.menu_items = advanced_settings_items
     oled_menu.menuindex = 0
-    noisebox.config = nh.Config(default_path, custom_path)
+    noisebox.config = nh.Config(dry_run=True)
 
     rotaryState = RotaryState_AdvancedSettingsMenu(debug=True)
     assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "1"
@@ -138,7 +138,7 @@ def test_rotarty_state_advanced_settings_menu_item_queue():
 
     oled_menu.menu_items = advanced_settings_items
     oled_menu.menuindex = 1
-    noisebox.config = nh.Config(default_path, custom_path)
+    noisebox.config = nh.Config(dry_run=True)
 
     rotaryState = RotaryState_AdvancedSettingsMenu(debug=True)
     assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "8"
@@ -150,7 +150,7 @@ def test_rotarty_state_advanced_settings_menu_change_ip():
     oled = Mock()
     oled_menu = Mock()
     noisebox = Mock()
-    noisebox.config = nh.Config(default_path, custom_path)
+    noisebox.config = nh.Config(dry_run=True)
 
     oled_menu.menu_items = advanced_settings_items
     oled_menu.menuindex = 2
@@ -165,7 +165,7 @@ def test_rotarty_state_ip_picker():
     oled = Mock()
     oled_menu = Mock()
     noisebox = Mock()
-    noisebox.config = nh.Config(default_path, custom_path)
+    noisebox.config = nh.Config(dry_run=True)
 
     oled_menu.advanced_settings_items = advanced_settings_items
     oled_menu.menu_items = advanced_settings_items

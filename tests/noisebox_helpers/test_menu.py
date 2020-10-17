@@ -19,7 +19,7 @@ queue_values = ["2", "4", "6", "8"]
 default_path = './tests/test_default_config.ini'
 custom_path = './tests/test_custom_config.ini'
 
-config = Config(default_path, custom_path)
+config = Config(dry_run=True)
 
 def test_get_main_menu_items():
     assert menu.get_main_menu_items() == main_menu_items
