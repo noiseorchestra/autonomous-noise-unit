@@ -15,8 +15,6 @@ class Noisebox:
         self.pytrip = None
         self.oled = None
         self.jack_helper = None
-        self.pytrip_watch = None
-        self.pytrip_wait = None
         self.level_meters = []
 
         self.set_attributes(dry_run)
@@ -31,8 +29,6 @@ class Noisebox:
         self.pytrip = nh.PyTrip()
         self.oled = OLED()
         self.jack_helper = nh.JackHelper()
-        self.pytrip_watch = nh.PyTripWatch()
-        self.pytrip_wait = nh.PyTripWait()
 
     def get_ip(self):
         """Get and return ip and hostname"""
@@ -92,13 +88,7 @@ class Noisebox:
             thread.terminate()
         self.jack_helper.disconnect_session()
 
-    def start_jacktrip_session(self):
-        """Start hubserver JackTrip session"""
-
-        self.oled.draw_lines(["==START JACKTRIP==", "Connecting to:", self.get_session_params()['ip']])
-
-        result = self.pytrip.connect_to_hub_server(self.get_session_params())
-
+    def check_session_status(self, result):
         if result["connected"] is True:
             self.jack_helper.disconnect_session()
             self.oled.draw_lines(result["message"])
@@ -108,38 +98,23 @@ class Noisebox:
             self.pytrip.stop()
             raise self.nh.NoiseBoxCustomError(result["message"])
 
+    def start_jacktrip_session(self):
+        """Start hubserver JackTrip session"""
+
+        self.oled.draw_lines(["==START JACKTRIP==", "Connecting to:", self.get_session_params()['ip']])
+
+        result = self.pytrip.connect_to_hub_server(self.get_session_params())
+        self.check_session_status(result)
+
     def start_jacktrip_peer_session(self, server=True, peer_address=None):
 
         start_message = ["==START JACKTRIP==", "Starting server", "Waiting for peer.."]
-        error_message = ["==JACKTRIP ERROR==", "JackTrip failed to start"]
-        peer_address_or_server = "server"
-        long_timeout = True
-
         if server is False:
             start_message = ["==START JACKTRIP==", "Connecting to:", peer_address]
-            peer_address_or_server = peer_address
-            long_timeout = False
 
         self.oled.draw_lines(start_message)
-
-        try:
-            self.pytrip.start(self.get_session_params(), p2p=True, server=server, peer_address=peer_address)
-        except Exception:
-            self.pytrip.stop()
-            raise self.nh.NoiseBoxCustomError(error_message)
-        else:
-            self.pytrip_watch.run(self.pytrip)
-            self.pytrip_wait.run(self.pytrip_watch, peer_address_or_server, long_timeout=long_timeout)
-            message = self.pytrip_wait.message
-
-            if self.pytrip_wait.connected is True:
-                self.jack_helper.disconnect_session()
-                self.oled.draw_lines(message)
-                self.start_jacktrip_monitoring()
-            else:
-                self.pytrip.stop()
-                self.pytrip_watch.terminate()
-                raise self.nh.NoiseBoxCustomError(message)
+        result = self.pytrip.connect_to_peer(self.get_session_params(), server=server, peer_address=peer_address)
+        self.check_session_status(result)
 
     def stop_jacktrip_session(self):
         """Stop JackTrip session"""

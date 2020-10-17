@@ -58,3 +58,23 @@ class PyTrip:
             self.pytrip_watch.run(self)
             self.pytrip_wait.run(self.pytrip_watch, session_params['ip'])
             return {"connected": self.pytrip_wait.connected, "message": self.pytrip_wait.message}
+
+    def connect_to_peer(self, session_params, server, peer_address):
+
+        error_message = ["==JACKTRIP ERROR==", "JackTrip failed to start"]
+        peer_address_or_server = "server"
+        long_timeout = True
+
+        if server is False:
+            peer_address_or_server = peer_address
+            long_timeout = False
+
+        try:
+            self.start(session_params, p2p=True, server=server, peer_address=peer_address)
+        except Exception:
+            self.stop()
+            raise nh.NoiseBoxCustomError(error_message)
+        else:
+            self.pytrip_watch.run(self)
+            self.pytrip_wait.run(self.pytrip_watch, peer_address_or_server, long_timeout=long_timeout)
+            return {"connected": self.pytrip_wait.connected, "message": self.pytrip_wait.message}
