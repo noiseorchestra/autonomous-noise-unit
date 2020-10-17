@@ -23,7 +23,6 @@ custom_path = './tests/test_custom_config.ini'
 
 def test_rotarty_state_menu_item_connect_server():
 
-    oled = Mock()
     oled_menu = Mock()
     noisebox = Mock()
 
@@ -32,9 +31,9 @@ def test_rotarty_state_menu_item_connect_server():
     rotaryState = RotaryState_Menu(debug=True)
 
     oled_menu.menuindex = 0
-    assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "RotaryState_Scrolling"
-    oled.start_scrolling_text.assert_called_with("Error")
-    assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "RotaryState_JacktripRunning"
+    assert rotaryState.switchCallback(noisebox, oled_menu, None) == "RotaryState_Scrolling"
+    noisebox.oled.start_scrolling_text.assert_called_with("Error")
+    assert rotaryState.switchCallback(noisebox, oled_menu, None) == "RotaryState_JacktripRunning"
 
 
 def test_rotarty_state_menu_item_monitoring():
@@ -49,7 +48,7 @@ def test_rotarty_state_menu_item_monitoring():
 
     oled_menu.menuindex = 1
     assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "RotaryState_Scrolling"
-    oled.start_scrolling_text.assert_called_with("Error")
+    noisebox.oled.start_scrolling_text.assert_called_with("Error")
     assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "RotaryState_Monitoring"
 
 
@@ -66,7 +65,7 @@ def test_rotarty_state_menu_item_p2p():
 
     oled_menu.menuindex = 2
     assert rotaryState.switchCallback(noisebox, oled_menu, oled) == "SwitchState_PeersMenu"
-    oled_menu.new_menu_items.assert_called_with(['123.123.123.123', 'START SERVER', '<-- BACK'])
+    noisebox.menu.new_menu_items.assert_called_with(['123.123.123.123', 'START SERVER', '<-- BACK'])
 
 
 def test_rotarty_state_menu_item_settings():

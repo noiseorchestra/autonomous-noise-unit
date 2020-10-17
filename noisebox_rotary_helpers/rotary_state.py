@@ -1,4 +1,6 @@
 from noisebox_helpers import NoiseBoxCustomError, menu, Config
+from noisebox_rotary_helpers.rotary_state_actions import RotaryStateActions
+
 
 ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "<-", " ->"]
 
@@ -34,38 +36,22 @@ class RotaryState_Menu(RotaryState):
         """check menu value on button click and run corresponding methods"""
 
         strval = oled_menu.menu_items[oled_menu.menuindex]
+        actions = RotaryStateActions(noisebox)
 
         if (strval == "CONNECT TO SERVER"):
-            next_state = RotaryState_JacktripRunning
-            try:
-                noisebox.start_jacktrip_session()
-            except NoiseBoxCustomError as e:
-                oled.start_scrolling_text(e.args[0])
-                next_state = RotaryState_Scrolling
-
+            next_state = actions.connect_to_server(RotaryState_JacktripRunning, RotaryState_Scrolling)
             if self.debug is True:
                 return next_state.__name__
             self.new_state(next_state)
 
         if (strval == "LEVEL METER"):
-            next_state = RotaryState_Monitoring
-            try:
-                noisebox.start_local_monitoring()
-            except NoiseBoxCustomError as e:
-                oled.start_scrolling_text(e.args[0])
-                next_state = RotaryState_Scrolling
-
+            next_state = actions.level_meter(RotaryState_Monitoring, RotaryState_Scrolling)
             if self.debug is True:
                 return next_state.__name__
             self.new_state(next_state)
 
         if (strval == "P2P SESSION"):
-            next_state = SwitchState_PeersMenu
-            oled.draw_text(0, 26, "Searching for peers...")
-            online_peers = noisebox.check_peers()
-            online_peers.append("START SERVER")
-            online_peers.append("<-- BACK")
-            oled_menu.new_menu_items(online_peers)
+            next_state = actions.p2p_session(SwitchState_PeersMenu)
 
             if self.debug is True:
                 return next_state.__name__
