@@ -13,16 +13,16 @@ class RotaryState:
     def new_state(self, state):
         self.__class__ = state
 
-    def switchCallback(self, noisebox, oled_menu):
+    def switchCallback(self, noisebox):
         print("switchCallback not set")
 
-    def rotaryCallback(self, oled_menu, direction):
+    def rotaryCallback(self, noisebox, direction):
         print("rotaryCallback not set")
 
-    def drawDefaultMenu(self, oled_menu):
-        oled_menu.new_menu_items(oled_menu.default_menu_items)
+    def drawDefaultMenu(self, noisebox):
+        noisebox.menu.new_menu_items(noisebox.menu.default_menu_items)
         self.new_state(RotaryState_Menu)
-        oled_menu.draw_menu()
+        noisebox.menu.draw_menu()
 
 
 class RotaryState_Menu(RotaryState):
