@@ -145,7 +145,7 @@ class Noisebox:
         """Stop JackTrip session"""
 
         self.stop_monitoring()
-        self.pytrip_watch.terminate()
+        self.pytrip.stop_watching()
         self.pytrip.stop()
         self.oled.draw_lines(["==JACKTRIP STOPPED=="])
 
