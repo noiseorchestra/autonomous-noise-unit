@@ -1,15 +1,14 @@
-from noisebox_helpers import NoiseBoxCustomError, menu, Config
+import noisebox_helpers as nh
 from noisebox_rotary_helpers.rotary_state_actions import RotaryStateActions
-
 
 ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "<-", " ->"]
 
 class RotaryState:
     """Base state"""
 
-    def __init__(self, debug=False):
+    def __init__(self):
+        self.debug = False
         self.new_state(RotaryState_Menu)
-        self.debug = debug
 
     def new_state(self, state):
         self.__class__ = state
@@ -35,39 +34,22 @@ class RotaryState_Menu(RotaryState):
     def switchCallback(self, noisebox, oled_menu, oled):
         """check menu value on button click and run corresponding methods"""
 
-        strval = oled_menu.menu_items[oled_menu.menuindex]
+        strval = noisebox.menu.menu_items[noisebox.menu.menuindex]
         actions = RotaryStateActions(noisebox)
 
         if (strval == "CONNECT TO SERVER"):
-            next_state = actions.connect_to_server(RotaryState_JacktripRunning, RotaryState_Scrolling)
-            if self.debug is True:
-                return next_state.__name__
-            self.new_state(next_state)
+            self.new_state(actions.connect_to_server(RotaryState_JacktripRunning, RotaryState_Scrolling))
 
         if (strval == "LEVEL METER"):
-            next_state = actions.level_meter(RotaryState_Monitoring, RotaryState_Scrolling)
-            if self.debug is True:
-                return next_state.__name__
-            self.new_state(next_state)
+            self.new_state(actions.level_meter(RotaryState_Monitoring, RotaryState_Scrolling))
 
         if (strval == "P2P SESSION"):
-            next_state = actions.p2p_session(SwitchState_PeersMenu)
-
-            if self.debug is True:
-                return next_state.__name__
-
-            self.new_state(next_state)
-            oled_menu.draw_menu()
+            self.new_state(actions.p2p_session(SwitchState_PeersMenu))
+            noisebox.menu.draw_menu()
 
         if (strval == "SETTINGS -->"):
-            next_state = RotaryState_SettingsMenu
-            oled_menu.new_menu_items(menu.get_settings_items(noisebox.config))
-
-            if self.debug is True:
-                return next_state.__name__
-
-            self.new_state(next_state)
-            oled_menu.draw_menu()
+            self.new_state(actions.settings_menu(RotaryState_SettingsMenu))
+            noisebox.menu.draw_menu()
 
     def rotaryCallback(self, oled_menu, direction):
         """Increment menu counter and redraw menu"""
@@ -121,7 +103,7 @@ class SwitchState_PeersMenu(RotaryState):
             try:
                 noisebox.start_jacktrip_peer_session(server=True)
                 self.new_state(RotaryState_JacktripServerWaiting)
-            except NoiseBoxCustomError as e:
+            except nh.NoiseBoxCustomError as e:
                 oled.start_scrolling_text(e.args[0])
                 self.new_state(RotaryState_Scrolling)
             else:
@@ -132,7 +114,7 @@ class SwitchState_PeersMenu(RotaryState):
                 if (strval == menu_item):
                     try:
                         noisebox.start_jacktrip_peer_session(server=False, peer_address=menu_item)
-                    except NoiseBoxCustomError as e:
+                    except nh.NoiseBoxCustomError as e:
                         oled.start_scrolling_text(e.args[0])
                         self.new_state(RotaryState_Scrolling)
                     else:
@@ -166,7 +148,7 @@ class RotaryState_SettingsMenu(RotaryState):
         elif (strval == "INPUT"):
             """Toggle input channels mono/stereo"""
 
-            next_input_value = menu.next_input_value(value)
+            next_input_value = nh.menu.next_input_value(value)
             oled_menu.menu_items[oled_menu.menuindex]["value"] = next_input_value
             if self.debug is True:
                 return next_input_value
@@ -175,7 +157,7 @@ class RotaryState_SettingsMenu(RotaryState):
 
         elif (strval == "JACKTRIP"):
             next_state = RotaryState_AdvancedSettingsMenu
-            oled_menu.new_menu_items(menu.get_advanced_settings_items(noisebox.config))
+            oled_menu.new_menu_items(nh.menu.get_advanced_settings_items(noisebox.config))
 
             if self.debug is True:
                 return next_state.__name__
@@ -192,7 +174,7 @@ class RotaryState_SettingsMenu(RotaryState):
             oled.draw_lines(["==UPDATE==", "Updating system"])
             try:
                 noisebox.system_update()
-            except NoiseBoxCustomError as e:
+            except nh.NoiseBoxCustomError as e:
                 oled.start_scrolling_text(e.args[0])
                 self.new_state(RotaryState_Scrolling)
 
@@ -213,7 +195,7 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
     def switchCallback(self, noisebox, oled_menu, oled):
         """check menu value on button click and run corresponding methods"""
 
-        config = Config()
+        config = nh.Config()
 
         if type(oled_menu.menu_items[oled_menu.menuindex]) is dict:
             strval = oled_menu.menu_items[oled_menu.menuindex]["name"]
@@ -222,7 +204,7 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
             strval = oled_menu.menu_items[oled_menu.menuindex]
 
         if (strval == "QUEUE"):
-            next_queue_value = menu.next_queue_value(value)
+            next_queue_value = nh.menu.next_queue_value(value)
             oled_menu.menu_items[oled_menu.menuindex]["value"] = next_queue_value
             if self.debug is True:
                 return next_queue_value
@@ -230,7 +212,7 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
             oled_menu.draw_menu()
 
         if (strval == "CHANNELS"):
-            next_channels_value = menu.next_channels_value(value)
+            next_channels_value = nh.menu.next_channels_value(value)
             oled_menu.menu_items[oled_menu.menuindex]["value"] = next_channels_value
             if self.debug is True:
                 return next_channels_value
@@ -305,6 +287,6 @@ class RotaryState_IpPicker(RotaryState):
         noisebox.config.save(next_config)
 
     def advanced_menu(self, oled_menu, noisebox):
-        oled_menu.new_menu_items(menu.get_advanced_settings_items(noisebox.config))
+        oled_menu.new_menu_items(nh.menu.get_advanced_settings_items(noisebox.config))
         self.new_state(RotaryState_AdvancedSettingsMenu)
         oled_menu.draw_menu()
