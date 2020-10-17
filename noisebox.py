@@ -50,26 +50,23 @@ class Noisebox:
         self.online_peers = self.nh.get_online_peers(peers)
         return self.online_peers
 
+    def set_level_meters(self, ports):
+        for i, port in enumerate(ports):
+            channel = "IN-" + str(i + 1)
+            self.level_meters.append(self.nh.LevelMeter(port.name, channel))
+
     def start_level_meters(self, stereo_input=False, jacktrip_session=False):
         """Get relevant ports and start level meters"""
 
-        level_meters = []
+        self.level_meters = []
 
         try:
-            local_inputs = self.jack_helper.get_inputs(stereo=stereo_input)
-            for i, port in enumerate(local_inputs):
-                channel = "IN-" + str(i + 1)
-                level_meters.append(self.nh.LevelMeter(port.name, channel))
-
+            self.set_level_meters(self.jack_helper.get_inputs(stereo=stereo_input))
             if jacktrip_session is True:
-                jacktrip_receives = self.jack_helper.get_jacktrip_receives()
-                for i, port in enumerate(jacktrip_receives):
-                    channel = "JT-" + str(i + 1)
-                    level_meters.append(self.nh.LevelMeter(port.name, channel))
+                self.set_level_meters(self.jack_helper.get_jacktrip_receives())
         except self.nh.NoiseBoxCustomError:
             raise
         else:
-            self.level_meters = level_meters
             self.oled.start_meters(self.level_meters)
 
     def start_local_monitoring(self):
