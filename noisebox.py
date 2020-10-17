@@ -99,14 +99,14 @@ class Noisebox:
 
         result = self.pytrip.connect_to_hub_server(self.get_session_params())
 
-        if result.connected is True:
+        if result["connected"] is True:
             self.jack_helper.disconnect_session()
-            self.oled.draw_lines(result.message)
+            self.oled.draw_lines(result["message"])
             self.start_jacktrip_monitoring()
         else:
             self.pytrip.stop_watching()
             self.pytrip.stop()
-            raise self.nh.NoiseBoxCustomError(result.message)
+            raise self.nh.NoiseBoxCustomError(result["message"])
 
     def start_jacktrip_peer_session(self, server=True, peer_address=None):
 
