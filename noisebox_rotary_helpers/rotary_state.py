@@ -148,7 +148,7 @@ class RotaryState_SettingsMenu(RotaryState):
         elif (strval == "INPUT"):
             """Toggle input channels mono/stereo"""
 
-            next_input_value = nh.menu.next_input_value(value)
+            next_input_value = noisebox.menu.next_input_value(value)
             oled_menu.menu_items[oled_menu.menuindex]["value"] = next_input_value
             if self.debug is True:
                 return next_input_value
@@ -157,7 +157,7 @@ class RotaryState_SettingsMenu(RotaryState):
 
         elif (strval == "JACKTRIP"):
             next_state = RotaryState_AdvancedSettingsMenu
-            oled_menu.new_menu_items(nh.menu.get_advanced_settings_items(noisebox.config))
+            oled_menu.new_menu_items(noisebox.menu.get_advanced_settings_items(noisebox.config))
 
             if self.debug is True:
                 return next_state.__name__
@@ -204,7 +204,7 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
             strval = oled_menu.menu_items[oled_menu.menuindex]
 
         if (strval == "QUEUE"):
-            next_queue_value = nh.menu.next_queue_value(value)
+            next_queue_value = noisebox.menu.next_queue_value(value)
             oled_menu.menu_items[oled_menu.menuindex]["value"] = next_queue_value
             if self.debug is True:
                 return next_queue_value
@@ -212,7 +212,7 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
             oled_menu.draw_menu()
 
         if (strval == "CHANNELS"):
-            next_channels_value = nh.menu.next_channels_value(value)
+            next_channels_value = noisebox.menu.next_channels_value(value)
             oled_menu.menu_items[oled_menu.menuindex]["value"] = next_channels_value
             if self.debug is True:
                 return next_channels_value
@@ -287,6 +287,6 @@ class RotaryState_IpPicker(RotaryState):
         noisebox.config.save(next_config)
 
     def advanced_menu(self, oled_menu, noisebox):
-        oled_menu.new_menu_items(nh.menu.get_advanced_settings_items(noisebox.config))
+        oled_menu.new_menu_items(noisebox.menu.get_advanced_settings_items(noisebox.config))
         self.new_state(RotaryState_AdvancedSettingsMenu)
         oled_menu.draw_menu()

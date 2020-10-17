@@ -31,5 +31,6 @@ class RotaryStateActions:
         return success_state
 
     def settings_menu(self, success_state, fail_state=None):
-        self.noisebox.menu.new_menu_items(nh.menu.get_settings_items(self.noisebox.config))
+        settings_items = self.noisebox.menu.get_settings_items(self.noisebox.config)
+        self.noisebox.menu.new_menu_items(settings_items)
         return success_state

@@ -27,7 +27,6 @@ custom_path = './tests/test_custom_config.ini'
 
 def test_rotarty_state_menu_item_connect_server():
 
-    oled_menu = Mock()
     noisebox = Mock()
 
     noisebox.start_jacktrip_session.side_effect = [nh.NoiseBoxCustomError("Error"), True]
@@ -85,6 +84,7 @@ def test_rotarty_state_menu_item_settings():
     noisebox.menu.settings_items = settings_menu_items
     noisebox.config = nh.Config(dry_run=True)
     rotaryState = RotaryState_Menu(debug=True)
+    noisebox.menu.get_settings_items.side_effect = [settings_menu_items]
 
     noisebox.menu.menuindex = 3
     rotaryState.switchCallback(noisebox, None, None)

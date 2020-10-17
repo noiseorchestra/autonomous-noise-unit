@@ -1,4 +1,5 @@
-from noisebox_helpers import menu, Config
+from noisebox_helpers import Config
+from noisebox_oled_helpers import MenuItems
 
 main_menu_items = ['CONNECT TO SERVER',
                    'LEVEL METER',
@@ -20,6 +21,7 @@ default_path = './tests/test_default_config.ini'
 custom_path = './tests/test_custom_config.ini'
 
 config = Config(dry_run=True)
+menu = MenuItems()
 
 def test_get_main_menu_items():
     assert menu.get_main_menu_items() == main_menu_items
