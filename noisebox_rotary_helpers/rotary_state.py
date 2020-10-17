@@ -1,5 +1,5 @@
 import noisebox_helpers as nh
-from noisebox_rotary_helpers.rotary_state_actions import RotaryStateActions
+import noisebox_rotary_helpers.rotary_state_actions as actions
 
 ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "<-", " ->"]
 
@@ -35,20 +35,19 @@ class RotaryState_Menu(RotaryState):
         """check menu value on button click and run corresponding methods"""
 
         strval = noisebox.menu.menu_items[noisebox.menu.menuindex]
-        actions = RotaryStateActions(noisebox)
 
         if (strval == "CONNECT TO SERVER"):
-            self.new_state(actions.connect_to_server(RotaryState_JacktripRunning, RotaryState_Scrolling))
+            self.new_state(actions.connect_to_server(noisebox, RotaryState_JacktripRunning, RotaryState_Scrolling))
 
         if (strval == "LEVEL METER"):
-            self.new_state(actions.level_meter(RotaryState_Monitoring, RotaryState_Scrolling))
+            self.new_state(actions.level_meter(noisebox, RotaryState_Monitoring, RotaryState_Scrolling))
 
         if (strval == "P2P SESSION"):
-            self.new_state(actions.p2p_session(SwitchState_PeersMenu))
+            self.new_state(actions.p2p_session(noisebox, SwitchState_PeersMenu))
             noisebox.menu.draw_menu()
 
         if (strval == "SETTINGS -->"):
-            self.new_state(actions.settings_menu(RotaryState_SettingsMenu))
+            self.new_state(actions.settings_menu(noisebox, RotaryState_SettingsMenu))
             noisebox.menu.draw_menu()
 
     def rotaryCallback(self, noisebox, direction):
@@ -95,7 +94,6 @@ class SwitchState_PeersMenu(RotaryState):
     def switchCallback(self, noisebox):
         strval = noisebox.menu.menu_items[noisebox.menu.menuindex]
 
-        """check menu value when button clicked and run corresponding function"""
         if (strval == "<-- BACK"):
             self.drawDefaultMenu(noisebox)
 
