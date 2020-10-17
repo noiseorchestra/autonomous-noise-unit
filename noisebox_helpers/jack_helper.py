@@ -37,7 +37,7 @@ class JackHelper:
 
         return local_receive_ports
 
-    def get_inputs(self, stereo=False):
+    def get_inputs(self, stereo):
         """Get an array of input port names"""
 
         local_receive_ports = self.jackClient.get_ports('system:capture.*')
@@ -101,7 +101,7 @@ class JackHelper:
                 self.jackClient.disconnect(send_port, my_port)
         self.connections = []
 
-    def make_jacktrip_connections(self, stereo_input=False):
+    def make_jacktrip_connections(self, stereo_input):
         """Make connections for jacktrip session"""
 
         self.disconnect_session()
@@ -119,7 +119,7 @@ class JackHelper:
         self.set_all_connections([jacktrip_receive_ports], [local_send_ports])
         self.make_all_connections()
 
-    def make_monitoring_connections(self, stereo_input=False):
+    def make_monitoring_connections(self, stereo_input):
         """Make connections for monitoring local inputs"""
 
         local_receive_ports = self.jackClient.get_ports('system:capture.*')

@@ -3,17 +3,19 @@ from unittest.mock import Mock
 import noisebox_helpers as nh
 import pytest
 
-noisebox = Noisebox(dry_run=True)
 
 def test_get_session_params():
+    noisebox = Noisebox(dry_run=True)
     assert noisebox.get_session_params()["ip"] == "111.111.111.111"
 
 def test_check_peers():
+    noisebox = Noisebox(dry_run=True)
     noisebox.nh = Mock()
     noisebox.check_peers()
     noisebox.nh.get_online_peers.assert_called_with(['pi@raspberry.myvpn', 'pi@raspberry.myvpn'])
 
 def test_start_level_meters():
+    noisebox = Noisebox(dry_run=True)
     system_capture_01 = Mock()
     system_capture_01.name = "system:capture_01"
     system_capture_02 = Mock()
@@ -36,13 +38,31 @@ def test_start_level_meters():
     noisebox.nh.NoiseBoxCustomError = nh.NoiseBoxCustomError
     noisebox.nh.LevelMeter = Mock()
     noisebox.nh.LevelMeter.side_effect = level_meters
+    noisebox.is_stereo_input = Mock()
     noisebox.oled = Mock()
     noisebox.jack_helper = Mock()
     noisebox.jack_helper.get_inputs.side_effect = get_inputs
+    noisebox.is_stereo_input.side_effect = [False, True, True]
     noisebox.start_level_meters()
     assert noisebox.level_meters == [('system:capture_01', 'IN-1')]
-    noisebox.start_level_meters(stereo_input=(True))
+    noisebox.start_level_meters()
     assert noisebox.level_meters == [('system:capture_01', 'IN-1'), ('system:capture_02', 'IN-2')]
     noisebox.nh.LevelMeter.side_effect = nh.NoiseBoxCustomError
     with pytest.raises(nh.NoiseBoxCustomError):
         noisebox.start_level_meters()
+
+def test_start_local_monitoring():
+    noisebox = Noisebox(dry_run=True)
+    noisebox.start_level_meters = Mock()
+    noisebox.jack_helper = Mock()
+    noisebox.start_local_monitoring()
+    noisebox.start_level_meters.assert_called_with()
+    noisebox.jack_helper.make_monitoring_connections.assert_called_with(True)
+
+def test_start_jacktrip_monitoring():
+    noisebox = Noisebox(dry_run=True)
+    noisebox.start_level_meters = Mock()
+    noisebox.jack_helper = Mock()
+    noisebox.start_jacktrip_monitoring()
+    noisebox.start_level_meters.assert_called_with(jacktrip_session=True)
+    noisebox.jack_helper.make_jacktrip_connections.assert_called_with(True)
