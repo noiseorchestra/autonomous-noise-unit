@@ -95,25 +95,18 @@ class Noisebox:
     def start_jacktrip_session(self):
         """Start hubserver JackTrip session"""
 
-        try:
-            self.oled.draw_lines(["==START JACKTRIP==", "Connecting to:", self.get_session_params()['ip']])
-            self.pytrip.start(self.get_session_params())
-        except Exception:
-            self.pytrip.stop()
-            raise self.nh.NoiseBoxCustomError(["==JACKTRIP ERROR==", "JackTrip failed to start"])
-        else:
-            self.pytrip_watch.run(self.pytrip)
-            self.pytrip_wait.run(self.pytrip_watch, self.get_session_params()['ip'])
-            message = self.pytrip_wait.message
+        self.oled.draw_lines(["==START JACKTRIP==", "Connecting to:", self.get_session_params()['ip']])
 
-            if self.pytrip_wait.connected is True:
-                self.jack_helper.disconnect_session()
-                self.oled.draw_lines(message)
-                self.start_jacktrip_monitoring()
-            else:
-                self.pytrip_watch.terminate()
-                self.pytrip.stop()
-                raise self.nh.NoiseBoxCustomError(message)
+        result = self.pytrip.connect_to_hub_server(self.get_session_params())
+
+        if result.connected is True:
+            self.jack_helper.disconnect_session()
+            self.oled.draw_lines(result.message)
+            self.start_jacktrip_monitoring()
+        else:
+            self.pytrip.stop_watching()
+            self.pytrip.stop()
+            raise self.nh.NoiseBoxCustomError(result.message)
 
     def start_jacktrip_peer_session(self, server=True, peer_address=None):
 
