@@ -139,7 +139,7 @@ def main():
     from noisebox_rotary_helpers.rotary import KY040
 
     noisebox = Noisebox(dry_run=False)
-    ky040 = KY040(noisebox, noisebox.menu)
+    ky040 = KY040(noisebox)
 
     try:
         noisebox.menu.start(noisebox.oled.device)
