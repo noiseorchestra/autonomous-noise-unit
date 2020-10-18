@@ -173,13 +173,9 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
         value = self.get_value(noisebox)
 
         if (strval == "QUEUE"):
-            actions.change_queue(noisebox, value)
+            self.new_state(actions.change_queue(noisebox, value))
         if (strval == "CHANNELS"):
-            next_channels_value = noisebox.menu.next_channels_value(value)
-            noisebox.menu.menu_items[noisebox.menu.menuindex]["value"] = next_channels_value
-            noisebox.config.save(noisebox.config.change_output_channels(next_channels_value))
-            noisebox.menu.draw_menu()
-
+            self.new_state(actions.change_jacktrip_channels(noisebox, value))
         if (strval == "IP"):
             self.new_state(RotaryState_IpPicker)
             self.counter = -1
