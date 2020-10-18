@@ -141,13 +141,13 @@ class RotaryState_SettingsMenu(RotaryState):
 
         elif (strval == "INPUT"):
             """Toggle input channels mono/stereo"""
-            actions.toggle_input_channels(noisebox, value)
+            self.new_state(actions.toggle_input_channels(noisebox, value))
 
         elif (strval == "JACKTRIP"):
             self.new_state(actions.jacktrip_menu(noisebox))
 
         elif (strval == "IP ADDRESS"):
-            actions.show_ip_address(noisebox)
+            self.new_state(actions.show_ip_address(noisebox))
 
         elif (strval == "UPDATE"):
             self.new_state(actions.update(noisebox))

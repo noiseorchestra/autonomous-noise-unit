@@ -58,6 +58,7 @@ def toggle_input_channels(noisebox, value):
     noisebox.menu.menu_items[noisebox.menu.menuindex]["value"] = next_input_value
     noisebox.config.save(noisebox.config.change_input_channels(next_input_value))
     noisebox.menu.draw_menu()
+    return rs.RotaryState_SettingsMenu
 
 def jacktrip_menu(noisebox):
     noisebox.menu.new_menu_items(noisebox.menu.get_advanced_settings_items(noisebox.config))
@@ -68,6 +69,7 @@ def show_ip_address(noisebox):
     title = ["==HOSTNAME & IP=="]
     noisebox.oled.draw_lines(title + noisebox.get_ip())
     noisebox.menu.draw_menu()
+    return rs.RotaryState_SettingsMenu
 
 def update(noisebox):
     noisebox.oled.draw_lines(["==UPDATE==", "Updating system"])
@@ -83,3 +85,4 @@ def change_queue(noisebox, value):
     noisebox.menu.menu_items[noisebox.menu.menuindex]["value"] = next_queue_value
     noisebox.config.save(noisebox.config.change_queue(next_queue_value))
     noisebox.menu.draw_menu()
+    return rs.RotaryState_AdvancedSettingsMenu
