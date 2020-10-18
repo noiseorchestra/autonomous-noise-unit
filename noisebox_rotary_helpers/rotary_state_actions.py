@@ -44,9 +44,9 @@ def start_peer_session_as_server(noisebox):
     return next_state
 
 def start_peer_session_as_peer(noisebox):
-    strval = noisebox.menu.menu_items[noisebox.menu.menuindex]
+    strval = noisebox.menu.active_menu_items[noisebox.menu.menuindex]
     next_state = rs.RotaryState_JacktripRunning
-    for menu_item in noisebox.menu.menu_items:
+    for menu_item in noisebox.menu.active_menu_items:
         if (strval == menu_item):
             try:
                 noisebox.start_jacktrip_peer_session(server=False, peer_address=menu_item)
@@ -57,7 +57,7 @@ def start_peer_session_as_peer(noisebox):
 
 def toggle_input_channels(noisebox, value):
     next_input_value = noisebox.menu.next_input_value(value)
-    noisebox.menu.menu_items[noisebox.menu.menuindex]["value"] = next_input_value
+    noisebox.menu.active_menu_items[noisebox.menu.menuindex]["value"] = next_input_value
     noisebox.config.save(noisebox.config.change_input_channels(next_input_value))
     noisebox.menu.draw_menu()
     return rs.RotaryState_SettingsMenu
@@ -84,14 +84,14 @@ def update(noisebox):
 
 def change_queue(noisebox, value):
     next_queue_value = noisebox.menu.next_queue_value(value)
-    noisebox.menu.menu_items[noisebox.menu.menuindex]["value"] = next_queue_value
+    noisebox.menu.active_menu_items[noisebox.menu.menuindex]["value"] = next_queue_value
     noisebox.config.save(noisebox.config.change_queue(next_queue_value))
     noisebox.menu.draw_menu()
     return rs.RotaryState_AdvancedSettingsMenu
 
 def change_jacktrip_channels(noisebox, value):
     next_channels_value = noisebox.menu.next_channels_value(value)
-    noisebox.menu.menu_items[noisebox.menu.menuindex]["value"] = next_channels_value
+    noisebox.menu.active_menu_items[noisebox.menu.menuindex]["value"] = next_channels_value
     noisebox.config.save(noisebox.config.change_output_channels(next_channels_value))
     noisebox.menu.draw_menu()
     return rs.RotaryState_AdvancedSettingsMenu

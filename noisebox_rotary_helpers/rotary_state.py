@@ -23,15 +23,15 @@ class RotaryState:
         noisebox.menu.draw_menu()
 
     def get_strval(self, noisebox):
-        strval = noisebox.menu.menu_items[noisebox.menu.menuindex]
-        if type(noisebox.menu.menu_items[noisebox.menu.menuindex]) is dict:
-            strval = noisebox.menu.menu_items[noisebox.menu.menuindex]["name"]
+        strval = noisebox.menu.active_menu_items[noisebox.menu.menuindex]
+        if type(noisebox.menu.active_menu_items[noisebox.menu.menuindex]) is dict:
+            strval = noisebox.menu.active_menu_items[noisebox.menu.menuindex]["name"]
         return strval
 
     def get_value(self, noisebox):
         value = None
-        if type(noisebox.menu.menu_items[noisebox.menu.menuindex]) is dict:
-            value = noisebox.menu.menu_items[noisebox.menu.menuindex]["value"]
+        if type(noisebox.menu.active_menu_items[noisebox.menu.menuindex]) is dict:
+            value = noisebox.menu.active_menu_items[noisebox.menu.menuindex]["value"]
         return value
 
 class RotaryState_Menu(RotaryState):

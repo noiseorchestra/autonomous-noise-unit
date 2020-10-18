@@ -47,12 +47,12 @@ class Menu(MenuItems):
         """draw menu on convas"""
 
         with canvas(self.device) as draw:
-            self.menu(self.device, draw, self.menu_items, self.counter % len(self.menu_items))
+            self.menu(self.device, draw, self.active_menu_items, self.counter % len(self.active_menu_items))
 
     def new_menu_items(self, new_menu_items):
         """Set new menu items"""
 
-        self.menu_items = new_menu_items
+        self.active_menu_items = new_menu_items
         self.menuindex = 0
         self.counter = 0
 
