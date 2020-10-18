@@ -8,7 +8,7 @@ class Menu(MenuItems):
     """Class for drawing OLED menu"""
 
     def __init__(self):
-        # persist values
+        super()._init_()
         self.counter = 0
         self.menuindex = 0
         self.device = None
