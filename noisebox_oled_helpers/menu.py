@@ -27,27 +27,28 @@ class Menu(MenuItems):
         draw.text((x, y), text, font=font, outline=0, fill="black")
 
     def get_menu_item_str(self, menustr, i):
-        if type(menustr[i]) is dict:
-            return menustr[i]["name"] + ": " + menustr[i]["value"]
-        return menustr[i]
+        menu_items = self.active_menu_items
+        if type(menu_items[i]) is dict:
+            return menu_items[i]["name"] + ": " + menu_items[i]["value"]
+        return menu_items[i]
 
-    def menu(self, device, draw, menustr, index):
+    def menu(self, draw, index):
         """return prepared menu"""
 
         font = ImageFont.load_default()
         draw.rectangle(self.device.bounding_box, outline="white", fill="black")
-        for i in range(len(menustr)):
+        for i in range(len(self.active_menu_items)):
             if(i == index):
                 self.menuindex = i
-                self.invert(draw, 2, i*10, self.get_menu_item_str(menustr, i))
+                self.invert(draw, 2, i*10, self.get_menu_item_str(i))
             else:
-                draw.text((2, i*10), self.get_menu_item_str(menustr, i), font=font, fill=255)
+                draw.text((2, i*10), self.get_menu_item_str(i), font=font, fill=255)
 
     def draw_menu(self):
         """draw menu on convas"""
 
         with canvas(self.device) as draw:
-            self.menu(self.device, draw, self.active_menu_items, self.counter % len(self.active_menu_items))
+            self.menu(draw, self.counter % len(self.active_menu_items))
 
     def reset_menu(self, new_menu_items):
         """Set new menu items"""
