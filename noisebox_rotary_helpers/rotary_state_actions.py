@@ -25,11 +25,13 @@ def p2p_session(noisebox):
     online_peers.append("START SERVER")
     online_peers.append("<-- BACK")
     noisebox.menu.new_menu_items(online_peers)
+    noisebox.menu.draw_menu()
     return rs.RotaryState_PeersMenu
 
 def settings_menu(noisebox):
     settings_items = noisebox.menu.get_settings_items(noisebox.config)
     noisebox.menu.new_menu_items(settings_items)
+    noisebox.menu.draw_menu()
     return rs.RotaryState_SettingsMenu
 
 def start_peer_session_as_server(noisebox):
@@ -93,3 +95,13 @@ def change_jacktrip_channels(noisebox, value):
     noisebox.config.save(noisebox.config.change_output_channels(next_channels_value))
     noisebox.menu.draw_menu()
     return rs.RotaryState_AdvancedSettingsMenu
+
+def draw_advanced_menu(noisebox):
+    noisebox.menu.new_menu_items(noisebox.menu.get_advanced_settings_items(noisebox.config))
+    noisebox.menu.draw_menu()
+    return rs.RotaryState_AdvancedSettingsMenu
+
+def draw_default_menu(noisebox):
+    noisebox.menu.new_menu_items(noisebox.menu.main_menu_items)
+    noisebox.menu.draw_menu()
+    return rs.RotaryState_Menu

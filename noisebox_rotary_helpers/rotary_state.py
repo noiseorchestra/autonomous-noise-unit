@@ -19,11 +19,6 @@ class RotaryState:
     def rotaryCallback(self, noisebox, direction):
         print("rotaryCallback not set")
 
-    def drawDefaultMenu(self, noisebox):
-        noisebox.menu.new_menu_items(noisebox.menu.main_menu_items)
-        self.new_state(RotaryState_Menu)
-        noisebox.menu.draw_menu()
-
     def get_strval(self, noisebox):
         strval = noisebox.menu.menu_items[noisebox.menu.menuindex]
         if type(noisebox.menu.menu_items[noisebox.menu.menuindex]) is dict:
@@ -55,11 +50,9 @@ class RotaryState_Menu(RotaryState):
 
         if (strval == "P2P SESSION"):
             self.new_state(actions.p2p_session(noisebox))
-            noisebox.menu.draw_menu()
 
         if (strval == "SETTINGS -->"):
             self.new_state(actions.settings_menu(noisebox))
-            noisebox.menu.draw_menu()
 
     def rotaryCallback(self, noisebox, direction):
         """Increment menu counter and redraw menu"""
@@ -76,28 +69,28 @@ class RotaryState_Monitoring(RotaryState):
 
     def switchCallback(self, noisebox):
         noisebox.stop_monitoring()
-        self.drawDefaultMenu(noisebox)
+        self.new_state(actions.draw_default_menu(noisebox))
 
 class RotaryState_JacktripRunning(RotaryState):
     """JackTrip running state"""
 
     def switchCallback(self, noisebox):
         noisebox.stop_jacktrip_session()
-        self.drawDefaultMenu(noisebox)
+        self.new_state(actions.draw_default_menu(noisebox))
 
 class RotaryState_JacktripServerWaiting(RotaryState):
     """JackTrip server waiting state"""
 
     def switchCallback(self, noisebox):
         noisebox.stop_jacktrip_session()
-        self.drawDefaultMenu(noisebox)
+        self.new_state(actions.draw_default_menu(noisebox))
 
 class RotaryState_Scrolling(RotaryState):
     """Scrolling oled text state"""
 
     def switchCallback(self, noisebox):
         noisebox.oled.stop_scrolling_text()
-        self.drawDefaultMenu(noisebox)
+        self.new_state(actions.draw_default_menu(noisebox))
 
 class RotaryState_PeersMenu(RotaryState):
     """New swtitch state"""
@@ -109,7 +102,7 @@ class RotaryState_PeersMenu(RotaryState):
         strval = self.get_strval(noisebox)
 
         if (strval == "<-- BACK"):
-            self.drawDefaultMenu(noisebox)
+            self.new_state(actions.draw_default_menu(noisebox))
 
         elif (strval == "START SERVER"):
             self.new_state(RotaryState_JacktripServerWaiting)
@@ -118,6 +111,8 @@ class RotaryState_PeersMenu(RotaryState):
             self.new_state(actions.start_peer_session_as_peer(noisebox))
 
     def rotaryCallback(self, noisebox, direction):
+        """Increment menu counter and redraw menu"""
+
         if direction == 1:
             noisebox.menu.counter += 1
         else:
@@ -137,7 +132,7 @@ class RotaryState_SettingsMenu(RotaryState):
         value = self.get_value(noisebox)
 
         if (strval == "<-- BACK"):
-            self.drawDefaultMenu(noisebox)
+            self.new_state(actions.draw_default_menu(noisebox))
 
         elif (strval == "INPUT"):
             """Toggle input channels mono/stereo"""
@@ -180,7 +175,7 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
             self.new_state(RotaryState_IpPicker)
             self.init_ip_menu(noisebox)
         if (strval == "<-- BACK"):
-            self.drawDefaultMenu(noisebox)
+            self.new_state(actions.draw_default_menu(noisebox))
             return "<-- BACK"
 
     def rotaryCallback(self, noisebox, direction):
@@ -212,7 +207,7 @@ class RotaryState_IpPicker(RotaryState):
 
         if self.ip_values[self.counter] is self.ip_values[-1]:
             self.save_ip(noisebox)
-            self.advanced_menu(noisebox)
+            self.new_state(actions.draw_advanced_menu(noisebox))
 
         elif self.ip_values[self.counter] is self.ip_values[-2]:
             self.ip_address = self.ip_address[:-1]
@@ -222,7 +217,7 @@ class RotaryState_IpPicker(RotaryState):
         elif len(next_string) == 15:
             self.ip_address = next_string
             self.save_ip(noisebox)
-            self.advanced_menu(noisebox)
+            self.new_state(actions.draw_advanced_menu(noisebox))
 
         else:
             self.ip_address += self.ip_values[self.counter]
@@ -243,8 +238,3 @@ class RotaryState_IpPicker(RotaryState):
         if self.debug is True:
             return
         noisebox.config.save(next_config)
-
-    def advanced_menu(self, noisebox):
-        noisebox.menu.new_menu_items(noisebox.menu.get_advanced_settings_items(noisebox.config))
-        self.new_state(RotaryState_AdvancedSettingsMenu)
-        noisebox.menu.draw_menu()
