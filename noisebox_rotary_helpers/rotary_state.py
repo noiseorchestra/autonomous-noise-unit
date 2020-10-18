@@ -24,6 +24,17 @@ class RotaryState:
         self.new_state(RotaryState_Menu)
         noisebox.menu.draw_menu()
 
+    def get_strval(self, noisebox):
+        strval = noisebox.menu.menu_items[noisebox.menu.menuindex]
+        if type(noisebox.menu.menu_items[noisebox.menu.menuindex]) is dict:
+            strval = noisebox.menu.menu_items[noisebox.menu.menuindex]["name"]
+        return strval
+
+    def get_value(self, noisebox):
+        value = None
+        if type(noisebox.menu.menu_items[noisebox.menu.menuindex]) is dict:
+            value = noisebox.menu.menu_items[noisebox.menu.menuindex]["value"]
+        return value
 
 class RotaryState_Menu(RotaryState):
     """Menu state"""
@@ -34,7 +45,7 @@ class RotaryState_Menu(RotaryState):
     def switchCallback(self, noisebox):
         """check menu value on button click and run corresponding methods"""
 
-        strval = noisebox.menu.menu_items[noisebox.menu.menuindex]
+        strval = self.get_strval(noisebox)
 
         if (strval == "CONNECT TO SERVER"):
             self.new_state(actions.connect_to_server(noisebox))
@@ -95,7 +106,7 @@ class RotaryState_PeersMenu(RotaryState):
         self.debug = debug
 
     def switchCallback(self, noisebox):
-        strval = noisebox.menu.menu_items[noisebox.menu.menuindex]
+        strval = self.get_strval(noisebox)
 
         if (strval == "<-- BACK"):
             self.drawDefaultMenu(noisebox)
@@ -122,11 +133,8 @@ class RotaryState_SettingsMenu(RotaryState):
     def switchCallback(self, noisebox):
         """check menu value on button click and run corresponding methods"""
 
-        if type(noisebox.menu.menu_items[noisebox.menu.menuindex]) is dict:
-            strval = noisebox.menu.menu_items[noisebox.menu.menuindex]["name"]
-            value = noisebox.menu.menu_items[noisebox.menu.menuindex]["value"]
-        else:
-            strval = noisebox.menu.menu_items[noisebox.menu.menuindex]
+        strval = self.get_strval(noisebox)
+        value = self.get_value(noisebox)
 
         if (strval == "<-- BACK"):
             self.drawDefaultMenu(noisebox)
@@ -161,11 +169,8 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
     def switchCallback(self, noisebox):
         """check menu value on button click and run corresponding methods"""
 
-        if type(noisebox.menu.menu_items[noisebox.menu.menuindex]) is dict:
-            strval = noisebox.menu.menu_items[noisebox.menu.menuindex]["name"]
-            value = noisebox.menu.menu_items[noisebox.menu.menuindex]["value"]
-        else:
-            strval = noisebox.menu.menu_items[noisebox.menu.menuindex]
+        strval = self.get_strval(noisebox)
+        value = self.get_value(noisebox)
 
         if (strval == "QUEUE"):
             next_queue_value = noisebox.menu.next_queue_value(value)
