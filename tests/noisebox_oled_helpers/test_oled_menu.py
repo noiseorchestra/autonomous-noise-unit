@@ -18,12 +18,14 @@ def test_get_menu_item_string():
         "CHANGE IP",
         "<-- BACK"
     ]
-    menu = Menu()
-    for i in range(len(menu_items)):
-        assert menu.get_menu_item_str(menu_items, i) == menu_items[i]
 
+    menu = Menu(dry_run=True)
+    for i in range(len(menu_items)):
+        assert menu.get_menu_item_str(i) == menu_items[i]
+
+    menu.new_menu_items(advanced_settings_items)
     for i in range(len(advanced_settings_items)):
-        assert menu.get_menu_item_str(advanced_settings_items, i) == results[i]
+        assert menu.get_menu_item_str(i) == results[i]
 
 def test_new_menu_items():
     menu = Menu()

@@ -7,8 +7,9 @@ from PIL import ImageFont
 class Menu(MenuItems):
     """Class for drawing OLED menu"""
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, dry_run=False):
+        super().__init__(dry_run)
+        self.dry_run = dry_run
         self.counter = 0
         self.menuindex = 0
         self.device = None
@@ -26,7 +27,7 @@ class Menu(MenuItems):
         draw.rectangle((x, y, x+120, y+10), outline=255, fill=255)
         draw.text((x, y), text, font=font, outline=0, fill="black")
 
-    def get_menu_item_str(self, menustr, i):
+    def get_menu_item_str(self, i):
         menu_items = self.active_menu_items
         if type(menu_items[i]) is dict:
             return menu_items[i]["name"] + ": " + menu_items[i]["value"]

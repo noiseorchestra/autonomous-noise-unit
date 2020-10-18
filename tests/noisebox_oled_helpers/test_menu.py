@@ -17,20 +17,16 @@ advanced_settings_items = [{"name": "CHANNELS", "value": "2"}, {"name": "QUEUE",
 input_values = ["1", "2"]
 queue_values = ["2", "4", "6", "8"]
 
-default_path = './tests/test_default_config.ini'
-custom_path = './tests/test_custom_config.ini'
+menu = MenuItems(dry_run=True)
 
-config = Config(dry_run=True)
-menu = MenuItems()
-
-def test_get_main_menu_items():
-    assert menu.get_main_menu_items() == main_menu_items
+def test_active_menu_items():
+    assert menu.active_menu_items == main_menu_items
 
 def test_get_settings_items():
-    assert menu.get_settings_items(config) == settings_items
+    assert menu.settings_items == settings_items
 
-def test_get_settings_items():
-    assert menu.get_advanced_settings_items(config) == advanced_settings_items
+def test_get_advanced_settings_items():
+    assert menu.advanced_settings_items == advanced_settings_items
 
 def test_next_input_value():
     assert menu.next_value(input_values, "1") == "2"
