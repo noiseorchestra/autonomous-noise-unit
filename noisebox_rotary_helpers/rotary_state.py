@@ -1,7 +1,4 @@
-import noisebox_helpers as nh
 import noisebox_rotary_helpers.rotary_state_actions as actions
-
-ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "<-", " ->"]
 
 class RotaryState:
     """Base state"""
@@ -171,7 +168,7 @@ class RotaryState_IpPicker(RotaryState):
     def init_ip_menu(self, noisebox):
         self.noisebox = noisebox
         self.counter = -1
-        self.ip_values = ip_values
+        self.ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "<-", " ->"]
         self.ip_address = self.noisebox.config.get_config()["jacktrip-default"]["ip"]
         self.noisebox.menu.draw_ip_menu(self.ip_values[self.counter], self.ip_address )
 
