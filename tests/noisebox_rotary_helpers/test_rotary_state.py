@@ -1,4 +1,4 @@
-from noisebox_rotary_helpers.rotary_state import RotaryState_Menu, RotaryState_SettingsMenu, RotaryState_AdvancedSettingsMenu, RotaryState_IpPicker, RotaryState_PeersMenu
+from noisebox_rotary_helpers.rotary_state import RotaryState, RotaryState_Menu, RotaryState_SettingsMenu, RotaryState_AdvancedSettingsMenu, RotaryState_IpPicker, RotaryState_PeersMenu
 from unittest.mock import Mock
 import noisebox_helpers as nh
 from noisebox_oled_helpers.menu_items import MenuItems
@@ -205,11 +205,13 @@ def test_rotarty_state_ip_picker():
 
     new_state_mock = Mock()
 
-    rotaryState = RotaryState_IpPicker(debug=True)
+    rotaryState = RotaryState(debug=True)
+    rotaryState.new_state(RotaryState_IpPicker)
+    rotaryState.init_ip_menu(noisebox)
+    assert rotaryState.__class__.__name__ == "RotaryState_IpPicker"
     assert rotaryState.ip_address == "111.111.111.111"
-    rotaryState.ip_address = ""
-    assert rotaryState.ip_address == ""
 
+    rotaryState.ip_address = ""
     rotaryState.counter = 0
     rotaryState.switchCallback(noisebox)
     noisebox.menu.draw_ip_menu.assert_called_with(" ->", "0")
@@ -223,7 +225,6 @@ def test_rotarty_state_ip_picker():
     rotaryState.switchCallback(noisebox)
     noisebox.menu.draw_ip_menu.assert_called_with("<-", "03")
 
-    rotaryState = RotaryState_IpPicker(debug=True)
     rotaryState.ip_address = ""
     rotaryState.counter = 0
     rotaryState.new_state = new_state_mock
@@ -234,7 +235,6 @@ def test_rotarty_state_ip_picker():
     assert rotaryState.ip_address == "173.42.381.22"
     rotaryState.new_state.assert_called_with(RotaryState_AdvancedSettingsMenu)
 
-    rotaryState = RotaryState_IpPicker(debug=True)
     rotaryState.ip_address = ""
     rotaryState.counter = 0
     rotaryState.new_state = new_state_mock

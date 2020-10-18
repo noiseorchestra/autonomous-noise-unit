@@ -6,8 +6,8 @@ ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "<-", " ->"]
 class RotaryState:
     """Base state"""
 
-    def __init__(self):
-        self.debug = False
+    def __init__(self, debug=False):
+        self.debug = debug
         self.new_state(RotaryState_Menu)
 
     def new_state(self, state):
@@ -178,11 +178,7 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
             self.new_state(actions.change_jacktrip_channels(noisebox, value))
         if (strval == "IP"):
             self.new_state(RotaryState_IpPicker)
-            self.counter = -1
-            self.ip_values = ip_values
-            self.ip_address = noisebox.config.get_config()["jacktrip-default"]["ip"]
-            noisebox.menu.draw_ip_menu(self.ip_values[self.counter], self.ip_address )
-
+            self.init_ip_menu(noisebox)
         if (strval == "<-- BACK"):
             self.drawDefaultMenu(noisebox)
             return "<-- BACK"
@@ -200,10 +196,15 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
 class RotaryState_IpPicker(RotaryState):
     """Change IP address"""
     def __init__(self, debug=False):
+        super().__init__(self)
         self.debug = debug
+
+    def init_ip_menu(self, noisebox):
+        self.noisebox = noisebox
         self.counter = -1
         self.ip_values = ip_values
-        self.ip_address = "111.111.111.111"
+        self.ip_address = self.noisebox.config.get_config()["jacktrip-default"]["ip"]
+        self.noisebox.menu.draw_ip_menu(self.ip_values[self.counter], self.ip_address )
 
     def switchCallback(self, noisebox):
 
