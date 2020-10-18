@@ -27,9 +27,7 @@ def test_get_menu_item_string():
 
 def test_new_menu_items():
     menu = Menu()
-    new_menu_items = Mock()
-    menu.new_menu_items = new_menu_items
     menu.reset_menu(advanced_settings_items)
     assert menu.counter == 0
     assert menu.menuindex == 0
-    menu.new_menu_items.assert_called_with(advanced_settings_items)
+    assert menu.active_menu_items == advanced_settings_items
