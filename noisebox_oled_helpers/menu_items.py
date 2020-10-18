@@ -54,3 +54,6 @@ class MenuItems:
         next_index = index + 1
         next_index = 0 if next_index == len(values) else next_index
         return values[next_index]
+
+    def new_menu_items(self, new_menu_items):
+        self.active_menu_items = new_menu_items

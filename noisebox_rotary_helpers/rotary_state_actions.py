@@ -24,13 +24,13 @@ def p2p_session(noisebox):
     online_peers = noisebox.check_peers()
     online_peers.append("START SERVER")
     online_peers.append("<-- BACK")
-    noisebox.menu.new_menu_items(online_peers)
+    noisebox.menu.reset_menu(online_peers)
     noisebox.menu.draw_menu()
     return rs.RotaryState_PeersMenu
 
 def settings_menu(noisebox):
     settings_items = noisebox.menu.get_settings_items(noisebox.config)
-    noisebox.menu.new_menu_items(settings_items)
+    noisebox.menu.reset_menu(settings_items)
     noisebox.menu.draw_menu()
     return rs.RotaryState_SettingsMenu
 
@@ -63,7 +63,7 @@ def toggle_input_channels(noisebox, value):
     return rs.RotaryState_SettingsMenu
 
 def jacktrip_menu(noisebox):
-    noisebox.menu.new_menu_items(noisebox.menu.get_advanced_settings_items(noisebox.config))
+    noisebox.menu.reset_menu(noisebox.menu.get_advanced_settings_items(noisebox.config))
     noisebox.menu.draw_menu()
     return rs.RotaryState_AdvancedSettingsMenu
 
@@ -97,11 +97,11 @@ def change_jacktrip_channels(noisebox, value):
     return rs.RotaryState_AdvancedSettingsMenu
 
 def draw_advanced_menu(noisebox):
-    noisebox.menu.new_menu_items(noisebox.menu.get_advanced_settings_items(noisebox.config))
+    noisebox.menu.reset_menu(noisebox.menu.get_advanced_settings_items(noisebox.config))
     noisebox.menu.draw_menu()
     return rs.RotaryState_AdvancedSettingsMenu
 
 def draw_default_menu(noisebox):
-    noisebox.menu.new_menu_items(noisebox.menu.main_menu_items)
+    noisebox.menu.reset_menu(noisebox.menu.main_menu_items)
     noisebox.menu.draw_menu()
     return rs.RotaryState_Menu

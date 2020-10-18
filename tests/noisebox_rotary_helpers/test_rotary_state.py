@@ -43,7 +43,7 @@ def test_rotarty_state_menu_item_p2p():
 
     noisebox = Mock()
     noisebox.menu = MenuItems()
-    noisebox.menu.new_menu_items = Mock()
+    noisebox.menu.reset_menu = Mock()
     noisebox.menu.draw_menu = Mock()
     noisebox.menu.menuindex = 2
     rotaryState = RotaryState_Menu(debug=True)
@@ -51,14 +51,14 @@ def test_rotarty_state_menu_item_p2p():
 
     rotaryState.switchCallback(noisebox)
     assert rotaryState.__class__.__name__ == "RotaryState_PeersMenu"
-    noisebox.menu.new_menu_items.assert_called_with(['123.123.123.123', 'START SERVER', '<-- BACK'])
+    noisebox.menu.reset_menu.assert_called_with(['123.123.123.123', 'START SERVER', '<-- BACK'])
 
 
 def test_rotarty_state_menu_item_settings():
 
     noisebox = Mock()
     noisebox.menu = MenuItems()
-    noisebox.menu.new_menu_items = Mock()
+    noisebox.menu.reset_menu = Mock()
     noisebox.menu.draw_menu = Mock()
     noisebox.config = nh.Config(dry_run=True)
     rotaryState = RotaryState_Menu(debug=True)
@@ -66,7 +66,7 @@ def test_rotarty_state_menu_item_settings():
 
     rotaryState.switchCallback(noisebox)
     assert rotaryState.__class__.__name__ == "RotaryState_SettingsMenu"
-    noisebox.menu.new_menu_items.assert_called_with(noisebox.menu.settings_items)
+    noisebox.menu.reset_menu.assert_called_with(noisebox.menu.settings_items)
 
 def test_rotarty_state_start_server_session():
 
@@ -128,16 +128,16 @@ def test_rotarty_state_settings_menu_item_jacktrip():
     noisebox = Mock()
     noisebox.menu = MenuItems()
     noisebox.menu.active_menu_items = noisebox.menu.settings_items
-    noisebox.menu.new_menu_items = Mock()
+    noisebox.menu.reset_menu = Mock()
     noisebox.menu.draw_menu = Mock()
-    noisebox.menu.new_menu_items.side_effect = side_effect
+    noisebox.menu.reset_menu.side_effect = side_effect
     noisebox.config = nh.Config(dry_run=True)
     noisebox.menu.menuindex = 2
     rotaryState = RotaryState_SettingsMenu(debug=True)
 
     rotaryState.switchCallback(noisebox)
     assert rotaryState.__class__.__name__ == "RotaryState_AdvancedSettingsMenu"
-    noisebox.menu.new_menu_items.assert_called_with(noisebox.menu.advanced_settings_items)
+    noisebox.menu.reset_menu.assert_called_with(noisebox.menu.advanced_settings_items)
 
 
 def test_rotarty_state_advanced_settings_menu_item_channels():
@@ -195,7 +195,7 @@ def test_rotarty_state_ip_picker():
     noisebox.menu = MenuItems()
     noisebox.menu.draw_ip_menu = Mock()
     noisebox.menu.draw_menu = Mock()
-    noisebox.menu.new_menu_items = Mock()
+    noisebox.menu.reset_menu = Mock()
     noisebox.config = nh.Config(dry_run=True)
     noisebox.menu.active_menu_items = noisebox.menu.advanced_settings_items
     noisebox.menu.menuindex = 0
