@@ -17,7 +17,13 @@ class RotaryState:
         print("switchCallback not set")
 
     def rotaryCallback(self, noisebox, direction):
-        print("rotaryCallback not set")
+        """Increment menu counter and redraw menu"""
+
+        if direction == 1:
+            noisebox.menu.counter += 1
+        else:
+            noisebox.menu.counter -= 1
+        noisebox.menu.draw_menu()
 
     def get_strval(self, noisebox):
         strval = noisebox.menu.menu_items[noisebox.menu.menuindex]
@@ -54,14 +60,6 @@ class RotaryState_Menu(RotaryState):
         if (strval == "SETTINGS -->"):
             self.new_state(actions.settings_menu(noisebox))
 
-    def rotaryCallback(self, noisebox, direction):
-        """Increment menu counter and redraw menu"""
-
-        if direction == 1:
-            noisebox.menu.counter += 1
-        else:
-            noisebox.menu.counter -= 1
-        noisebox.menu.draw_menu()
 
 
 class RotaryState_Monitoring(RotaryState):
@@ -110,14 +108,6 @@ class RotaryState_PeersMenu(RotaryState):
         else:
             self.new_state(actions.start_peer_session_as_peer(noisebox))
 
-    def rotaryCallback(self, noisebox, direction):
-        """Increment menu counter and redraw menu"""
-
-        if direction == 1:
-            noisebox.menu.counter += 1
-        else:
-            noisebox.menu.counter -= 1
-        noisebox.menu.draw_menu()
 
 
 class RotaryState_SettingsMenu(RotaryState):
@@ -147,14 +137,6 @@ class RotaryState_SettingsMenu(RotaryState):
         elif (strval == "UPDATE"):
             self.new_state(actions.update(noisebox))
 
-    def rotaryCallback(self, noisebox, direction):
-        """Increment menu counter and redraw menu"""
-
-        if direction == 1:
-            noisebox.menu.counter += 1
-        else:
-            noisebox.menu.counter -= 1
-        noisebox.menu.draw_menu()
 
 class RotaryState_AdvancedSettingsMenu(RotaryState):
     """Settings menu state"""
@@ -178,14 +160,6 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
             self.new_state(actions.draw_default_menu(noisebox))
             return "<-- BACK"
 
-    def rotaryCallback(self, noisebox, direction):
-        """Increment menu counter and redraw menu"""
-
-        if direction == 1:
-            noisebox.menu.counter += 1
-        else:
-            noisebox.menu.counter -= 1
-        noisebox.menu.draw_menu()
 
 
 class RotaryState_IpPicker(RotaryState):
