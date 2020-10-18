@@ -20,7 +20,7 @@ class RotaryState:
         print("rotaryCallback not set")
 
     def drawDefaultMenu(self, noisebox):
-        noisebox.menu.new_menu_items(noisebox.menu.default_menu_items)
+        noisebox.menu.new_menu_items(noisebox.menu.main_menu_items)
         self.new_state(RotaryState_Menu)
         noisebox.menu.draw_menu()
 
@@ -37,17 +37,17 @@ class RotaryState_Menu(RotaryState):
         strval = noisebox.menu.menu_items[noisebox.menu.menuindex]
 
         if (strval == "CONNECT TO SERVER"):
-            self.new_state(actions.connect_to_server(noisebox, RotaryState_JacktripRunning, RotaryState_Scrolling))
+            self.new_state(actions.connect_to_server(noisebox))
 
         if (strval == "LEVEL METER"):
-            self.new_state(actions.level_meter(noisebox, RotaryState_Monitoring, RotaryState_Scrolling))
+            self.new_state(actions.level_meter(noisebox))
 
         if (strval == "P2P SESSION"):
-            self.new_state(actions.p2p_session(noisebox, SwitchState_PeersMenu))
+            self.new_state(actions.p2p_session(noisebox))
             noisebox.menu.draw_menu()
 
         if (strval == "SETTINGS -->"):
-            self.new_state(actions.settings_menu(noisebox, RotaryState_SettingsMenu))
+            self.new_state(actions.settings_menu(noisebox))
             noisebox.menu.draw_menu()
 
     def rotaryCallback(self, noisebox, direction):
@@ -88,8 +88,11 @@ class RotaryState_Scrolling(RotaryState):
         noisebox.oled.stop_scrolling_text()
         self.drawDefaultMenu(noisebox)
 
-class SwitchState_PeersMenu(RotaryState):
+class RotaryState_PeersMenu(RotaryState):
     """New swtitch state"""
+
+    def __init__(self, debug=False):
+        self.debug = debug
 
     def switchCallback(self, noisebox):
         strval = noisebox.menu.menu_items[noisebox.menu.menuindex]
@@ -98,25 +101,10 @@ class SwitchState_PeersMenu(RotaryState):
             self.drawDefaultMenu(noisebox)
 
         elif (strval == "START SERVER"):
-            try:
-                noisebox.start_jacktrip_peer_session(server=True)
-                self.new_state(RotaryState_JacktripServerWaiting)
-            except nh.NoiseBoxCustomError as e:
-                noisebox.oled.start_scrolling_text(e.args[0])
-                self.new_state(RotaryState_Scrolling)
-            else:
-                self.new_state(RotaryState_JacktripRunning)
-
+            self.new_state(RotaryState_JacktripServerWaiting)
+            self.new_state(actions.start_peer_session_as_server(noisebox))
         else:
-            for menu_item in noisebox.menu.menu_items:
-                if (strval == menu_item):
-                    try:
-                        noisebox.start_jacktrip_peer_session(server=False, peer_address=menu_item)
-                    except nh.NoiseBoxCustomError as e:
-                        noisebox.oled.start_scrolling_text(e.args[0])
-                        self.new_state(RotaryState_Scrolling)
-                    else:
-                        self.new_state(RotaryState_JacktripRunning)
+            self.new_state(actions.start_peer_session_as_peer(noisebox))
 
     def rotaryCallback(self, noisebox, direction):
         if direction == 1:
@@ -145,36 +133,16 @@ class RotaryState_SettingsMenu(RotaryState):
 
         elif (strval == "INPUT"):
             """Toggle input channels mono/stereo"""
-
-            next_input_value = noisebox.menu.next_input_value(value)
-            noisebox.menu.menu_items[noisebox.menu.menuindex]["value"] = next_input_value
-            if self.debug is True:
-                return next_input_value
-            noisebox.config.save(noisebox.config.change_input_channels(next_input_value))
-            noisebox.menu.draw_menu()
+            actions.toggle_input_channels(noisebox, value)
 
         elif (strval == "JACKTRIP"):
-            next_state = RotaryState_AdvancedSettingsMenu
-            noisebox.menu.new_menu_items(noisebox.menu.get_advanced_settings_items(noisebox.config))
-
-            if self.debug is True:
-                return next_state.__name__
-
-            self.new_state(next_state)
-            noisebox.menu.draw_menu()
+            self.new_state(actions.jacktrip_menu(noisebox))
 
         elif (strval == "IP ADDRESS"):
-            title = ["==HOSTNAME & IP=="]
-            noisebox.oled.draw_lines(title + noisebox.get_ip())
-            noisebox.menu.draw_menu()
+            actions.show_ip_address(noisebox)
 
         elif (strval == "UPDATE"):
-            noisebox.oled.draw_lines(["==UPDATE==", "Updating system"])
-            try:
-                noisebox.system_update()
-            except nh.NoiseBoxCustomError as e:
-                noisebox.oled.start_scrolling_text(e.args[0])
-                self.new_state(RotaryState_Scrolling)
+            self.new_state(actions.update(noisebox))
 
     def rotaryCallback(self, noisebox, direction):
         """Increment menu counter and redraw menu"""
@@ -193,8 +161,6 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
     def switchCallback(self, noisebox):
         """check menu value on button click and run corresponding methods"""
 
-        config = nh.Config()
-
         if type(noisebox.menu.menu_items[noisebox.menu.menuindex]) is dict:
             strval = noisebox.menu.menu_items[noisebox.menu.menuindex]["name"]
             value = noisebox.menu.menu_items[noisebox.menu.menuindex]["value"]
@@ -204,16 +170,12 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
         if (strval == "QUEUE"):
             next_queue_value = noisebox.menu.next_queue_value(value)
             noisebox.menu.menu_items[noisebox.menu.menuindex]["value"] = next_queue_value
-            if self.debug is True:
-                return next_queue_value
             noisebox.config.save(noisebox.config.change_queue(next_queue_value))
             noisebox.menu.draw_menu()
 
         if (strval == "CHANNELS"):
             next_channels_value = noisebox.menu.next_channels_value(value)
             noisebox.menu.menu_items[noisebox.menu.menuindex]["value"] = next_channels_value
-            if self.debug is True:
-                return next_channels_value
             noisebox.config.save(noisebox.config.change_output_channels(next_channels_value))
             noisebox.menu.draw_menu()
 

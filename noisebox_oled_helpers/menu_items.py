@@ -16,10 +16,10 @@ class MenuItems:
         self.input_values = ["1", "2"]
         self.channels_values = ["1", "2"]
         self.queue_values = ["2", "4", "6", "8", "10", "12", "14", "16"]
-        self.default_menu_items = self.main_menu_items
+        self.menu_items = self.main_menu_items
 
     def get_main_menu_items(self):
-        return self.main_menu_items
+        return self.menu_items
 
     def get_settings_items(self, config):
         # need to implement loading stored config values

@@ -7,6 +7,7 @@ class Config:
     def __init__(self, dry_run=False):
         self.default_path = None
         self.custom_path = None
+        self.dry_run = dry_run
 
         self.set_paths(dry_run)
 
@@ -67,5 +68,8 @@ class Config:
         return cfg
 
     def save(self, cfg):
+        if self.dry_run is True:
+            print("Save config", cfg)
+            return
         with open('./config.ini', 'w') as configfile:
             cfg.write(configfile)
