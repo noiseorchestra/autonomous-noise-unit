@@ -173,11 +173,7 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
         value = self.get_value(noisebox)
 
         if (strval == "QUEUE"):
-            next_queue_value = noisebox.menu.next_queue_value(value)
-            noisebox.menu.menu_items[noisebox.menu.menuindex]["value"] = next_queue_value
-            noisebox.config.save(noisebox.config.change_queue(next_queue_value))
-            noisebox.menu.draw_menu()
-
+            actions.change_queue(noisebox, value)
         if (strval == "CHANNELS"):
             next_channels_value = noisebox.menu.next_channels_value(value)
             noisebox.menu.menu_items[noisebox.menu.menuindex]["value"] = next_channels_value

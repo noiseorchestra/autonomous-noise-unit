@@ -77,3 +77,9 @@ def update(noisebox):
         noisebox.oled.start_scrolling_text(e.args[0])
         return rs.RotaryState_Scrolling
     return rs.RotaryState_Menu
+
+def change_queue(noisebox, value):
+    next_queue_value = noisebox.menu.next_queue_value(value)
+    noisebox.menu.menu_items[noisebox.menu.menuindex]["value"] = next_queue_value
+    noisebox.config.save(noisebox.config.change_queue(next_queue_value))
+    noisebox.menu.draw_menu()
