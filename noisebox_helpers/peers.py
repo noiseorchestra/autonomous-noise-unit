@@ -45,7 +45,7 @@ def get_online_peers(peers):
     """Run ping_all and return online peers"""
 
     peers = ping_all(peers)
-    return who_is_awake()
+    return who_is_awake(peers)
 
 
 def who_is_awake(peers):
