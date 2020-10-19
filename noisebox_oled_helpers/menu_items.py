@@ -30,6 +30,10 @@ class MenuItems:
         return self._active_menu_items
 
     @property
+    def main_menu(self):
+        return self._main_menu_items
+
+    @property
     def settings_items(self):
         items = self._settings_items
         items[0]["value"] = self.get_jacktrip_settings()["input-channels"]
@@ -67,5 +71,14 @@ class MenuItems:
         next_index = 0 if next_index == len(values) else next_index
         return values[next_index]
 
-    def new_menu_items(self, new_menu_items):
+    def set_main_menu(self):
+        self._active_menu_items = self._main_menu_items
+
+    def set_advanced_menu(self):
+        self._active_menu_items = self.advanced_settings_items
+
+    def set_settings_menu(self):
+        self._active_menu_items = self.settings_items
+
+    def set_new_menu_items(self, new_menu_items):
         self._active_menu_items = new_menu_items

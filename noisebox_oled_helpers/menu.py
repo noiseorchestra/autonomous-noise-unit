@@ -51,10 +51,9 @@ class Menu(MenuItems):
         with canvas(self.device) as draw:
             self.menu(draw, self.counter % len(self.active_menu_items))
 
-    def reset_menu(self, new_menu_items):
+    def reset_menu(self):
         """Set new menu items"""
 
-        self.new_menu_items(new_menu_items)
         self.menuindex = 0
         self.counter = 0
 
