@@ -89,16 +89,12 @@ def update(noisebox):
 def change_queue(noisebox, value):
     next_queue_value = noisebox.menu.next_queue_value()
     noisebox.config.save(noisebox.config.change_queue(next_queue_value))
-    noisebox.menu.reset_menu()
-    noisebox.menu.set_advanced_menu()
     noisebox.menu.draw_menu()
     return rs.RotaryState_AdvancedSettingsMenu
 
 def change_jacktrip_channels(noisebox, value):
     next_channels_value = noisebox.menu.next_channels_value()
     noisebox.config.save(noisebox.config.change_output_channels(next_channels_value))
-    noisebox.menu.reset_menu()
-    noisebox.menu.set_advanced_menu()
     noisebox.menu.draw_menu()
     return rs.RotaryState_AdvancedSettingsMenu
 
