@@ -2,7 +2,6 @@ from noisebox_rotary_helpers.rotary_state import RotaryState, RotaryState_Menu, 
 from unittest.mock import Mock
 import noisebox_helpers as nh
 from noisebox_oled_helpers.menu import Menu
-from noisebox import Noisebox
 
 peers_menu = ["START SERVER", "pi@raspberry1.myvpn", "pi@raspberry2.myvpn", "<-- BACK"]
 
@@ -110,13 +109,13 @@ def test_rotarty_state_settings_menu_item_mono_input():
     noisebox = Mock()
     noisebox.menu = Menu(dry_run=True)
     noisebox.menu.new_menu_items(noisebox.menu.settings_items)
-    noisebox.menu.menuindex = 0
     noisebox.menu.draw_menu = Mock()
-    noisebox.config.change_input_channels = Mock()
+    noisebox.menu.menuindex = 0
     rotaryState = RotaryState_SettingsMenu(debug=True)
     rotaryState.switchCallback(noisebox)
-    noisebox.config.change_input_channels.assert_called_with("1")
     assert rotaryState.__class__.__name__ == "RotaryState_SettingsMenu"
+    noisebox.config.change_input_channels.assert_called_with("1")
+
 
 def test_rotarty_state_settings_menu_item_jacktrip():
 
@@ -124,7 +123,7 @@ def test_rotarty_state_settings_menu_item_jacktrip():
         return arg
 
     noisebox = Mock()
-    noisebox.menu = Menu()
+    noisebox.menu = Menu(dry_run=True)
     noisebox.menu.new_menu_items(noisebox.menu.settings_items)
     noisebox.menu.reset_menu = Mock()
     noisebox.menu.draw_menu = Mock()
@@ -148,6 +147,7 @@ def test_rotarty_state_advanced_settings_menu_item_channels():
     rotaryState = RotaryState_AdvancedSettingsMenu(debug=True)
     rotaryState.switchCallback(noisebox)
     assert rotaryState.__class__.__name__ == "RotaryState_AdvancedSettingsMenu"
+    noisebox.config.change_output_channels.assert_called_with("1")
 
 def test_rotarty_state_advanced_settings_menu_item_queue():
 
@@ -156,18 +156,11 @@ def test_rotarty_state_advanced_settings_menu_item_queue():
     noisebox.menu.draw_menu = Mock()
     noisebox.menu.new_menu_items(noisebox.menu.advanced_settings_items)
     noisebox.menu.menuindex = 1
-    noisebox.config = nh.Config(dry_run=True)
 
     rotaryState = RotaryState_AdvancedSettingsMenu(debug=True)
     rotaryState.switchCallback(noisebox)
     assert rotaryState.__class__.__name__ == "RotaryState_AdvancedSettingsMenu"
-
-    # assert noisebox.menu.active_menu_items[1]["value"] == "8"
-    # rotaryState.switchCallback(noisebox)
-    # assert noisebox.menu.active_menu_items[1]["value"] == "10"
-    # rotaryState.switchCallback(noisebox)
-    # assert noisebox.menu.active_menu_items[1]["value"] == "12"
-
+    noisebox.config.change_queue.assert_called_with("8")
 
 def test_rotarty_state_advanced_settings_menu_change_ip():
 
@@ -182,6 +175,7 @@ def test_rotarty_state_advanced_settings_menu_change_ip():
     rotaryState.switchCallback(noisebox)
     noisebox.menu.draw_ip_menu.assert_called_with(" ->", "111.111.111.111")
     assert rotaryState.ip_address == "111.111.111.111"
+    assert rotaryState.__class__.__name__ == "RotaryState_IpPicker"
 
 
 def test_rotarty_state_ip_picker():

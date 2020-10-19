@@ -52,14 +52,14 @@ class MenuItems:
         items[2]["value"] = jacktrip_settings["ip"]
         return items
 
-    def next_input_value(self, current_value):
-        return self.next_value(self._input_values, current_value)
+    def next_input_value(self):
+        return self.next_value(self._input_values, self.settings_items[0]["value"])
 
-    def next_queue_value(self, current_value):
-        return self.next_value(self._queue_values, current_value)
+    def next_queue_value(self):
+        return self.next_value(self._queue_values, self.advanced_settings_items[1]["value"])
 
-    def next_channels_value(self, current_value):
-        return self.next_value(self._channels_values, current_value)
+    def next_channels_value(self):
+        return self.next_value(self._channels_values, self.advanced_settings_items[0]["value"])
 
     def next_value(self, values, current_value):
         index = values.index(current_value)
