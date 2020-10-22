@@ -48,11 +48,32 @@ class Menu(MenuItems):
             else:
                 draw.text((2, i*10), self.get_menu_item_str(i), font=font, fill=255)
 
-    def draw_menu(self):
-        """draw menu on convas"""
+    def large_menu(self, draw, index):
+        """return prepared menu"""
 
-        with canvas(self.device) as draw:
-            self.menu(draw, self.counter % len(self.active_menu_items))
+        font = ImageFont.load_default()
+        draw.rectangle(self.device.bounding_box, outline="white", fill="black")
+        draw.text((2, 0), "=== A.N.U ===", font=font, fill=255)
+        for i in range(len(self.active_menu_items)):
+            if(i == index):
+                self.menuindex = i
+                self.invert(draw, 2, i*15 + 15, self.get_menu_item_str(i))
+            else:
+                draw.text((2, i*15 + 15), self.get_menu_item_str(i), font=font, fill=255)
+
+    def draw_menu(self):
+        """draw menu on canvas"""
+
+        if self.main_menu is self.active_menu_items:
+            if self.dry_run:
+                return "draw large menu"
+            with canvas(self.device) as draw:
+                self.large_menu(draw, self.counter % len(self.active_menu_items))
+        else:
+            if self.dry_run:
+                return "draw normal menu"
+            with canvas(self.device) as draw:
+                self.menu(draw, self.counter % len(self.active_menu_items))
 
     def reset_menu(self):
         """Set new menu items"""

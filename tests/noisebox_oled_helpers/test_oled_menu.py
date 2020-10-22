@@ -38,3 +38,10 @@ def test_new_menu_items():
     menu = Menu()
     menu.set_new_menu_items(["MENUITEM1"])
     assert menu.active_menu_items == ["MENUITEM1"]
+
+def test_draw_menu():
+    menu = Menu(dry_run=True)
+    menu.large_menu = Mock()
+    assert menu.draw_menu() == "draw large menu"
+    menu.set_settings_menu()
+    assert menu.draw_menu() == "draw normal menu"
