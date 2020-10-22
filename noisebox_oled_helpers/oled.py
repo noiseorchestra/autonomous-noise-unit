@@ -18,24 +18,24 @@ class OLED:
         self._meters_running = False
         self._scrolling_text_running = False
 
-    def _get_font(size):
-        return ImageFont.truetype(font="./assets/Roboto-Bold.ttf", size=size)
+    def get_font(size):
+        return ImageFont.truetype(font="./assets/Pixeboy.ttf", size=size)
 
     @property
     def small_font(self):
-        return self._get_font(10)
+        return self.get_font(10)
 
     @property
     def medium_font(self):
-        return self._get_font(12)
+        return self.get_font(12)
 
     @property
     def large_font(self):
-        return self._get_font(14)
+        return self.get_font(14)
 
     @property
     def title_font(self):
-        return self._get_font(18)
+        return self.get_font(18)
 
     def draw_text(self, x, y, text):
         """Draw one line of text"""

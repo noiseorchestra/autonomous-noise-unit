@@ -26,7 +26,7 @@ class Menu(MenuItems):
     def invert(self, draw, x, y, text, font_size):
         """invert selected menue item"""
 
-        font = ImageFont.truetype(font="./assets/Pixeboy.ttf", size=font_size)
+        font = self.oled.get_font(font_size)
         draw.rectangle((x, y, x+120, y+font_size), outline=255, fill=255)
         draw.text((x, y), text, font=font, outline=0, fill="black")
 
@@ -43,7 +43,7 @@ class Menu(MenuItems):
         """return prepared menu"""
 
         font_size = 12
-        font = ImageFont.truetype(font="./assets/Roboto-Bold.ttf", size=font_size)
+        font = self.oled.get_font(font_size)
 
         draw.rectangle(self.device.bounding_box, outline="white", fill="black")
         for i in range(len(self.active_menu_items)):
@@ -59,8 +59,8 @@ class Menu(MenuItems):
         font_size = 14
         title_size = 18
 
-        font = ImageFont.truetype(font="./assets/Roboto-Bold.ttf", size=font_size)
-        title_font = ImageFont.truetype(font="./assets/Roboto-Bold.ttf", size=title_size)
+        font = self.oled.get_font(font_size)
+        title_font = self.oled.get_font(title_size)
 
         draw.rectangle(self.device.bounding_box, outline="white", fill="black")
         draw.text((2, 0), "=== A.N.U ===", font=title_font, fill=255)
