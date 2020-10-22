@@ -120,9 +120,8 @@ def draw_default_menu(noisebox):
     return rs.RotaryState_Menu
 
 def exit_advanced_menu(noisebox):
+    noisebox.restart_jack_if_needed()
     noisebox.menu.reset_menu()
     noisebox.menu.set_main_menu()
     noisebox.menu.draw_menu()
-    noisebox.jack_helper.stop()
-    noisebox.jack_helper.start(noisebox.get_session_params())
     return rs.RotaryState_Menu
