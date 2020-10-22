@@ -156,7 +156,7 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
         if (strval == "PPS"):
             self.new_state(actions.change_jack_pps(noisebox, value))
         if (strval == "<-- BACK"):
-            self.new_state(actions.draw_default_menu(noisebox))
+            self.new_state(actions.exit_advanced_menu(noisebox))
             return "<-- BACK"
 
 

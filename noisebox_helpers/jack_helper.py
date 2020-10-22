@@ -32,6 +32,7 @@ class JackHelper:
         for proc in psutil.process_iter():
             if proc.name() == "jackd":
                 proc.kill()
+                time.sleep(1)
 
     def check_input_ports(self, local_receive_ports, stereo):
         if len(local_receive_ports) == 0:
