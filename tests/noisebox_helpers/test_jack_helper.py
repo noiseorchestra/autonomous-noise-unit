@@ -21,6 +21,39 @@ jacktrip_send_02.name = "jactrip:send_02"
 
 system_capture_mono = [Mock()]
 
+dummy_cfg_with_pps = {
+    "jacktrip-default": {
+        "ip": "123.123.123.123",
+        "hub_mode": True,
+        "server": False,
+        "jacktrip-channels": "2",
+        "input-channels": "2",
+        "jacktrip-q": "6",
+        "jack-pps": "128"
+
+    }
+}
+
+dummy_cfg_without_pps = {
+    "jacktrip-default": {
+        "ip": "123.123.123.123",
+        "hub_mode": True,
+        "server": False,
+        "jacktrip-channels": "2",
+        "input-channels": "2",
+        "jacktrip-q": "6"
+
+    }
+}
+
+def test_generate_command():
+    jack_helper = nh.JackHelper()
+    result = ['jackd', '-R', '-dalsa', '-r48000', "-p256", '-n2', '-s', '-S']
+    assert jack_helper.generate_command(dummy_cfg_without_pps["jacktrip-default"]) == result
+    result = ['jackd', '-R', '-dalsa', '-r48000', "-p128", '-n2', '-s', '-S']
+    assert jack_helper.generate_command(dummy_cfg_with_pps["jacktrip-default"]) == result
+
+
 def test_check_input_ports():
     with pytest.raises(nh.NoiseBoxCustomError):
         assert jack_helper.check_input_ports([], stereo=True) == []
