@@ -12,6 +12,7 @@ def test_get_menu_item_string():
         "CHANNELS: 2",
         "QUEUE: 6",
         "IP: 111.111.111.111",
+        "PPS: 256",
         "<-- BACK"
     ]
 

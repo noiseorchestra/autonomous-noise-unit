@@ -9,17 +9,18 @@ class MenuItems:
                                  'LEVEL METER',
                                  'P2P SESSION',
                                  'SETTINGS -->']
-        self._settings_items = [{"name": "INPUT", "value": "1"},
+        self._settings_items = [{"name": "INPUT", "value": ""},
                                 "IP ADDRESS",
                                 "JACKTRIP",
                                 "UPDATE",
                                 "<-- BACK"]
 
-        self._advanced_settings_items = [{"name": "CHANNELS", "value": "1"}, {"name": "QUEUE", "value": "6"}, {"name": "IP", "value": "123.123.123.123"},"<-- BACK"]
+        self._advanced_settings_items = [{"name": "CHANNELS", "value": ""}, {"name": "QUEUE", "value": ""}, {"name": "IP", "value": ""}, {"name": "PPS", "value": ""}, "<-- BACK"]
         self._active_menu_items = self._main_menu_items
         self._input_values = ["1", "2"]
         self._channels_values = ["1", "2"]
         self._queue_values = ["2", "4", "6", "8", "10", "12", "14", "16"]
+        self._pps_values = ["32", "64", "128", "256", "512"]
 
     def get_jacktrip_settings(self):
         config = Config(self.dry_run)
@@ -51,9 +52,17 @@ class MenuItems:
             print("jacktrip-q key does not exisct, setting default value")
             q = "8"
 
+        try:
+            jacktrip_settings["jack-pps"]
+            pps = jacktrip_settings["jack-pps"]
+        except KeyError:
+            print("jack-pps key does not exist, setting default value")
+            pps = "256"
+
         items[0]["value"] = jacktrip_settings["jacktrip-channels"]
         items[1]["value"] = q
         items[2]["value"] = jacktrip_settings["ip"]
+        items[3]["value"] = pps
         return items
 
     def next_input_value(self):
@@ -64,6 +73,9 @@ class MenuItems:
 
     def next_channels_value(self):
         return self.next_value(self._channels_values, self.advanced_settings_items[0]["value"])
+
+    def next_pps_value(self):
+        return self.next_value(self._pps_values, self.advanced_settings_items[3]["value"])
 
     def next_value(self, values, current_value):
         index = values.index(current_value)
