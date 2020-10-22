@@ -33,6 +33,18 @@ class Config:
             please create your own config.ini file.
             """)
 
+        try:
+            cfg["jacktrip-default"]["jacktrip-q"]
+        except KeyError:
+            print("jacktrip-q key does not exisct, setting default value")
+            cfg["jacktrip-default"]["jacktrip-q"] = "8"
+
+        try:
+            cfg["jacktrip-default"]["jack-pps"]
+        except KeyError:
+            print("jack-pps key does not exist, setting default value")
+            cfg["jacktrip-default"]["jack-pps"] = "256"
+
         return cfg
 
     def get_default_only(self):
