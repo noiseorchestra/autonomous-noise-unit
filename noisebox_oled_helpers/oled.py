@@ -4,6 +4,7 @@ from luma.oled.device import ssd1306
 from PIL import Image, ImageFont
 from luma.core.virtual import viewport
 from noisebox_oled_helpers.meter import Meter
+import noisebox_oled_helpers.fonts as fonts
 from noisebox_oled_helpers.scroll import ScrollPanel
 from threading import Thread
 import time
@@ -22,7 +23,7 @@ class OLED:
         """Draw one line of text"""
 
         with canvas(self.device) as draw:
-            draw.text((x, y), text, fill="white")
+            draw.text((x, y), text, font=fonts.generate_font(10), fill="white")
         time.sleep(1)
 
     def draw_lines(self, lines):
@@ -31,7 +32,7 @@ class OLED:
         with canvas(self.device) as draw:
             y = 0
             for line in lines:
-                draw.text((0, y), line, fill="white")
+                draw.text((0, y), line, font=fonts.generate_font(10), fill="white")
                 y += 13
         time.sleep(1)
 
@@ -121,8 +122,3 @@ class OLED:
         posn = ((self.device.width - logo_resized.width) // 2, 0)
         background.paste(logo_resized, posn)
         self.device.display(background.convert(self.device.mode))
-
-    def generate_font(self, size):
-        font_path = os.path.abspath(os.path.join(
-            os.path.dirname(__file__), 'fonts', "ChiKareGo.ttf"))
-        return ImageFont.truetype(font_path, size)

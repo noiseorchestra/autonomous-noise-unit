@@ -1,7 +1,7 @@
 # Based on https://gist.github.com/codelectron/d493d4aaa6fc858ce69f2b335afd0b00#file-oled_rot_menu_rpi-py
 
 from noisebox_oled_helpers.menu_items import MenuItems
-from noisebox_oled_helpers.oled import OLED
+import noisebox_oled_helpers.fonts as fonts
 from luma.core.render import canvas
 from PIL import ImageFont, Image
 import os
@@ -20,13 +20,12 @@ class Menu(MenuItems):
         """Start menu"""
 
         self.device = device
-        self.oled = OLED()
         self.draw_menu()
 
     def invert(self, draw, x, y, text, font_size):
         """invert selected menue item"""
 
-        font = ImageFont.load_default()
+        font = fonts.generate_font(font_size)
         draw.rectangle((x, y, x+120, y+font_size), outline=255, fill=255)
         draw.text((x, y), text, font=font, outline=0, fill="black")
 
@@ -43,7 +42,7 @@ class Menu(MenuItems):
         """return prepared menu"""
 
         font_size = 15
-        font = self.oled.generate_font(font_size)
+        font = fonts.generate_font(font_size)
         draw.rectangle(self.device.bounding_box, outline="white", fill="black")
         for i in range(len(self.active_menu_items)):
             if(i == index):
