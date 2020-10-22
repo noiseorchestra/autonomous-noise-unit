@@ -66,12 +66,18 @@ class RotaryState_Monitoring(RotaryState):
         noisebox.stop_monitoring()
         self.new_state(actions.draw_default_menu(noisebox))
 
+    def rotaryCallback(self, noisebox, direction):
+        pass
+
 class RotaryState_JacktripRunning(RotaryState):
     """JackTrip running state"""
 
     def switchCallback(self, noisebox):
         noisebox.stop_jacktrip_session()
         self.new_state(actions.draw_default_menu(noisebox))
+
+    def rotaryCallback(self, noisebox, direction):
+        pass
 
 class RotaryState_JacktripServerWaiting(RotaryState):
     """JackTrip server waiting state"""
@@ -80,12 +86,18 @@ class RotaryState_JacktripServerWaiting(RotaryState):
         noisebox.stop_jacktrip_session()
         self.new_state(actions.draw_default_menu(noisebox))
 
+    def rotaryCallback(self, noisebox, direction):
+        pass
+
 class RotaryState_Scrolling(RotaryState):
     """Scrolling oled text state"""
 
     def switchCallback(self, noisebox):
         noisebox.oled.stop_scrolling_text()
         self.new_state(actions.draw_default_menu(noisebox))
+
+    def rotaryCallback(self, noisebox, direction):
+        pass
 
 class RotaryState_PeersMenu(RotaryState):
     """New swtitch state"""
