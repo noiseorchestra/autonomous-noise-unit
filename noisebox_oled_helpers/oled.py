@@ -1,7 +1,7 @@
 from luma.core.interface.serial import i2c
 from luma.core.render import canvas
 from luma.oled.device import ssd1306
-from PIL import ImageFont
+from PIL import ImageFont, ImageDraw
 from luma.core.virtual import viewport
 from noisebox_oled_helpers.meter import Meter
 from noisebox_oled_helpers.scroll import ScrollPanel
@@ -17,25 +17,6 @@ class OLED:
         self.device = ssd1306(self.serial, rotate=0)
         self._meters_running = False
         self._scrolling_text_running = False
-
-    def get_font(self, size):
-        return ImageFont.truetype(font="./assets/Pixeboy.ttf", size=size)
-
-    @property
-    def small_font(self):
-        return self.get_font(10)
-
-    @property
-    def medium_font(self):
-        return self.get_font(12)
-
-    @property
-    def large_font(self):
-        return self.get_font(14)
-
-    @property
-    def title_font(self):
-        return self.get_font(18)
 
     def draw_text(self, x, y, text):
         """Draw one line of text"""

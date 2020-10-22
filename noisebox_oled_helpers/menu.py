@@ -1,7 +1,6 @@
 # Based on https://gist.github.com/codelectron/d493d4aaa6fc858ce69f2b335afd0b00#file-oled_rot_menu_rpi-py
 
 from noisebox_oled_helpers.menu_items import MenuItems
-from noisebox_oled_helpers.oled import OLED
 from luma.core.render import canvas
 from PIL import ImageFont
 
@@ -14,20 +13,18 @@ class Menu(MenuItems):
         self.counter = 0
         self.menuindex = 0
         self.device = None
-        self.oled = None
 
     def start(self, device):
         """Start menu"""
 
         self.device = device
-        self.oled = OLED()
         self.draw_menu()
 
-    def invert(self, draw, x, y, text, font_size):
+    def invert(self, draw, x, y, text):
         """invert selected menue item"""
 
-        font = self.oled.get_font(font_size)
-        draw.rectangle((x, y, x+120, y+font_size), outline=255, fill=255)
+        font = ImageFont.load_default()
+        draw.rectangle((x, y, x+120, y+10), outline=255, fill=255)
         draw.text((x, y), text, font=font, outline=0, fill="black")
 
     def get_menu_item_str(self, i):
@@ -42,48 +39,20 @@ class Menu(MenuItems):
     def menu(self, draw, index):
         """return prepared menu"""
 
-        font_size = 12
-        font = self.oled.get_font(font_size)
-
+        font = ImageFont.load_default()
         draw.rectangle(self.device.bounding_box, outline="white", fill="black")
         for i in range(len(self.active_menu_items)):
             if(i == index):
                 self.menuindex = i
-                self.invert(draw, 2, i*font_size, self.get_menu_item_str(i), font_size)
+                self.invert(draw, 2, i*10, self.get_menu_item_str(i))
             else:
-                draw.text((2, i*font_size), self.get_menu_item_str(i), font=font, fill=255)
-
-    def large_menu(self, draw, index):
-        """return prepared menu"""
-
-        font_size = 14
-        title_size = 18
-
-        font = self.oled.get_font(font_size)
-        title_font = self.oled.get_font(title_size)
-
-        draw.rectangle(self.device.bounding_box, outline="white", fill="black")
-        draw.text((2, 0), "=== A.N.U ===", font=title_font, fill=255)
-        for i in range(len(self.active_menu_items)):
-            if(i == index):
-                self.menuindex = i
-                self.invert(draw, 2, i*font_size + title_size, self.get_menu_item_str(i), font_size)
-            else:
-                draw.text((2, i*font_size + title_size), self.get_menu_item_str(i), font=font, fill=255)
+                draw.text((2, i*10), self.get_menu_item_str(i), font=font, fill=255)
 
     def draw_menu(self):
-        """draw menu on canvas"""
+        """draw menu on convas"""
 
-        if self.main_menu is self.active_menu_items:
-            if self.dry_run:
-                return "draw large menu"
-            with canvas(self.device) as draw:
-                self.large_menu(draw, self.counter % len(self.active_menu_items))
-        else:
-            if self.dry_run:
-                return "draw normal menu"
-            with canvas(self.device) as draw:
-                self.menu(draw, self.counter % len(self.active_menu_items))
+        with canvas(self.device) as draw:
+            self.menu(draw, self.counter % len(self.active_menu_items))
 
     def reset_menu(self):
         """Set new menu items"""
