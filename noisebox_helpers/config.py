@@ -67,6 +67,11 @@ class Config:
         cfg["jacktrip-default"]["jacktrip-q"] = queue
         return cfg
 
+    def change_jack_pps(self, pps):
+        cfg = self.get_custom_only()
+        cfg["jacktrip-default"]["jack-pps"] = pps
+        return cfg
+
     def save(self, cfg):
         if self.dry_run is True:
             print("Save config", cfg)

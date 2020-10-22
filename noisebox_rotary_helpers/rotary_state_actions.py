@@ -100,6 +100,13 @@ def change_jacktrip_channels(noisebox, value):
     noisebox.menu.draw_menu()
     return rs.RotaryState_AdvancedSettingsMenu
 
+def change_jack_pps(noisebox, value):
+    next_pps_value = noisebox.menu.next_pps_value()
+    noisebox.config.save(noisebox.config.change_jack_pps(next_pps_value))
+    noisebox.menu.set_advanced_menu()
+    noisebox.menu.draw_menu()
+    return rs.RotaryState_AdvancedSettingsMenu
+
 def draw_advanced_menu(noisebox):
     noisebox.menu.reset_menu()
     noisebox.menu.set_advanced_menu()

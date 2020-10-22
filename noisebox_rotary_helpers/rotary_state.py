@@ -153,6 +153,8 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
         if (strval == "IP"):
             self.new_state(RotaryState_IpPicker)
             self.init_ip_menu(noisebox)
+        if (strval == "PPS"):
+            self.new_state(actions.change_jack_pps(noisebox, value))
         if (strval == "<-- BACK"):
             self.new_state(actions.draw_default_menu(noisebox))
             return "<-- BACK"
