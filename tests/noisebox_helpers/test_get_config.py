@@ -5,6 +5,7 @@ combined_config = {
         'hub_mode': 'True',
         'input-channels': '2',
         'ip': '111.111.111.111',
+        'jack-pps': '256',
         'jacktrip-channels': '2',
         'jacktrip-q': '6',
         'server': 'False'
@@ -32,7 +33,7 @@ default_config = {
         'ip': '123.123.123.123',
         'jacktrip-channels': '2',
         'jacktrip-q': '6',
-        'server': 'False'
+        'server': 'False',
     },
     'peers': {'ip_addresses': '111.111.111.111,222.222.222.222,333.333.333.333'},
     'server1': {

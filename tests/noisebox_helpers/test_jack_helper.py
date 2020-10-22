@@ -46,6 +46,12 @@ dummy_cfg_without_pps = {
     }
 }
 
+def test_check_current_pps():
+    jack_helper = nh.JackHelper()
+    jack_helper.current_pps = "256"
+    assert jack_helper.check_current_pps("128") == False
+    assert jack_helper.check_current_pps("256") == True
+
 def test_generate_command():
     jack_helper = nh.JackHelper()
     result = ['jackd', '-R', '-dalsa', '-r48000', "-p256", '-n2', '-s', '-S']

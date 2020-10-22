@@ -66,3 +66,17 @@ def test_start_jacktrip_monitoring():
     noisebox.start_jacktrip_monitoring()
     noisebox.start_level_meters.assert_called_with(jacktrip_session=True)
     noisebox.jack_helper.make_jacktrip_connections.assert_called_with(True)
+
+def test_restart_jack_if_needed():
+    noisebox = Noisebox(dry_run=True)
+    noisebox.jack_helper = nh.JackHelper()
+    noisebox.jack_helper.start = Mock()
+    noisebox.oled = Mock()
+    noisebox.jack_helper.current_pps = "256"
+    noisebox.restart_jack_if_needed()
+    assert not noisebox.jack_helper.start.called
+
+    noisebox.jack_helper.current_pps = "64"
+    noisebox.jack_helper.start = Mock()
+    noisebox.restart_jack_if_needed()
+    noisebox.jack_helper.start.assert_called()
