@@ -51,7 +51,7 @@ class Menu(MenuItems):
     def large_menu(self, draw, index):
         """return prepared menu"""
 
-        ttf = ImageFont.load("./assets/Roboto-Bold.ttf")
+        ttf = ImageFont.load("../assets/Roboto-Bold.ttf")
         font = ImageFont.truetype(font=ttf, size="14")
         draw.rectangle(self.device.bounding_box, outline="white", fill="black")
         draw.text((2, 0), "=== A.N.U ===", font=font, fill=255)
