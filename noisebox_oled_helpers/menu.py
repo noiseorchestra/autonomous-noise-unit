@@ -44,12 +44,14 @@ class Menu(MenuItems):
         font_size = 15
         font = fonts.generate_font(font_size)
         draw.rectangle(self.device.bounding_box, outline="white", fill="black")
+        if self.main_menu == self.active_menu_items:
+            draw.text((2, 0), "=== A.N.U ===", font=font, fill=255)
         for i in range(len(self.active_menu_items)):
             if(i == index):
                 self.menuindex = i
-                self.invert(draw, 2, i*font_size, self.get_menu_item_str(i), font_size)
+                self.invert(draw, 2, i*font_size + font_size, self.get_menu_item_str(i), font_size)
             else:
-                draw.text((2, i*font_size), self.get_menu_item_str(i), font=font, fill=255)
+                draw.text((2, i*font_size + font_size), self.get_menu_item_str(i), font=font, fill=255)
 
     def draw_menu(self):
         """draw menu on convas"""
