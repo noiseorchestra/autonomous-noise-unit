@@ -12,11 +12,13 @@ class JackHelper:
         self.jackClient = None
         self.connections = []
 
-    def start(self):
+    def generate_command(self, params):
+        return ['jackd', '-R', '-dalsa', '-r48000', '-p256', '-n2', '-s', '-S']
+
+    def start(self, params):
         """Start JACK with relavent parameters"""
 
-        command = ['jackd', '-R', '-dalsa', '-r48000', '-p256', '-n2', '-s', '-S']
-        Popen(command, stdout=PIPE, stderr=PIPE)
+        Popen(self.generate_command(params), stdout=PIPE, stderr=PIPE)
         time.sleep(2)
         self.jackClient = jack.Client('noisebox',  no_start_server=True)
         self.jackClient.activate()
