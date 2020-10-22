@@ -42,7 +42,6 @@ class Menu(MenuItems):
 
         font = ImageFont.load_default()
         draw.rectangle(self.device.bounding_box, outline="white", fill="black")
-        self.draw_logo()
         for i in range(len(self.active_menu_items)):
             if(i == index):
                 self.menuindex = i
