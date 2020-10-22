@@ -127,7 +127,7 @@ class Noisebox:
 
     def restart_jack_if_needed(self):
         new_pps = self.get_session_params()["jack-pps"]
-        if self.jack_helper.check_current_pps(new_pps):
+        if self.jack_helper.check_current_pps(new_pps) is False:
             self.oled.draw_lines(["==RESTARTING JACK==", "at " + new_pps + " pps" ])
             self.jack_helper.stop()
             self.jack_helper.start()
