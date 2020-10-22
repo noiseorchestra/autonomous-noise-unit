@@ -14,13 +14,18 @@ class MenuItems:
                                 "UPDATE",
                                 "<-- BACK"]
 
-        self._advanced_settings_items = [{"name": "CHANNELS", "value": ""}, {"name": "QUEUE", "value": ""}, {"name": "IP", "value": ""}, {"name": "PPS", "value": ""}, {"name": "mode", "value": "hub server"}, {"name": "peer", "value": ""}, "<-- BACK"]
+        self._advanced_settings_items = [{"name": "CHANNELS", "value": ""},
+                                         {"name": "QUEUE", "value": ""},
+                                         {"name": "IP", "value": ""},
+                                         {"name": "PPS", "value": ""},
+                                         {"name": "MODE", "value": ""},
+                                         {"name": "PEER", "value": ""}, "<-- BACK"]
         self._active_menu_items = self._main_menu_items
         self._input_values = ["1", "2"]
         self._channels_values = ["1", "2"]
         self._queue_values = ["2", "4", "6", "8", "10", "12", "14", "16"]
         self._pps_values = ["64", "128", "256", "512"]
-        self._hub_mode_values = [True, False]
+        self._hub_mode_values = ["True", "False"]
 
     def get_jacktrip_settings(self):
         config = Config(self.dry_run)
