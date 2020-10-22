@@ -130,7 +130,7 @@ class Noisebox:
         if self.jack_helper.check_current_pps(new_pps) is False:
             self.oled.draw_lines(["==RESTARTING JACK==", "at " + new_pps + " pps" ])
             self.jack_helper.stop()
-            self.jack_helper.start()
+            self.jack_helper.start(self.get_session_params())
 
     def system_update(self):
         p = subprocess.run(["git", "pull"])
