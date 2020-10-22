@@ -65,12 +65,3 @@ class Menu(MenuItems):
     def draw_ip_menu(self, picker_value, ip_address):
         with canvas(self.device) as draw:
             draw.text((10, 40), ip_address + picker_value, fill="white")
-
-    def draw_logo(self):
-        img_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'logo.png'))
-        logo = Image.open(img_path).convert("RGBA")
-        logo_resized = logo.resize((self.device.height, self.device.height))
-        background = Image.new("RGBA", self.device.size, "black")
-        posn = ((self.device.width - logo_resized.width) // 2, 0)
-        background.paste(logo_resized, posn)
-        self.device.display(background.convert(self.device.mode))

@@ -1,13 +1,13 @@
 from luma.core.interface.serial import i2c
 from luma.core.render import canvas
 from luma.oled.device import ssd1306
-from PIL import ImageFont, ImageDraw
+from PIL import Image
 from luma.core.virtual import viewport
 from noisebox_oled_helpers.meter import Meter
 from noisebox_oled_helpers.scroll import ScrollPanel
 from threading import Thread
 import time
-
+import os
 
 class OLED:
     """Helper object for OLED functions"""
@@ -112,3 +112,12 @@ class OLED:
 
     def draw_ip_menu(self, picker_value, ip_address):
         self.draw_text(10, 40, ip_address + picker_value)
+
+    def draw_logo(self):
+        img_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'logo.png'))
+        logo = Image.open(img_path).convert("RGBA")
+        logo_resized = logo.resize((self.device.height, self.device.height))
+        background = Image.new("RGBA", self.device.size, "black")
+        posn = ((self.device.width - logo_resized.width) // 2, 0)
+        background.paste(logo_resized, posn)
+        self.device.display(background.convert(self.device.mode))

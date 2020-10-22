@@ -149,6 +149,8 @@ def main():
     ky040 = KY040(noisebox)
 
     try:
+        noisebox.oled.draw_logo()
+        sleep(3)
         noisebox.menu.start(noisebox.oled.device)
     except Exception as e:
         print("OLED error:", e)
