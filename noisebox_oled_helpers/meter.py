@@ -7,7 +7,7 @@ def vertical_bar(draw, name, x1, y1, x2, y2, yh):
 
     draw.rectangle((x1, y1) + (x2, y2), "black", "white")
     draw.rectangle((x1, y1) + (x2, yh), "white", "white")
-    draw.text((x1, y1 + 2), name, font=fonts.generate_font(13), fill="white")
+    draw.text((x1, y1 + 2), name, font=fonts.generate_font(14), fill="white")
 
 
 def render(draw, name, width, height, meter):

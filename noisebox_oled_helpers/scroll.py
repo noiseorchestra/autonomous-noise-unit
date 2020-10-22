@@ -6,7 +6,7 @@ def scrollable_panel(draw, x1, y1, x2, y2, text, i):
     """Draw meter bar and frame"""
 
     draw.rectangle((x1, y1) + (x2 - 1, y2 - 1), "black", "black")
-    draw.text((i, 0), text, font=fonts.generate_font(10), fill="white")
+    draw.text((i, 0), text, font=fonts.generate_font(15), fill="white")
 
 
 def render(draw, width, height, text, i):

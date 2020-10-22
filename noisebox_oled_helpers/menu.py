@@ -48,7 +48,7 @@ class Menu(MenuItems):
             offset = 0 - font_size*(index-3)
         draw.rectangle(self.device.bounding_box, outline="white", fill="black")
         if self.main_menu == self.active_menu_items:
-            draw.text((2, 0), "====== A.N.U ======", font=font, fill=255)
+            draw.text((2, 0), " ====== A.N.U ======", font=font, fill=255)
             offset += font_size
         for i in range(len(self.active_menu_items)):
             if(i == index):
