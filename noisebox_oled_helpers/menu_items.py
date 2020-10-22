@@ -14,12 +14,13 @@ class MenuItems:
                                 "UPDATE",
                                 "<-- BACK"]
 
-        self._advanced_settings_items = [{"name": "CHANNELS", "value": ""}, {"name": "QUEUE", "value": ""}, {"name": "IP", "value": ""}, {"name": "PPS", "value": ""}, "<-- BACK"]
+        self._advanced_settings_items = [{"name": "CHANNELS", "value": ""}, {"name": "QUEUE", "value": ""}, {"name": "IP", "value": ""}, {"name": "PPS", "value": ""}, {"name": "mode", "value": "hub server"}, {"name": "peer", "value": ""}, "<-- BACK"]
         self._active_menu_items = self._main_menu_items
         self._input_values = ["1", "2"]
         self._channels_values = ["1", "2"]
         self._queue_values = ["2", "4", "6", "8", "10", "12", "14", "16"]
         self._pps_values = ["64", "128", "256", "512"]
+        self._hub_mode_values = [True, False]
 
     def get_jacktrip_settings(self):
         config = Config(self.dry_run)
@@ -44,24 +45,12 @@ class MenuItems:
         jacktrip_settings = self.get_jacktrip_settings()
         items = self._advanced_settings_items
 
-        try:
-            jacktrip_settings["jacktrip-q"]
-            q = jacktrip_settings["jacktrip-q"]
-        except KeyError:
-            print("jacktrip-q key does not exisct, setting default value")
-            q = "8"
-
-        try:
-            jacktrip_settings["jack-pps"]
-            pps = jacktrip_settings["jack-pps"]
-        except KeyError:
-            print("jack-pps key does not exist, setting default value")
-            pps = "256"
-
         items[0]["value"] = jacktrip_settings["jacktrip-channels"]
-        items[1]["value"] = q
+        items[1]["value"] = jacktrip_settings["jacktrip-q"]
         items[2]["value"] = jacktrip_settings["ip"]
-        items[3]["value"] = pps
+        items[3]["value"] = jacktrip_settings["jack-pps"]
+        items[4]["value"] = jacktrip_settings["hub-mode"]
+        items[5]["value"] = jacktrip_settings["peer-ip"]
         return items
 
     def next_input_value(self):
@@ -75,6 +64,9 @@ class MenuItems:
 
     def next_pps_value(self):
         return self.next_value(self._pps_values, self.advanced_settings_items[3]["value"])
+
+    def next_mub_mode_value(self):
+        return self.next_value(self._hub_mode_values, self.advanced_settings_items[4]["value"])
 
     def next_value(self, values, current_value):
         index = values.index(current_value)
