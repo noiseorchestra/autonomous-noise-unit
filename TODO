@@ -1,12 +1,20 @@
 ==TODO==
-- don't store menu values in Class get them on each draw
 - ANU title on main page?
+- change details in ANU info, can this show public IP address?
+- rearrange menu:
+		- ANU text/logo
+		- [CONNECT, LEVEL METER, SETTINGS -->] (BIG)
+		- [INPUT: (mono / stereo), PEER SESSION, DEVICE INFO, UPDATE, ADVANCED --> ]
+		- [CHANNELS: 1,
+			 QUEUE: 6,
+			 IP: xxx.xxx.xxx.xxx, (switches when changing mode)
+			 PPS: xxx
+			 MODE: hub server / peer
+			 EXIT]
 - change input channels 1/2 to mono/stereo in the menu
 - check organisation of menu items and all names make sense
-- larger menu items on main menu?
 - advanced config menu
 		- p2p IP ADDRESS
-		- p value for jackd??
 - change server names in config file
 - hold button shutdown
 - replace noisebox with ANU
@@ -19,6 +27,7 @@
 - hello and goodbye messages
 
 ==DONE==
+- don't store menu values in Class get them on each draw
 - advanced config menu
 		- hub server ip ADDRESS
 		- q value
