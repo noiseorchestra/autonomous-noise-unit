@@ -1,7 +1,7 @@
 from luma.core.interface.serial import i2c
 from luma.core.render import canvas
 from luma.oled.device import ssd1306
-from PIL import Image
+from PIL import Image, ImageFont
 from luma.core.virtual import viewport
 from noisebox_oled_helpers.meter import Meter
 from noisebox_oled_helpers.scroll import ScrollPanel
@@ -121,3 +121,8 @@ class OLED:
         posn = ((self.device.width - logo_resized.width) // 2, 0)
         background.paste(logo_resized, posn)
         self.device.display(background.convert(self.device.mode))
+
+    def generate_font(self, size):
+        font_path = os.path.abspath(os.path.join(
+            os.path.dirname(__file__), 'fonts', "ChiKareGo.ttf"))
+        return ImageFont.truetype(font_path, size)

@@ -1,6 +1,7 @@
 # Based on https://gist.github.com/codelectron/d493d4aaa6fc858ce69f2b335afd0b00#file-oled_rot_menu_rpi-py
 
 from noisebox_oled_helpers.menu_items import MenuItems
+from noisebox_oled_helpers.oled import OLED
 from luma.core.render import canvas
 from PIL import ImageFont, Image
 import os
@@ -19,13 +20,14 @@ class Menu(MenuItems):
         """Start menu"""
 
         self.device = device
+        self.oled = OLED()
         self.draw_menu()
 
-    def invert(self, draw, x, y, text):
+    def invert(self, draw, x, y, text, font_size):
         """invert selected menue item"""
 
         font = ImageFont.load_default()
-        draw.rectangle((x, y, x+120, y+10), outline=255, fill=255)
+        draw.rectangle((x, y, x+120, y+font_size), outline=255, fill=255)
         draw.text((x, y), text, font=font, outline=0, fill="black")
 
     def get_menu_item_str(self, i):
@@ -33,21 +35,22 @@ class Menu(MenuItems):
         if type(menu_items[i]) is dict:
             value = menu_items[i]["value"]
             if menu_items[i]["name"] == "INPUT":
-                 value = "mono" if menu_items[i]["value"] == "1" else "stereo"
+                value = "mono" if menu_items[i]["value"] == "1" else "stereo"
             return menu_items[i]["name"] + ": " + value
         return menu_items[i]
 
     def menu(self, draw, index):
         """return prepared menu"""
 
-        font = ImageFont.load_default()
+        font_size = 15
+        font = self.oled.generate_font(font_size)
         draw.rectangle(self.device.bounding_box, outline="white", fill="black")
         for i in range(len(self.active_menu_items)):
             if(i == index):
                 self.menuindex = i
-                self.invert(draw, 2, i*10, self.get_menu_item_str(i))
+                self.invert(draw, 2, i*font_size, self.get_menu_item_str(i), font_size)
             else:
-                draw.text((2, i*10), self.get_menu_item_str(i), font=font, fill=255)
+                draw.text((2, i*font_size), self.get_menu_item_str(i), font=font, fill=255)
 
     def draw_menu(self):
         """draw menu on convas"""
