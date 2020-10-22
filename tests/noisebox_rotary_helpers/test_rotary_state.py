@@ -62,7 +62,7 @@ def test_rotarty_state_menu_item_settings():
     noisebox.menu.draw_menu = Mock()
     noisebox.config = nh.Config(dry_run=True)
     rotaryState = rs.RotaryState_Menu(debug=True)
-    noisebox.menu.menuindex = 3
+    noisebox.menu.menuindex = 2
 
     rotaryState.switchCallback(noisebox)
     assert rotaryState.__class__.__name__ == "RotaryState_SettingsMenu"

@@ -1,14 +1,13 @@
 from noisebox_helpers import Config
 from noisebox_oled_helpers import MenuItems
 
-main_menu_items = ['CONNECT TO SERVER',
+main_menu_items = ['CONNECT',
                    'LEVEL METER',
-                   'P2P SESSION',
-                   'SETTINGS -->']
+                   'SETTINGS']
 
 settings_items = [{"name": "INPUT", "value": "2"},
-                  "IP ADDRESS",
-                  "JACKTRIP",
+                  "DEVICE INFO",
+                  "ADVANCED OPTIONS",
                   "UPDATE",
                   "<-- BACK"]
 

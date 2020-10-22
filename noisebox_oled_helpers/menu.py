@@ -30,7 +30,10 @@ class Menu(MenuItems):
     def get_menu_item_str(self, i):
         menu_items = self.active_menu_items
         if type(menu_items[i]) is dict:
-            return menu_items[i]["name"] + ": " + menu_items[i]["value"]
+            value = menu_items[i]["value"]
+            if menu_items[i]["name"] == "INPUT":
+                 value = "mono" if menu_items[i]["value"] == "1" else "stereo"
+            return menu_items[i]["name"] + ": " + value
         return menu_items[i]
 
     def menu(self, draw, index):

@@ -45,7 +45,7 @@ class RotaryState_Menu(RotaryState):
 
         strval = self.get_strval(noisebox)
 
-        if (strval == "CONNECT TO SERVER"):
+        if (strval == "CONNECT"):
             self.new_state(actions.connect_to_server(noisebox))
 
         if (strval == "LEVEL METER"):
@@ -54,7 +54,7 @@ class RotaryState_Menu(RotaryState):
         if (strval == "P2P SESSION"):
             self.new_state(actions.p2p_session(noisebox))
 
-        if (strval == "SETTINGS -->"):
+        if (strval == "SETTINGS"):
             self.new_state(actions.settings_menu(noisebox))
 
 
@@ -125,10 +125,10 @@ class RotaryState_SettingsMenu(RotaryState):
             """Toggle input channels mono/stereo"""
             self.new_state(actions.toggle_input_channels(noisebox, value))
 
-        elif (strval == "JACKTRIP"):
+        elif (strval == "ADVANCED OPTIONS"):
             self.new_state(actions.jacktrip_menu(noisebox))
 
-        elif (strval == "IP ADDRESS"):
+        elif (strval == "DEVICE INFO"):
             self.new_state(actions.show_ip_address(noisebox))
 
         elif (strval == "UPDATE"):

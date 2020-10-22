@@ -5,13 +5,12 @@ class MenuItems:
 
     def __init__(self, dry_run=False):
         self.dry_run = dry_run
-        self._main_menu_items = ['CONNECT TO SERVER',
+        self._main_menu_items = ['CONNECT',
                                  'LEVEL METER',
-                                 'P2P SESSION',
-                                 'SETTINGS -->']
+                                 'SETTINGS']
         self._settings_items = [{"name": "INPUT", "value": ""},
-                                "IP ADDRESS",
-                                "JACKTRIP",
+                                "DEVICE INFO",
+                                "ADVANCED OPTIONS",
                                 "UPDATE",
                                 "<-- BACK"]
 
