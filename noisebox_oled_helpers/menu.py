@@ -43,13 +43,13 @@ class Menu(MenuItems):
 
         font_size = 15
         font = fonts.generate_font(font_size)
+        offset = 0
+        if index > 3:
+            offset = 0 - font_size*(index-1)
         draw.rectangle(self.device.bounding_box, outline="white", fill="black")
         if self.main_menu == self.active_menu_items:
             draw.text((2, 0), "===== A.N.U =====", font=font, fill=255)
         for i in range(len(self.active_menu_items)):
-            offset = 0
-            if i > 2:
-                offset = 0 - font_size*(i-1)
             if(i == index):
                 self.menuindex = i
                 self.invert(draw, 2, i*font_size + font_size + offset, self.get_menu_item_str(i), font_size)
