@@ -26,7 +26,7 @@ class Menu(MenuItems):
     def invert(self, draw, x, y, text, font_size):
         """invert selected menue item"""
 
-        font = ImageFont.truetype(font="./assets/Roboto-Bold.ttf", size=font_size)
+        font = ImageFont.truetype(font="./assets/Pixeboy.ttf", size=font_size)
         draw.rectangle((x, y, x+120, y+font_size), outline=255, fill=255)
         draw.text((x, y), text, font=font, outline=0, fill="black")
 
