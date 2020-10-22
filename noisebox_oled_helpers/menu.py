@@ -47,6 +47,7 @@ class Menu(MenuItems):
         if self.main_menu == self.active_menu_items:
             draw.text((2, 0), "===== A.N.U =====", font=font, fill=255)
         for i in range(len(self.active_menu_items)):
+            offset = 0
             if i > 2:
                 offset = 0 - font_size*(i-1)
             if(i == index):
