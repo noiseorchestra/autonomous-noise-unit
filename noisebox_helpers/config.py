@@ -45,6 +45,18 @@ class Config:
             print("jack-pps key does not exist, setting default value")
             cfg["jacktrip-default"]["jack-pps"] = "256"
 
+        try:
+            cfg["jacktrip-default"]["hub-mode"]
+        except KeyError:
+            print("jack-hub key does not exist, setting default value")
+            cfg["jacktrip-default"]["hub-mode"] = True
+
+        try:
+            cfg["jacktrip-default"]["peer-ip"]
+        except KeyError:
+            print("peer-ip key does not exist, setting default value")
+            cfg["jacktrip-default"]["peer-ip"] = "111.111.111.111"
+
         return cfg
 
     def get_default_only(self):
