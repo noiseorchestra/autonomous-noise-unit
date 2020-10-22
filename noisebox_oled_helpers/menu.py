@@ -45,7 +45,7 @@ class Menu(MenuItems):
         font = fonts.generate_font(font_size)
         offset = 0
         if index > 3:
-            offset = 0 - font_size*(index-2)
+            offset = 0 - font_size*(index-3)
         if self.main_menu == self.active_menu_items:
             draw.text((2, 0), "===== A.N.U =====", font=font, fill=255)
             offset + font_size
