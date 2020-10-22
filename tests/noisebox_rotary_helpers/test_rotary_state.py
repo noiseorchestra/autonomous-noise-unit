@@ -39,19 +39,19 @@ def test_rotarty_state_menu_item_monitoring():
     assert rotaryState.__class__.__name__ == "RotaryState_Monitoring"
 
 
-def test_rotarty_state_menu_item_p2p():
-
-    noisebox = Mock()
-    noisebox.menu = Menu(dry_run=True)
-    noisebox.menu.set_new_menu_items = Mock()
-    noisebox.menu.draw_menu = Mock()
-    noisebox.menu.menuindex = 2
-    rotaryState = rs.RotaryState_Menu(debug=True)
-    noisebox.check_peers.return_value = ['123.123.123.123']
-
-    rotaryState.switchCallback(noisebox)
-    assert rotaryState.__class__.__name__ == "RotaryState_PeersMenu"
-    noisebox.menu.set_new_menu_items.assert_called_with(['123.123.123.123', 'START SERVER', '<-- BACK'])
+# def test_rotarty_state_menu_item_p2p():
+#
+#     noisebox = Mock()
+#     noisebox.menu = Menu(dry_run=True)
+#     noisebox.menu.set_new_menu_items = Mock()
+#     noisebox.menu.draw_menu = Mock()
+#     noisebox.menu.menuindex = 2
+#     rotaryState = rs.RotaryState_Menu(debug=True)
+#     noisebox.check_peers.return_value = ['123.123.123.123']
+#
+#     rotaryState.switchCallback(noisebox)
+#     assert rotaryState.__class__.__name__ == "RotaryState_PeersMenu"
+#     noisebox.menu.set_new_menu_items.assert_called_with(['123.123.123.123', 'START SERVER', '<-- BACK'])
 
 
 def test_rotarty_state_menu_item_settings():
