@@ -18,7 +18,7 @@ class OLED:
         self._meters_running = False
         self._scrolling_text_running = False
 
-    def get_font(size):
+    def get_font(self, size):
         return ImageFont.truetype(font="./assets/Pixeboy.ttf", size=size)
 
     @property
