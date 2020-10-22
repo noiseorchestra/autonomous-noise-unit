@@ -13,7 +13,9 @@ class JackHelper:
         self.connections = []
 
     def generate_command(self, params):
-        p = "-p" + params["jack-pps"] if params["jack-pps"] else "-p256"
+        p = "-p256"
+        if "jack-pps" in params.keys():
+            p = "-p" + params["jack-pps"]
         return ['jackd', '-R', '-dalsa', '-r48000', p, '-n2', '-s', '-S']
 
     def start(self, params):
