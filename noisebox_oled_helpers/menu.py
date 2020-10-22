@@ -65,4 +65,4 @@ class Menu(MenuItems):
 
     def draw_ip_menu(self, picker_value, ip_address):
         with canvas(self.device) as draw:
-            draw.text((10, 40), ip_address + picker_value, fill="white")
+            draw.text((10, 40), ip_address + picker_value, font=fonts.generate_font(15), fill="white")
