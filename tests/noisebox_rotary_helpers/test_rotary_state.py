@@ -1,4 +1,4 @@
-from noisebox_rotary_helpers.rotary_state import RotaryState, RotaryState_Menu, RotaryState_SettingsMenu, RotaryState_AdvancedSettingsMenu, RotaryState_IpPicker, RotaryState_PeersMenu
+import noisebox_rotary_helpers.rotary_state as rs
 from unittest.mock import Mock
 import noisebox_helpers as nh
 from noisebox_oled_helpers.menu import Menu
@@ -11,13 +11,13 @@ def test_rotarty_state_menu_item_connect_server():
     noisebox.menu = Menu(dry_run=True)
     noisebox.menu.menuindex = 0
     noisebox.start_jacktrip_session.side_effect = [nh.NoiseBoxCustomError("Error"), True]
-    rotaryState = RotaryState_Menu(debug=True)
+    rotaryState = rs.RotaryState_Menu(debug=True)
 
     rotaryState.switchCallback(noisebox)
     assert rotaryState.__class__.__name__ == "RotaryState_Scrolling"
     noisebox.oled.start_scrolling_text.assert_called_with("Error")
 
-    rotaryState = RotaryState_Menu(debug=True)
+    rotaryState = rs.RotaryState_Menu(debug=True)
     rotaryState.switchCallback(noisebox)
     assert rotaryState.__class__.__name__ == "RotaryState_JacktripRunning"
 
@@ -28,13 +28,13 @@ def test_rotarty_state_menu_item_monitoring():
     noisebox.menu = Menu(dry_run=True)
     noisebox.menu.menuindex = 1
     noisebox.start_local_monitoring.side_effect = [nh.NoiseBoxCustomError("Error"), True]
-    rotaryState = RotaryState_Menu(debug=True)
+    rotaryState = rs.RotaryState_Menu(debug=True)
 
     rotaryState.switchCallback(noisebox)
     assert rotaryState.__class__.__name__ == "RotaryState_Scrolling"
     noisebox.oled.start_scrolling_text.assert_called_with("Error")
 
-    rotaryState = RotaryState_Menu(debug=True)
+    rotaryState = rs.RotaryState_Menu(debug=True)
     rotaryState.switchCallback(noisebox)
     assert rotaryState.__class__.__name__ == "RotaryState_Monitoring"
 
@@ -46,7 +46,7 @@ def test_rotarty_state_menu_item_p2p():
     noisebox.menu.set_new_menu_items = Mock()
     noisebox.menu.draw_menu = Mock()
     noisebox.menu.menuindex = 2
-    rotaryState = RotaryState_Menu(debug=True)
+    rotaryState = rs.RotaryState_Menu(debug=True)
     noisebox.check_peers.return_value = ['123.123.123.123']
 
     rotaryState.switchCallback(noisebox)
@@ -61,7 +61,7 @@ def test_rotarty_state_menu_item_settings():
     noisebox.menu.set_settings_menu = Mock()
     noisebox.menu.draw_menu = Mock()
     noisebox.config = nh.Config(dry_run=True)
-    rotaryState = RotaryState_Menu(debug=True)
+    rotaryState = rs.RotaryState_Menu(debug=True)
     noisebox.menu.menuindex = 3
 
     rotaryState.switchCallback(noisebox)
@@ -74,14 +74,14 @@ def test_rotarty_state_start_server_session():
     noisebox.menu = Menu(dry_run=True)
     noisebox.start_jacktrip_peer_session.side_effect = [nh.NoiseBoxCustomError("Error"), True]
     noisebox.menu.set_new_menu_items(peers_menu)
-    rotaryState = RotaryState_PeersMenu(debug=True)
+    rotaryState = rs.RotaryState_PeersMenu(debug=True)
     noisebox.menu.menuindex = 0
 
     rotaryState.switchCallback(noisebox)
     assert rotaryState.__class__.__name__ == "RotaryState_Scrolling"
     noisebox.oled.start_scrolling_text.assert_called_with("Error")
 
-    rotaryState = RotaryState_PeersMenu(debug=True)
+    rotaryState = rs.RotaryState_PeersMenu(debug=True)
     rotaryState.switchCallback(noisebox)
     assert rotaryState.__class__.__name__ == "RotaryState_JacktripRunning"
     noisebox.start_jacktrip_peer_session.assert_called_with(server=True)
@@ -92,14 +92,14 @@ def test_rotarty_state_start_peer_session():
     noisebox.menu = Menu(dry_run=True)
     noisebox.start_jacktrip_peer_session.side_effect = [nh.NoiseBoxCustomError("Error"), True]
     noisebox.menu.set_new_menu_items(peers_menu)
-    rotaryState = RotaryState_PeersMenu(debug=True)
+    rotaryState = rs.RotaryState_PeersMenu(debug=True)
     noisebox.menu.menuindex = 1
 
     rotaryState.switchCallback(noisebox)
     assert rotaryState.__class__.__name__ == "RotaryState_Scrolling"
     noisebox.oled.start_scrolling_text.assert_called_with("Error")
 
-    rotaryState = RotaryState_PeersMenu(debug=True)
+    rotaryState = rs.RotaryState_PeersMenu(debug=True)
     rotaryState.switchCallback(noisebox)
     assert rotaryState.__class__.__name__ == "RotaryState_JacktripRunning"
     noisebox.start_jacktrip_peer_session.assert_called_with(peer_address='pi@raspberry1.myvpn', server=False)
@@ -111,7 +111,7 @@ def test_rotarty_state_settings_menu_item_mono_input():
     noisebox.menu.set_settings_menu()
     noisebox.menu.draw_menu = Mock()
     noisebox.menu.menuindex = 0
-    rotaryState = RotaryState_SettingsMenu(debug=True)
+    rotaryState = rs.RotaryState_SettingsMenu(debug=True)
     rotaryState.switchCallback(noisebox)
     assert rotaryState.__class__.__name__ == "RotaryState_SettingsMenu"
     noisebox.config.change_input_channels.assert_called_with("1")
@@ -126,7 +126,7 @@ def test_rotarty_state_settings_menu_item_jacktrip():
     noisebox.menu.draw_menu = Mock()
     noisebox.config = nh.Config(dry_run=True)
     noisebox.menu.menuindex = 2
-    rotaryState = RotaryState_SettingsMenu(debug=True)
+    rotaryState = rs.RotaryState_SettingsMenu(debug=True)
     rotaryState.switchCallback(noisebox)
     assert rotaryState.__class__.__name__ == "RotaryState_AdvancedSettingsMenu"
     noisebox.menu.set_advanced_menu.assert_called()
@@ -140,7 +140,7 @@ def test_rotarty_state_advanced_settings_menu_item_channels():
     noisebox.menu.set_advanced_menu()
     noisebox.menu.menuindex = 0
 
-    rotaryState = RotaryState_AdvancedSettingsMenu(debug=True)
+    rotaryState = rs.RotaryState_AdvancedSettingsMenu(debug=True)
     rotaryState.switchCallback(noisebox)
     assert rotaryState.__class__.__name__ == "RotaryState_AdvancedSettingsMenu"
     noisebox.config.change_output_channels.assert_called_with("1")
@@ -153,7 +153,7 @@ def test_rotarty_state_advanced_settings_menu_item_queue():
     noisebox.menu.set_advanced_menu()
     noisebox.menu.menuindex = 1
 
-    rotaryState = RotaryState_AdvancedSettingsMenu(debug=True)
+    rotaryState = rs.RotaryState_AdvancedSettingsMenu(debug=True)
     rotaryState.switchCallback(noisebox)
     assert rotaryState.__class__.__name__ == "RotaryState_AdvancedSettingsMenu"
     noisebox.config.change_queue.assert_called_with("8")
@@ -167,7 +167,7 @@ def test_rotarty_state_advanced_settings_menu_change_ip():
     noisebox.menu.set_advanced_menu()
     noisebox.menu.menuindex = 2
 
-    rotaryState = RotaryState_AdvancedSettingsMenu(debug=True)
+    rotaryState = rs.RotaryState_AdvancedSettingsMenu(debug=True)
     rotaryState.switchCallback(noisebox)
     noisebox.menu.draw_ip_menu.assert_called_with(" ->", "111.111.111.111")
     assert rotaryState.ip_address == "111.111.111.111"
@@ -190,8 +190,8 @@ def test_rotarty_state_ip_picker():
 
     new_state_mock = Mock()
 
-    rotaryState = RotaryState(debug=True)
-    rotaryState.new_state(RotaryState_IpPicker)
+    rotaryState = rs.RotaryState(debug=True)
+    rotaryState.new_state(rs.RotaryState_IpPicker)
     rotaryState.init_ip_menu(noisebox)
     assert rotaryState.__class__.__name__ == "RotaryState_IpPicker"
     assert rotaryState.ip_address == "111.111.111.111"
@@ -218,7 +218,7 @@ def test_rotarty_state_ip_picker():
         rotaryState.counter = click
         rotaryState.switchCallback(noisebox)
     assert rotaryState.ip_address == "173.42.381.22"
-    rotaryState.new_state.assert_called_with(RotaryState_AdvancedSettingsMenu)
+    rotaryState.new_state.assert_called_with(rs.RotaryState_AdvancedSettingsMenu)
 
     rotaryState.ip_address = ""
     rotaryState.counter = 0
@@ -228,4 +228,4 @@ def test_rotarty_state_ip_picker():
         rotaryState.counter = click
         rotaryState.switchCallback(noisebox)
     assert rotaryState.ip_address == "173.421.381.222"
-    rotaryState.new_state.assert_called_with(RotaryState_AdvancedSettingsMenu)
+    rotaryState.new_state.assert_called_with(rs.RotaryState_AdvancedSettingsMenu)
