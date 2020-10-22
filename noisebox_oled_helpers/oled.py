@@ -23,7 +23,7 @@ class OLED:
         """Draw one line of text"""
 
         with canvas(self.device) as draw:
-            draw.text((x, y), text, font=fonts.generate_font(10), fill="white")
+            draw.text((x, y), text, font=fonts.generate_font(12), fill="white")
         time.sleep(1)
 
     def draw_lines(self, lines):
@@ -32,7 +32,7 @@ class OLED:
         with canvas(self.device) as draw:
             y = 0
             for line in lines:
-                draw.text((0, y), line, font=fonts.generate_font(10), fill="white")
+                draw.text((0, y), line, font=fonts.generate_font(12), fill="white")
                 y += 13
         time.sleep(1)
 
