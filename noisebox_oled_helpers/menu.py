@@ -67,8 +67,7 @@ class Menu(MenuItems):
             draw.text((10, 40), ip_address + picker_value, fill="white")
 
     def draw_logo(self):
-        img_path = os.path.abspath(os.path.join(os.path.dirname(__file__),
-            'assets', 'logo.png'))
+        img_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'logo.png'))
         logo = Image.open(img_path).convert("RGBA")
         logo_resized = logo.resize((self.device.height, self.device.height))
         background = Image.new("RGBA", self.device.size, "black")
