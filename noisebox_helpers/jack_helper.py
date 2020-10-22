@@ -13,7 +13,8 @@ class JackHelper:
         self.connections = []
 
     def generate_command(self, params):
-        return ['jackd', '-R', '-dalsa', '-r48000', '-p256', '-n2', '-s', '-S']
+        p = "-p" + params["jack-pps"] if params["jack-pps"] else "-p256"
+        return ['jackd', '-R', '-dalsa', '-r48000', p, '-n2', '-s', '-S']
 
     def start(self, params):
         """Start JACK with relavent parameters"""

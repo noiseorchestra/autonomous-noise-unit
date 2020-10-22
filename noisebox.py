@@ -156,7 +156,7 @@ def main():
         sys.exit("Exited because of rotary error")
 
     try:
-        noisebox.jack_helper.start()
+        noisebox.jack_helper.start(noisebox.get_session_params())
     except Exception as e:
         print("JACK Client could not start:", e)
         noisebox.oled.draw_lines(["==ERROR==", "JACK didn't start", "Restarting script"])
