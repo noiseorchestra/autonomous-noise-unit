@@ -16,7 +16,7 @@ advanced_settings_items = [{"name": "CHANNELS", "value": "2"}, {"name": "QUEUE",
 
 input_values = ["1", "2"]
 queue_values = ["2", "4", "6", "8"]
-pps_values = ["32", "64", "128", "256", "512"]
+pps_values = ["64", "128", "256", "512"]
 channels_values = ["1", "2"]
 
 menu = MenuItems(dry_run=True)

@@ -20,7 +20,7 @@ class MenuItems:
         self._input_values = ["1", "2"]
         self._channels_values = ["1", "2"]
         self._queue_values = ["2", "4", "6", "8", "10", "12", "14", "16"]
-        self._pps_values = ["32", "64", "128", "256", "512"]
+        self._pps_values = ["64", "128", "256", "512"]
 
     def get_jacktrip_settings(self):
         config = Config(self.dry_run)
