@@ -48,9 +48,9 @@ class Noisebox:
         self.online_peers = self.nh.get_online_peers(peers)
         return self.online_peers
 
-    def set_level_meters(self, ports):
+    def set_level_meters(self, ports, prefix):
         for i, port in enumerate(ports):
-            channel = "IN-" + str(i + 1)
+            channel = prefix + str(i + 1)
             self.level_meters.append(self.nh.LevelMeter(port.name, channel))
 
     def is_stereo_input(self):
@@ -62,9 +62,9 @@ class Noisebox:
         self.level_meters = []
 
         try:
-            self.set_level_meters(self.jack_helper.get_inputs(self.is_stereo_input()))
+            self.set_level_meters(self.jack_helper.get_inputs(self.is_stereo_input()), "IN-")
             if jacktrip_session is True:
-                self.set_level_meters(self.jack_helper.get_jacktrip_receives())
+                self.set_level_meters(self.jack_helper.get_jacktrip_receives(), "JT-")
         except self.nh.NoiseBoxCustomError:
             raise
         else:
