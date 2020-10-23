@@ -26,7 +26,7 @@ def ping_peer(peer):
 def ping_all(peers):
     """Check status of all peers and return result"""
 
-    pool = ThreadPoolExecutor(10)
+    pool = ThreadPoolExecutor(20)
     pings = []
     results = []
 
