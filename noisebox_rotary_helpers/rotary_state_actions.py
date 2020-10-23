@@ -80,7 +80,6 @@ def jacktrip_menu(noisebox):
 def show_ip_address(noisebox):
     title = ["==HOSTNAME & IP=="]
     noisebox.oled.draw_lines(title + noisebox.get_ip())
-    noisebox.menu.draw_menu()
     return rs.RotaryState_Show
 
 def update(noisebox):
