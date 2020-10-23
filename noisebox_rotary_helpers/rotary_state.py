@@ -51,9 +51,6 @@ class RotaryState_Menu(RotaryState):
         if (strval == "LEVEL METER"):
             self.new_state(actions.level_meter(noisebox))
 
-        if (strval == "P2P SESSION"):
-            self.new_state(actions.p2p_session(noisebox))
-
         if (strval == "SETTINGS"):
             self.new_state(actions.settings_menu(noisebox))
 

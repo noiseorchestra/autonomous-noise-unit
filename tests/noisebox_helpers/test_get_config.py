@@ -117,3 +117,17 @@ def test_change_queue():
     config.change_queue(queue)['jacktrip-default']['jacktrip-q'] == queue
     queue = "6"
     config.change_queue(queue)['jacktrip-default']['jacktrip-q'] == queue
+
+def test_change_mode():
+    config = nh.Config(dry_run=True)
+    mode = "p2p"
+    config.change_jacktrip_mode(mode)['jacktrip-default']['jacktrip-mode'] == mode
+    mode = "hub-server"
+    config.change_jacktrip_mode(mode)['jacktrip-default']['jacktrip-mode'] == mode
+
+def test_change_peer_ip():
+    config = nh.Config(dry_run=True)
+    peer = "111.111.111.111"
+    config.change_peer_ip(peer)['jacktrip-default']['peer-ip'] == peer
+    peer = "222.222.222.222"
+    config.change_peer_ip(peer)['jacktrip-default']['peer-ip'] == peer
