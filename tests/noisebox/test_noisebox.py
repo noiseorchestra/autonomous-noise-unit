@@ -12,7 +12,7 @@ def test_check_peers():
     noisebox = Noisebox(dry_run=True)
     noisebox.nh = Mock()
     noisebox.check_peers()
-    noisebox.nh.get_online_peers.assert_called_with(['pi@raspberry.myvpn', 'pi@raspberry.myvpn'])
+    noisebox.nh.get_online_peers.assert_called_with(['pi@raspberry.myvpn', 'pi@raspberry.myvpn', '111.111.111.111'])
 
 def test_start_level_meters():
     noisebox = Noisebox(dry_run=True)

@@ -44,6 +44,7 @@ class Noisebox:
         """Check status of all peers"""
 
         peers = self.config.get_config()['peers']['ip_addresses'].split(',')
+        peers.append(self.config.get_config()['jacktrip-default']['peer-ip'])
         self.online_peers = self.nh.get_online_peers(peers)
         return self.online_peers
 
