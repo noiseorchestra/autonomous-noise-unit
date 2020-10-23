@@ -5,7 +5,7 @@ combined_config = {
         'hub_mode': 'True',
         'input-channels': '2',
         'ip': '111.111.111.111',
-        'jacktrip-mode': 'hub server',
+        'jacktrip-mode': 'hub-server',
         'jack-pps': '256',
         'jacktrip-channels': '2',
         'jacktrip-q': '6',

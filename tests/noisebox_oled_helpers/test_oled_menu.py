@@ -13,7 +13,7 @@ def test_get_menu_item_string():
         "QUEUE: 6",
         "IP: 111.111.111.111",
         "PPS: 256",
-        "MODE: hub server",
+        "MODE: hub-server",
         "PEER: 111.111.111.111",
         "<-- BACK"
     ]

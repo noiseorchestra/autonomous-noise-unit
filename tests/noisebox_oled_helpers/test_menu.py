@@ -15,7 +15,7 @@ advanced_settings_items = [{"name": "CHANNELS", "value": "2"},
                            {"name": "QUEUE", "value": "6"},
                            {"name": "IP", "value": "111.111.111.111"},
                            {"name": "PPS", "value": "256"},
-                           {"name": "MODE", "value": "hub server"},
+                           {"name": "MODE", "value": "hub-server"},
                            {"name": "PEER", "value": "111.111.111.111"},
                            "<-- BACK"]
 
@@ -53,4 +53,4 @@ def test_next_pps_value():
     assert menu.next_pps_value() == "512"
 
 def test_next_mode_value():
-    assert menu.next_mode_value() == "peer connection"
+    assert menu.next_mode_value() == "p2p"

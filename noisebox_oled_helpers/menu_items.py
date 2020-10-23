@@ -25,7 +25,7 @@ class MenuItems:
         self._channels_values = ["1", "2"]
         self._queue_values = ["2", "4", "6", "8", "10", "12", "14", "16"]
         self._pps_values = ["64", "128", "256", "512"]
-        self._mode_values = ["hub server", "peer connection"]
+        self._mode_values = ["hub-server", "p2p"]
 
     def get_jacktrip_settings(self):
         config = Config(self.dry_run)

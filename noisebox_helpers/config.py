@@ -49,7 +49,7 @@ class Config:
             cfg["jacktrip-default"]["jacktrip-mode"]
         except KeyError:
             print("jack-hub key does not exist, setting default value")
-            cfg["jacktrip-default"]["jacktrip-mode"] = "hub server"
+            cfg["jacktrip-default"]["jacktrip-mode"] = "hub-server"
 
         try:
             cfg["jacktrip-default"]["peer-ip"]

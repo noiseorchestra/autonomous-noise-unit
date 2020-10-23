@@ -9,7 +9,7 @@
 			 QUEUE: 6,
 			 IP: xxx.xxx.xxx.xxx, (switches when changing mode)
 			 PPS: xxx
-			 MODE: hub server / peer
+			 MODE: hub-server / peer
 			 EXIT]
 - change input channels 1/2 to mono/stereo in the menu
 - check organisation of menu items and all names make sense
@@ -29,7 +29,7 @@
 ==DONE==
 - don't store menu values in Class get them on each draw
 - advanced config menu
-		- hub server ip ADDRESS
+		- hub-server ip ADDRESS
 		- q value
 - Mock tests
 - check how config values are set and write tests
