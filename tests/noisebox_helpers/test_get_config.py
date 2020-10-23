@@ -5,9 +5,11 @@ combined_config = {
         'hub_mode': 'True',
         'input-channels': '2',
         'ip': '111.111.111.111',
+        'jacktrip-mode': 'hub server',
         'jack-pps': '256',
         'jacktrip-channels': '2',
         'jacktrip-q': '6',
+        'peer-ip': '111.111.111.111',
         'server': 'False'
     },
     'peers': {'ip_addresses': 'pi@raspberry.myvpn,pi@raspberry.myvpn'},

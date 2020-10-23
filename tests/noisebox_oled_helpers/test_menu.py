@@ -11,12 +11,19 @@ settings_items = [{"name": "INPUT", "value": "2"},
                   "UPDATE",
                   "<-- BACK"]
 
-advanced_settings_items = [{"name": "CHANNELS", "value": "2"}, {"name": "QUEUE", "value": "6"}, {"name": "IP", "value": "111.111.111.111"}, {"name": "PPS", "value": "256"}, "<-- BACK"]
+advanced_settings_items = [{"name": "CHANNELS", "value": "2"},
+                           {"name": "QUEUE", "value": "6"},
+                           {"name": "IP", "value": "111.111.111.111"},
+                           {"name": "PPS", "value": "256"},
+                           {"name": "MODE", "value": "hub server"},
+                           {"name": "PEER", "value": "111.111.111.111"},
+                           "<-- BACK"]
 
 input_values = ["1", "2"]
 queue_values = ["2", "4", "6", "8"]
 pps_values = ["64", "128", "256", "512"]
 channels_values = ["1", "2"]
+hub_mode_values = [True, False]
 
 menu = MenuItems(dry_run=True)
 
@@ -44,3 +51,6 @@ def test_next_channels_value():
 
 def test_next_pps_value():
     assert menu.next_pps_value() == "512"
+
+def test_next_mode_value():
+    assert menu.next_mode_value() == "peer connection"

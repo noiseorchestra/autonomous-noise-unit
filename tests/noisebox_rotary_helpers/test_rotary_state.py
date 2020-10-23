@@ -184,7 +184,7 @@ def test_rotarty_state_advanced_settings_menu_change_ip():
     rotaryState.switchCallback(noisebox)
     noisebox.menu.draw_ip_menu.assert_called_with(" ->", "111.111.111.111")
     assert rotaryState.ip_address == "111.111.111.111"
-    assert rotaryState.__class__.__name__ == "RotaryState_IpPicker"
+    assert rotaryState.__class__.__name__ == "RotaryState_IpPicker_Server"
 
 
 def test_rotarty_state_ip_picker():
@@ -204,9 +204,9 @@ def test_rotarty_state_ip_picker():
     new_state_mock = Mock()
 
     rotaryState = rs.RotaryState(debug=True)
-    rotaryState.new_state(rs.RotaryState_IpPicker)
+    rotaryState.new_state(rs.RotaryState_IpPicker_Server)
     rotaryState.init_ip_menu(noisebox)
-    assert rotaryState.__class__.__name__ == "RotaryState_IpPicker"
+    assert rotaryState.__class__.__name__ == "RotaryState_IpPicker_Server"
     assert rotaryState.ip_address == "111.111.111.111"
 
     rotaryState.ip_address = ""
