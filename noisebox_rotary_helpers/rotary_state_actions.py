@@ -36,6 +36,12 @@ def settings_menu(noisebox):
     noisebox.menu.draw_menu()
     return rs.RotaryState_SettingsMenu
 
+def start_jacktrip_session(noisebox):
+    if noisebox.get_session_params()["jacktrip-mode"] == "p2p":
+        return p2p_session(noisebox)
+    else:
+        return connect_to_server(noisebox)
+
 def start_peer_session_as_server(noisebox):
     next_state = rs.RotaryState_JacktripRunning
     try:

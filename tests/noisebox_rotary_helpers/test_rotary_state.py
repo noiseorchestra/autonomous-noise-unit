@@ -11,6 +11,7 @@ def test_rotarty_state_menu_item_connect_server():
     noisebox.menu = Menu(dry_run=True)
     noisebox.menu.menuindex = 0
     noisebox.start_jacktrip_session.side_effect = [nh.NoiseBoxCustomError("Error"), True]
+    noisebox.get_session_params.side_effect = [{"jacktrip-mode": "hub-server"}, {"jacktrip-mode": "hub-server"}]
     rotaryState = rs.RotaryState_Menu(debug=True)
 
     rotaryState.switchCallback(noisebox)
@@ -20,6 +21,17 @@ def test_rotarty_state_menu_item_connect_server():
     rotaryState = rs.RotaryState_Menu(debug=True)
     rotaryState.switchCallback(noisebox)
     assert rotaryState.__class__.__name__ == "RotaryState_JacktripRunning"
+
+    rotaryState = rs.RotaryState_Menu(debug=True)
+    noisebox.get_session_params.side_effect = [{"jacktrip-mode": "p2p"}]
+    noisebox.menu.draw_menu = Mock()
+    noisebox.check_peers.return_value = ['123.123.123.123']
+    noisebox.menu.set_new_menu_items = Mock()
+
+    rotaryState = rs.RotaryState_Menu(debug=True)
+    rotaryState.switchCallback(noisebox)
+    assert rotaryState.__class__.__name__ == "RotaryState_PeersMenu"
+    noisebox.menu.set_new_menu_items.assert_called_with(['123.123.123.123', 'START SERVER', '<-- BACK'])
 
 
 def test_rotarty_state_menu_item_monitoring():
@@ -37,8 +49,7 @@ def test_rotarty_state_menu_item_monitoring():
     rotaryState = rs.RotaryState_Menu(debug=True)
     rotaryState.switchCallback(noisebox)
     assert rotaryState.__class__.__name__ == "RotaryState_Monitoring"
-
-
+#
 # def test_rotarty_state_menu_item_p2p():
 #
 #     noisebox = Mock()
@@ -52,7 +63,7 @@ def test_rotarty_state_menu_item_monitoring():
 #     rotaryState.switchCallback(noisebox)
 #     assert rotaryState.__class__.__name__ == "RotaryState_PeersMenu"
 #     noisebox.menu.set_new_menu_items.assert_called_with(['123.123.123.123', 'START SERVER', '<-- BACK'])
-
+#
 
 def test_rotarty_state_menu_item_settings():
 

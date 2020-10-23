@@ -46,7 +46,7 @@ class RotaryState_Menu(RotaryState):
         strval = self.get_strval(noisebox)
 
         if (strval == "CONNECT"):
-            self.new_state(actions.connect_to_server(noisebox))
+            self.new_state(actions.start_jacktrip_session(noisebox))
 
         if (strval == "LEVEL METER"):
             self.new_state(actions.level_meter(noisebox))
