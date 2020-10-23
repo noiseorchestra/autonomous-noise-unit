@@ -96,6 +96,15 @@ class RotaryState_Scrolling(RotaryState):
     def rotaryCallback(self, noisebox, direction):
         pass
 
+class RotaryState_Show(RotaryState):
+    """Scrolling oled text state"""
+
+    def switchCallback(self, noisebox):
+        self.new_state(actions.draw_settings_menu(noisebox))
+
+    def rotaryCallback(self, noisebox, direction):
+        pass
+
 class RotaryState_PeersMenu(RotaryState):
     """New swtitch state"""
 

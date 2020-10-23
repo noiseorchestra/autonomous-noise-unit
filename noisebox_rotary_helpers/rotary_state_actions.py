@@ -81,7 +81,7 @@ def show_ip_address(noisebox):
     title = ["==HOSTNAME & IP=="]
     noisebox.oled.draw_lines(title + noisebox.get_ip())
     noisebox.menu.draw_menu()
-    return rs.RotaryState_SettingsMenu
+    return rs.RotaryState_Show
 
 def update(noisebox):
     noisebox.oled.draw_lines(["==UPDATE==", "Updating system"])
@@ -131,6 +131,12 @@ def draw_default_menu(noisebox):
     noisebox.menu.set_main_menu()
     noisebox.menu.draw_menu()
     return rs.RotaryState_Menu
+
+def draw_settings_menu(noisebox):
+    noisebox.menu.reset_menu()
+    noisebox.menu.set_settings_menu()
+    noisebox.menu.draw_menu()
+    return rs.RotaryState_SettingsMenu
 
 def exit_advanced_menu(noisebox):
     noisebox.restart_jack_if_needed()
