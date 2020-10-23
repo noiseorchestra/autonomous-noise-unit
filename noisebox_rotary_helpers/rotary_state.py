@@ -184,13 +184,6 @@ class RotaryState_IpPicker(RotaryState):
         super().__init__(self)
         self.debug = debug
 
-    def init_ip_menu(self, noisebox):
-        self.noisebox = noisebox
-        self.counter = -1
-        self.ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "<-", " ->"]
-        self.ip_address = self.noisebox.config.get_config()["jacktrip-default"]["ip"]
-        self.noisebox.menu.draw_ip_menu(self.ip_values[self.counter], self.ip_address )
-
     def switchCallback(self, noisebox):
 
         next_string = self.ip_address + self.ip_values[self.counter]
@@ -229,6 +222,14 @@ class RotaryState_IpPicker_Server(RotaryState_IpPicker):
         super().__init__(self)
         self.debug = debug
 
+    def init_ip_menu(self, noisebox):
+        self.noisebox = noisebox
+        self.counter = -1
+        self.ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "<-", " ->"]
+        self.ip_address = self.noisebox.config.get_config()["jacktrip-default"]["ip"]
+        self.noisebox.menu.draw_ip_menu(self.ip_values[self.counter], self.ip_address )
+
+
     def save_ip(self, noisebox):
         next_config = noisebox.config.change_server_ip(self.ip_address)
         if self.debug is True:
@@ -240,6 +241,13 @@ class RotaryState_IpPicker_Peer(RotaryState_IpPicker):
     def __init__(self, debug=False):
         super().__init__(self)
         self.debug = debug
+
+    def init_ip_menu(self, noisebox):
+        self.noisebox = noisebox
+        self.counter = -1
+        self.ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "<-", " ->"]
+        self.ip_address = self.noisebox.config.get_config()["jacktrip-default"]["peer-ip"]
+        self.noisebox.menu.draw_ip_menu(self.ip_values[self.counter], self.ip_address )
 
     def save_ip(self, noisebox):
         next_config = noisebox.config.change_peer_ip(self.ip_address)
