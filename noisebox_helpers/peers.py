@@ -26,7 +26,7 @@ def ping_peer(peer):
 def ping_all(peers):
     """Check status of all peers and return result"""
 
-    pool = ThreadPoolExecutor(10)
+    pool = ThreadPoolExecutor(20)
     pings = []
     results = []
 
@@ -45,4 +45,8 @@ def get_online_peers(peers):
     """Run ping_all and return online peers"""
 
     peers = ping_all(peers)
+    return who_is_awake(peers)
+
+
+def who_is_awake(peers):
     return [peer.peer for peer in peers if peer.rc == 0]

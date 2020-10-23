@@ -7,13 +7,12 @@ from noisebox_rotary_helpers.rotary_state import RotaryState
 class KY040:
     """Class for initializing rotary switch"""
 
-    def __init__(self, noisebox, oled_menu):
+    def __init__(self, noisebox):
 
         self.clockPin = 5
         self.dataPin = 6
         self.switchPin = 22
         self.noisebox = noisebox
-        self.oled_menu = oled_menu
         self.rotaryState = RotaryState()
         self.CLOCKWISE = 0
         self.ANTICLOCKWISE = 1
@@ -48,12 +47,12 @@ class KY040:
             data = GPIO.input(self.dataPin)
             print(GPIO.input(self.dataPin))
             if data == 1:
-                self.rotaryState.rotaryCallback(self.oled_menu, self.ANTICLOCKWISE)
+                self.rotaryState.rotaryCallback(self.noisebox, self.ANTICLOCKWISE)
             else:
-                self.rotaryState.rotaryCallback(self.oled_menu, self.CLOCKWISE)
+                self.rotaryState.rotaryCallback(self.noisebox, self.CLOCKWISE)
 
     def _switchCallback(self, pin):
         """Rotary switch callback"""
 
         if GPIO.input(self.switchPin) == 0:
-            self.rotaryState.switchCallback(self.noisebox, self.oled_menu, self.noisebox.oled)
+            self.rotaryState.switchCallback(self.noisebox)

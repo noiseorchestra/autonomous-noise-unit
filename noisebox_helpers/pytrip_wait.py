@@ -16,7 +16,7 @@ class PyTripWait():
         self.connected = False
         timeout_length = 10
         if long_timeout is True:
-            timeout_length = 60
+            timeout_length = 1200
 
         while self.waiting is True:
             try:

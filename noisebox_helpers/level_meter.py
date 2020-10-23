@@ -6,7 +6,7 @@ import math
 class LevelMeter:
     """Helper object for live monitoring the volume level of audio channels"""
 
-    def __init__(self, port, name=""):
+    def __init__(self, port, name="", mock=False):
         self.current_meter_value = 0.0
         self.current_meter = None
         self.port = port
@@ -14,7 +14,16 @@ class LevelMeter:
         self.name = name
 
         # run meter on init
-        self.run()
+        if mock is False:
+            self.run()
+
+    def process_meter_value(self, level):
+        value = -52.0
+        if math.isinf(level) is not True:
+            value = level
+            if value < -52.0:
+                value = -52.0
+        return value
 
     def start_meter(self):
         """Start jack_meter process"""
@@ -29,12 +38,7 @@ class LevelMeter:
         while self._running:
             try:
                 level = float(str(self.current_meter.stdout.readline().rstrip(), 'utf-8'))
-                value = -52.0
-                if math.isinf(level) is not True:
-                    value = level
-                if value < -52.0:
-                    value = -52.0
-                self.current_meter_value = value
+                self.current_meter_value = self.process_meter_value(level)
 
             except ValueError:
                 print("level_meter value not float")

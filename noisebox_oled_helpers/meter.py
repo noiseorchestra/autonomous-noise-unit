@@ -1,13 +1,13 @@
 import time
 from luma.core.virtual import hotspot
-
+import noisebox_oled_helpers.fonts as fonts
 
 def vertical_bar(draw, name, x1, y1, x2, y2, yh):
     """Draw meter bar and frame"""
 
     draw.rectangle((x1, y1) + (x2, y2), "black", "white")
     draw.rectangle((x1, y1) + (x2, yh), "white", "white")
-    draw.text((x1, y1 + 2), name, fill="white")
+    draw.text((x1, y1 + 2), name, font=fonts.generate_font(14), fill="white")
 
 
 def render(draw, name, width, height, meter):

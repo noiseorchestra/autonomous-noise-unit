@@ -10,12 +10,26 @@ class JackHelper:
 
     def __init__(self):
         self.jackClient = None
+        self.connections = []
+        self.current_pps = None
 
-    def start(self):
+    def set_current_pps(self, pps):
+        self.current_pps = pps
+
+    def check_current_pps(self, test_pps):
+        return test_pps == self.current_pps
+
+    def generate_command(self, params):
+        pps = "256"
+        if "jack-pps" in params.keys():
+            pps = params["jack-pps"]
+        self.set_current_pps(pps)
+        return ['jackd', '-R', '-dalsa', '-r48000', "-p" + pps, '-n2', '-s', '-S']
+
+    def start(self, params):
         """Start JACK with relavent parameters"""
 
-        command = ['jackd', '-R', '-dalsa', '-r48000', '-p256', '-n2', '-s', '-S']
-        Popen(command, stdout=PIPE, stderr=PIPE)
+        Popen(self.generate_command(params), stdout=PIPE, stderr=PIPE)
         time.sleep(2)
         self.jackClient = jack.Client('noisebox',  no_start_server=True)
         self.jackClient.activate()
@@ -26,32 +40,27 @@ class JackHelper:
         for proc in psutil.process_iter():
             if proc.name() == "jackd":
                 proc.kill()
+                time.sleep(1)
 
-    def get_inputs(self, stereo=False):
-        """Get an array of input port names"""
-
-        local_receive_ports = self.jackClient.get_ports('system:capture.*')
-
+    def check_input_ports(self, local_receive_ports, stereo):
         if len(local_receive_ports) == 0:
             raise NoiseBoxCustomError(["==ERROR==", "No audio inputs found"])
 
         if stereo is not True:
-            ports = [local_receive_ports[0]]
-        else:
-            ports = [port for port in local_receive_ports]
+            local_receive_ports = [local_receive_ports[0]]
 
-        return ports
+        return local_receive_ports
+
+    def get_inputs(self, stereo):
+        """Get an array of input port names"""
+
+        local_receive_ports = self.jackClient.get_ports('system:capture.*')
+        return self.check_input_ports(local_receive_ports, stereo)
 
     def get_jacktrip_receives(self):
         """Get an array of input port names"""
 
-        jacktrip_receive_ports = self.jackClient.get_ports('.*:receive.*')
-        ports = [port for port in jacktrip_receive_ports]
-
-        if len(ports) == 0:
-            raise NoiseBoxCustomError(["==ERROR==", "No audio inputs found"])
-
-        return ports
+        return self.jackClient.get_ports('.*:receive.*')
 
     def is_already_connected(self, receive_port, send_port):
         """check if 2 ports are already connected"""
@@ -68,9 +77,10 @@ class JackHelper:
         if not self.is_already_connected(receive_port, send_port):
             self.jackClient.connect(receive_port, send_port)
 
-    def connect_all(self, receive_ports_list, send_ports_list):
+    def set_all_connections(self, receive_ports_list, send_ports_list):
         """Connect a list of receive ports to a list of sends"""
 
+        self.connections = []
         for connection in product(receive_ports_list, send_ports_list):
             print(connection)
             receive_ports = connection[0]
@@ -79,17 +89,16 @@ class JackHelper:
             receive_stereo = True if len(receive_ports) == 2 else False
             send_stereo = True if len(send_ports) == 2 else False
 
+            self.connections.append((receive_ports[0], send_ports[0]))
             if receive_stereo and send_stereo:
-                self.connect(receive_ports[0], send_ports[0])
-                self.connect(receive_ports[1], send_ports[1])
-            if receive_stereo and not send_stereo:
-                self.connect(receive_ports[0], send_ports[0])
-                self.connect(receive_ports[1], send_ports[0])
-            if not receive_stereo and send_stereo:
-                self.connect(receive_ports[0], send_ports[0])
-                self.connect(receive_ports[0], send_ports[1])
-            if not receive_stereo and not send_stereo:
-                self.connect(receive_ports[0], send_ports[0])
+                self.connections.append((receive_ports[1], send_ports[1]))
+            elif receive_stereo and not send_stereo:
+                self.connections.append((receive_ports[1], send_ports[0]))
+            elif not receive_stereo and send_stereo:
+                self.connections.append((receive_ports[0], send_ports[1]))
+
+    def make_all_connections(self):
+        [self.connect(c[0], c[1]) for c in self.connections]
 
     def disconnect_all(self, my_port):
         # from madwort py_patcher
@@ -104,8 +113,9 @@ class JackHelper:
                 print('error disconnecting, trying the other way round!', e)
                 print('disconnect', send_port.name, 'from', my_port.name)
                 self.jackClient.disconnect(send_port, my_port)
+        self.connections = []
 
-    def make_jacktrip_connections(self, stereo_input=False):
+    def make_jacktrip_connections(self, stereo_input):
         """Make connections for jacktrip session"""
 
         self.disconnect_session()
@@ -119,10 +129,11 @@ class JackHelper:
         if stereo_input is not True:
             local_receive_ports = [local_receive_ports[0]]
 
-        self.connect_all([local_receive_ports], [jacktrip_send_ports, local_send_ports])
-        self.connect_all([jacktrip_receive_ports], [local_send_ports])
+        self.set_all_connections([local_receive_ports], [jacktrip_send_ports, local_send_ports])
+        self.set_all_connections([jacktrip_receive_ports], [local_send_ports])
+        self.make_all_connections()
 
-    def make_monitoring_connections(self, stereo_input=False):
+    def make_monitoring_connections(self, stereo_input):
         """Make connections for monitoring local inputs"""
 
         local_receive_ports = self.jackClient.get_ports('system:capture.*')
@@ -131,7 +142,8 @@ class JackHelper:
         if stereo_input is not True:
             local_receive_ports = [local_receive_ports[0]]
 
-        self.connect_all([local_receive_ports], [local_send_ports])
+        self.set_all_connections([local_receive_ports], [local_send_ports])
+        self.make_all_connections()
 
     def disconnect_session(self):
         """Disconnect all ports from system playback"""

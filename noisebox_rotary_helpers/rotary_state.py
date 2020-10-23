@@ -1,215 +1,262 @@
-from noisebox_helpers import NoiseBoxCustomError
-
+import noisebox_rotary_helpers.rotary_state_actions as actions
 
 class RotaryState:
     """Base state"""
 
-    def __init__(self):
+    def __init__(self, debug=False):
+        self.debug = debug
         self.new_state(RotaryState_Menu)
 
     def new_state(self, state):
         self.__class__ = state
 
-    def switchCallback(self, noisebox, oled_menu):
+    def switchCallback(self, noisebox):
         print("switchCallback not set")
 
-    def rotaryCallback(self, oled_menu, direction):
-        print("rotaryCallback not set")
+    def rotaryCallback(self, noisebox, direction):
+        """Increment menu counter and redraw menu"""
 
-    def drawDefaultMenu(self, oled_menu):
-        oled_menu.new_menu_items(oled_menu.default_menu_items)
-        self.new_state(RotaryState_Menu)
-        oled_menu.draw_menu()
+        if direction == 1:
+            noisebox.menu.counter += 1
+        else:
+            noisebox.menu.counter -= 1
+        noisebox.menu.draw_menu()
 
+    def get_strval(self, noisebox):
+        strval = noisebox.menu.active_menu_items[noisebox.menu.menuindex]
+        if type(noisebox.menu.active_menu_items[noisebox.menu.menuindex]) is dict:
+            strval = noisebox.menu.active_menu_items[noisebox.menu.menuindex]["name"]
+        return strval
 
+    def get_value(self, noisebox):
+        value = None
+        if type(noisebox.menu.active_menu_items[noisebox.menu.menuindex]) is dict:
+            value = noisebox.menu.active_menu_items[noisebox.menu.menuindex]["value"]
+        return value
 
 class RotaryState_Menu(RotaryState):
     """Menu state"""
 
-    def __init__(self):
-        self.new_state(RotaryState_Menu)
+    def __init__(self, debug=False):
+        self.debug = debug
 
-    def switchCallback(self, noisebox, oled_menu, oled):
+    def switchCallback(self, noisebox):
         """check menu value on button click and run corresponding methods"""
 
-        strval = oled_menu.menu_items[oled_menu.menuindex]
+        strval = self.get_strval(noisebox)
 
-        if (strval == "CONNECT TO SERVER"):
-            try:
-                noisebox.start_jacktrip_session()
-            except NoiseBoxCustomError as e:
-                oled.start_scrolling_text(e.args[0])
-                self.new_state(RotaryState_Scrolling)
-            else:
-                self.new_state(RotaryState_JacktripRunning)
+        if (strval == "CONNECT"):
+            self.new_state(actions.start_jacktrip_session(noisebox))
 
         if (strval == "LEVEL METER"):
-            try:
-                noisebox.start_local_monitoring()
-            except NoiseBoxCustomError as e:
-                oled.start_scrolling_text(e.args[0])
-                self.new_state(RotaryState_Scrolling)
-            else:
-                self.new_state(RotaryState_Monitoring)
+            self.new_state(actions.level_meter(noisebox))
 
-        if (strval == "P2P SESSION"):
-            oled.draw_text(0, 26, "Searching for peers...")
-            online_peers = noisebox.check_peers()
-            online_peers.append("START SERVER")
-            online_peers.append("<-- BACK")
-            oled_menu.new_menu_items(online_peers)
-            self.new_state(SwitchState_PeersMenu)
-            oled_menu.draw_menu()
+        if (strval == "SETTINGS"):
+            self.new_state(actions.settings_menu(noisebox))
 
-        if (strval == "SETTINGS -->"):
-            oled_menu.new_menu_items(oled_menu.settings_items)
-            self.new_state(RotaryState_SettingsMenu)
-            oled_menu.draw_menu()
-
-    def rotaryCallback(self, oled_menu, direction):
-        """Increment menu counter and redraw menu"""
-
-        if direction == 1:
-            oled_menu.counter += 1
-        else:
-            oled_menu.counter -= 1
-        oled_menu.draw_menu()
 
 
 class RotaryState_Monitoring(RotaryState):
     """Monitoring audio state"""
 
-    def switchCallback(self, noisebox, oled_menu, oled):
+    def switchCallback(self, noisebox):
         noisebox.stop_monitoring()
-        self.drawDefaultMenu(oled_menu)
+        self.new_state(actions.draw_default_menu(noisebox))
+
+    def rotaryCallback(self, noisebox, direction):
+        pass
 
 class RotaryState_JacktripRunning(RotaryState):
     """JackTrip running state"""
 
-    def switchCallback(self, noisebox, oled_menu, oled):
+    def switchCallback(self, noisebox):
         noisebox.stop_jacktrip_session()
-        self.drawDefaultMenu(oled_menu)
+        self.new_state(actions.draw_default_menu(noisebox))
+
+    def rotaryCallback(self, noisebox, direction):
+        pass
 
 class RotaryState_JacktripServerWaiting(RotaryState):
     """JackTrip server waiting state"""
 
-    def switchCallback(self, noisebox, oled_menu, oled):
+    def switchCallback(self, noisebox):
         noisebox.stop_jacktrip_session()
-        self.drawDefaultMenu(oled_menu)
+        self.new_state(actions.draw_default_menu(noisebox))
+
+    def rotaryCallback(self, noisebox, direction):
+        pass
 
 class RotaryState_Scrolling(RotaryState):
     """Scrolling oled text state"""
 
-    def switchCallback(self, noisebox, oled_menu, oled):
-        oled.stop_scrolling_text()
-        self.drawDefaultMenu(oled_menu)
+    def switchCallback(self, noisebox):
+        noisebox.oled.stop_scrolling_text()
+        self.new_state(actions.draw_default_menu(noisebox))
 
-class SwitchState_PeersMenu(RotaryState):
+    def rotaryCallback(self, noisebox, direction):
+        pass
+
+class RotaryState_Show(RotaryState):
+    """Scrolling oled text state"""
+
+    def switchCallback(self, noisebox):
+        self.new_state(actions.draw_settings_menu(noisebox))
+
+    def rotaryCallback(self, noisebox, direction):
+        pass
+
+class RotaryState_PeersMenu(RotaryState):
     """New swtitch state"""
 
-    def switchCallback(self, noisebox, oled_menu, oled):
-        strval = oled_menu.menu_items[oled_menu.menuindex]
+    def __init__(self, debug=False):
+        self.debug = debug
 
-        """check menu value when button clicked and run corresponding function"""
+    def switchCallback(self, noisebox):
+        strval = self.get_strval(noisebox)
+
         if (strval == "<-- BACK"):
-            self.drawDefaultMenu(oled_menu)
+            self.new_state(actions.draw_default_menu(noisebox))
 
         elif (strval == "START SERVER"):
-            try:
-                noisebox.start_jacktrip_peer_session(server=True)
-                self.new_state(RotaryState_JacktripServerWaiting)
-            except NoiseBoxCustomError as e:
-                oled.start_scrolling_text(e.args[0])
-                self.new_state(RotaryState_Scrolling)
-            else:
-                self.new_state(RotaryState_JacktripRunning)
-
+            self.new_state(RotaryState_JacktripServerWaiting)
+            self.new_state(actions.start_peer_session_as_server(noisebox))
         else:
-            for menu_item in oled_menu.menu_items:
-                if (strval == menu_item):
-                    try:
-                        noisebox.start_jacktrip_peer_session(server=False, peer_address=menu_item)
-                    except NoiseBoxCustomError as e:
-                        oled.start_scrolling_text(e.args[0])
-                        self.new_state(RotaryState_Scrolling)
-                    else:
-                        self.new_state(RotaryState_JacktripRunning)
+            self.new_state(actions.start_peer_session_as_peer(noisebox))
 
-    def rotaryCallback(self, oled_menu, direction):
-        if direction == 1:
-            oled_menu.counter += 1
-        else:
-            oled_menu.counter -= 1
-        oled_menu.draw_menu()
 
 
 class RotaryState_SettingsMenu(RotaryState):
     """Settings menu state"""
+    def __init__(self, debug=False):
+        self.debug = debug
 
-    def switchCallback(self, noisebox, oled_menu, oled):
+    def switchCallback(self, noisebox):
         """check menu value on button click and run corresponding methods"""
 
-        strval = oled_menu.menu_items[oled_menu.menuindex]
+        strval = self.get_strval(noisebox)
+        value = self.get_value(noisebox)
 
         if (strval == "<-- BACK"):
-            self.drawDefaultMenu(oled_menu)
+            self.new_state(actions.draw_default_menu(noisebox))
 
-        elif (strval == "MONO INPUT"):
+        elif (strval == "INPUT"):
             """Toggle input channels mono/stereo"""
+            self.new_state(actions.toggle_input_channels(noisebox, value))
 
-            next_ch = "1" if noisebox.session_params['input-channels'] == "2" else "2"
-            noisebox.session_params['input-channels'] = next_ch
-            noisebox.save_settings()
-            oled_menu.toggle_selected_items(["MONO INPUT"])
-            oled_menu.draw_menu()
+        elif (strval == "ADVANCED OPTIONS"):
+            self.new_state(actions.jacktrip_menu(noisebox))
 
-        elif (strval == "MONO OUTPUT"):
-            """Toggle jacktrip channels mono/stereo"""
-
-            next_ch = "1" if noisebox.session_params['jacktrip-channels'] == "2" else "2"
-            noisebox.session_params['jacktrip-channels'] = next_ch
-            noisebox.save_settings()
-            oled_menu.toggle_selected_items(["MONO OUTPUT"])
-            oled_menu.draw_menu()
-
-        elif (strval == "SERVER A"):
-            """Toggle to server B"""
-
-            ip = noisebox.config['server2']['ip']
-            noisebox.session_params['ip'] = ip
-            noisebox.save_settings()
-            oled_menu.menu_items.remove('SERVER A')
-            oled_menu.menu_items.insert(2, 'SERVER B')
-            oled_menu.draw_menu()
-
-        elif (strval == "SERVER B"):
-            """Toggle to server A"""
-
-            ip = noisebox.config['server1']['ip']
-            noisebox.session_params['ip'] = ip
-            noisebox.save_settings()
-            oled_menu.menu_items.remove('SERVER B')
-            oled_menu.menu_items.insert(2, 'SERVER A')
-            oled_menu.draw_menu()
-
-        elif (strval == "IP ADDRESS"):
-            title = ["==HOSTNAME & IP=="]
-            oled.draw_lines(title + noisebox.get_ip())
-            oled_menu.draw_menu()
+        elif (strval == "DEVICE INFO"):
+            self.new_state(actions.show_ip_address(noisebox))
 
         elif (strval == "UPDATE"):
-            oled.draw_lines(["==UPDATE==", "Updating system"])
-            try:
-                noisebox.system_update()
-            except NoiseBoxCustomError as e:
-                oled.start_scrolling_text(e.args[0])
-                self.new_state(RotaryState_Scrolling)
+            self.new_state(actions.update(noisebox))
 
-    def rotaryCallback(self, oled_menu, direction):
+
+class RotaryState_AdvancedSettingsMenu(RotaryState):
+    """Settings menu state"""
+    def __init__(self, debug=False):
+        self.debug = debug
+
+    def switchCallback(self, noisebox):
+        """check menu value on button click and run corresponding methods"""
+
+        strval = self.get_strval(noisebox)
+        value = self.get_value(noisebox)
+
+        if (strval == "QUEUE"):
+            self.new_state(actions.change_queue(noisebox, value))
+        if (strval == "CHANNELS"):
+            self.new_state(actions.change_jacktrip_channels(noisebox, value))
+        if (strval == "IP"):
+            self.new_state(RotaryState_IpPicker_Server)
+            self.init_ip_menu(noisebox)
+        if (strval == "PPS"):
+            self.new_state(actions.change_jack_pps(noisebox, value))
+        if (strval == "MODE"):
+            self.new_state(actions.change_jacktrip_mode(noisebox, value))
+        if (strval == "PEER"):
+            self.new_state(RotaryState_IpPicker_Peer)
+            self.init_ip_menu(noisebox)
+        if (strval == "<-- BACK"):
+            self.new_state(actions.exit_advanced_menu(noisebox))
+            return "<-- BACK"
+
+
+
+class RotaryState_IpPicker(RotaryState):
+    """Change IP address"""
+    def __init__(self, debug=False):
+        super().__init__(self)
+        self.debug = debug
+
+    def switchCallback(self, noisebox):
+
+        next_string = self.ip_address + self.ip_values[self.counter]
+
+        if self.ip_values[self.counter] is self.ip_values[-1]:
+            self.save_ip(noisebox)
+            self.new_state(actions.draw_advanced_menu(noisebox))
+
+        elif self.ip_values[self.counter] is self.ip_values[-2]:
+            self.ip_address = self.ip_address[:-1]
+            self.counter = -2
+            noisebox.menu.draw_ip_menu(self.ip_values[self.counter], self.ip_address)
+
+        elif len(next_string) == 15:
+            self.ip_address = next_string
+            self.save_ip(noisebox)
+            self.new_state(actions.draw_advanced_menu(noisebox))
+
+        else:
+            self.ip_address += self.ip_values[self.counter]
+            self.counter = -1
+            noisebox.menu.draw_ip_menu(self.ip_values[self.counter], self.ip_address)
+
+    def rotaryCallback(self, noisebox, direction):
         """Increment menu counter and redraw menu"""
 
         if direction == 1:
-            oled_menu.counter += 1
+            self.counter += 1
         else:
-            oled_menu.counter -= 1
-        oled_menu.draw_menu()
+            self.counter -= 1
+        noisebox.menu.draw_ip_menu(self.ip_values[self.counter], self.ip_address)
+
+class RotaryState_IpPicker_Server(RotaryState_IpPicker):
+    """Change IP address"""
+    def __init__(self, debug=False):
+        super().__init__(self)
+        self.debug = debug
+
+    def init_ip_menu(self, noisebox):
+        self.noisebox = noisebox
+        self.counter = -1
+        self.ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "<-", " ->"]
+        self.ip_address = self.noisebox.config.get_config()["jacktrip-default"]["ip"]
+        self.noisebox.menu.draw_ip_menu(self.ip_values[self.counter], self.ip_address )
+
+
+    def save_ip(self, noisebox):
+        next_config = noisebox.config.change_server_ip(self.ip_address)
+        if self.debug is True:
+            return
+        noisebox.config.save(next_config)
+
+class RotaryState_IpPicker_Peer(RotaryState_IpPicker):
+    """Change IP address"""
+    def __init__(self, debug=False):
+        super().__init__(self)
+        self.debug = debug
+
+    def init_ip_menu(self, noisebox):
+        self.noisebox = noisebox
+        self.counter = -1
+        self.ip_values = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "<-", " ->"]
+        self.ip_address = self.noisebox.config.get_config()["jacktrip-default"]["peer-ip"]
+        self.noisebox.menu.draw_ip_menu(self.ip_values[self.counter], self.ip_address )
+
+    def save_ip(self, noisebox):
+        next_config = noisebox.config.change_peer_ip(self.ip_address)
+        if self.debug is True:
+            return
+        noisebox.config.save(next_config)

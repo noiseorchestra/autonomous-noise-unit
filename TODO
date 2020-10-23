@@ -1,17 +1,25 @@
 ==TODO==
-
+- ANU title on main page?
+- change details in ANU info, can this show public IP address?
+- rearrange menu:
+		- ANU text/logo
+		- [CONNECT, LEVEL METER, SETTINGS] (BIG)
+		- [INPUT: (mono / stereo), PEER SESSION, DEVICE INFO, UPDATE, ADVANCED --> ]
+		- [CHANNELS: 1,
+			 QUEUE: 6,
+			 IP: xxx.xxx.xxx.xxx, (switches when changing mode)
+			 PPS: xxx
+			 MODE: hub-server / peer
+			 EXIT]
+- change input channels 1/2 to mono/stereo in the menu
+- check organisation of menu items and all names make sense
 - advanced config menu
-		- p2p IP ADDRESS
-		- hub server ip ADDRESS
-		- q value
-		- p value for jackd??
-- check how config values are set and write tests
-
+		- p2p DEVICE INFO
 - change server names in config file
 - hold button shutdown
 - replace noisebox with ANU
 - show "not connected to internet error" somewhere, when checking IP etc...
-- Write unit tests! (15%)
+- Write unit tests! (55%)
 - refactor pytrip_wait to return True / False and message, deal with this in NoiseBox (disconnect JackTrip connections straight away)
 - adapt jack_monitor & jack_wait to both run in background and handle errors that occur during a session, poll jack_monitor
 - remove subprocesses which run as shell (25%)
@@ -19,6 +27,12 @@
 - hello and goodbye messages
 
 ==DONE==
+- don't store menu values in Class get them on each draw
+- advanced config menu
+		- hub-server ip ADDRESS
+		- q value
+- Mock tests
+- check how config values are set and write tests
 - update button in settings
 - check github config
 - fix toggle server inconsistency

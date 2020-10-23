@@ -1,78 +1,86 @@
 #!/usr/bin/python3
-
-import RPi.GPIO as GPIO
-import configparser as cp
 from time import sleep
 import subprocess
 import sys
-import os
-import noisebox_rotary_helpers
-import noisebox_oled_helpers
+from noisebox_oled_helpers import Menu, OLED
 import noisebox_helpers as nh
 
 
 class Noisebox:
     """Main noisebox class"""
 
-    def __init__(self, cfg, jack_helper, oled):
-        self.config = cfg
-        self.peers = cfg.get('peers', 'ip_addresses').split(',')
-        self.online_peers = None
-        self.session_params = cfg['jacktrip-default']
+    def __init__(self, dry_run):
+        self.config = None
+        self.online_peers = []
+        self.pytrip = None
+        self.oled = None
+        self.jack_helper = None
+        self.level_meters = []
+
+        self.set_attributes(dry_run)
+
+    def set_attributes(self, dry_run):
+        if dry_run is True:
+            self.config = nh.Config(dry_run)
+            return
+
+        self.nh = nh
+        self.config = nh.Config()
         self.pytrip = nh.PyTrip()
-        self.oled = oled
-        self.jack_helper = jack_helper
-        self.pytrip_watch = nh.PyTripWatch()
-        self.pytrip_wait = nh.PyTripWait()
+        self.oled = OLED()
+        self.jack_helper = nh.JackHelper()
+        self.menu = Menu()
 
     def get_ip(self):
         """Get and return ip and hostname"""
 
-        result = nh.ip_address()
+        result = self.nh.ip_address()
         return result
+
+    def get_session_params(self):
+        return self.config.get_config()['jacktrip-default']
 
     def check_peers(self):
         """Check status of all peers"""
 
-        self.online_peers = nh.get_online_peers(self.peers)
+        peers = self.config.get_config()['peers']['ip_addresses'].split(',')
+        peers.append(self.config.get_config()['jacktrip-default']['peer-ip'])
+        self.online_peers = self.nh.get_online_peers(peers)
         return self.online_peers
 
-    def start_level_meters(self, stereo_input=False, jacktrip_session=False):
+    def set_level_meters(self, ports, prefix):
+        for i, port in enumerate(ports):
+            channel = prefix + str(i + 1)
+            self.level_meters.append(self.nh.LevelMeter(port.name, channel))
+
+    def is_stereo_input(self):
+        return False if self.get_session_params()['input-channels'] is "1" else True
+
+    def start_level_meters(self, jacktrip_session=False):
         """Get relevant ports and start level meters"""
 
-        level_meters = []
+        self.level_meters = []
 
         try:
-            local_inputs = self.jack_helper.get_inputs(stereo=stereo_input)
-            for i, port in enumerate(local_inputs):
-                channel = "IN-" + str(i + 1)
-                level_meters.append(nh.LevelMeter(port.name, channel))
-
+            self.set_level_meters(self.jack_helper.get_inputs(self.is_stereo_input()), "IN-")
             if jacktrip_session is True:
-                jacktrip_receives = self.jack_helper.get_jacktrip_receives()
-                for i, port in enumerate(jacktrip_receives):
-                    channel = "JT-" + str(i + 1)
-                    level_meters.append(nh.LevelMeter(port.name, channel))
-        except nh.NoiseBoxCustomError:
+                self.set_level_meters(self.jack_helper.get_jacktrip_receives(), "JT-")
+        except self.nh.NoiseBoxCustomError:
             raise
         else:
-            self.level_meters = level_meters
             self.oled.start_meters(self.level_meters)
 
     def start_local_monitoring(self):
         """Start monitoring local audio"""
 
-        stereo_input = False if self.session_params['input-channels'] is "1" else True
-        self.start_level_meters(stereo_input=stereo_input)
-        self.jack_helper.make_monitoring_connections(stereo_input=stereo_input)
+        self.start_level_meters()
+        self.jack_helper.make_monitoring_connections(self.is_stereo_input())
 
     def start_jacktrip_monitoring(self):
         """Start monitoring jacktrip session audio"""
 
-        stereo_jacktrip = False if self.session_params['jacktrip-channels'] == "1" else True
-        stereo_input = False if self.session_params['input-channels'] == "1" else True
-        self.start_level_meters(stereo_input=stereo_input, jacktrip_session=True)
-        self.jack_helper.make_jacktrip_connections(stereo_input=stereo_input)
+        self.start_level_meters(jacktrip_session=True)
+        self.jack_helper.make_jacktrip_connections(self.is_stereo_input())
 
     def stop_monitoring(self):
         """Stop monitoring audio"""
@@ -82,139 +90,69 @@ class Noisebox:
             thread.terminate()
         self.jack_helper.disconnect_session()
 
+    def is_session_connected(self, result):
+        if result["connected"] is True:
+            self.jack_helper.disconnect_session()
+            self.oled.draw_lines(result["message"])
+            self.start_jacktrip_monitoring()
+        else:
+            self.pytrip.stop_watching()
+            self.pytrip.stop()
+            raise self.nh.NoiseBoxCustomError(result["message"])
+
     def start_jacktrip_session(self):
         """Start hubserver JackTrip session"""
 
-        try:
-            self.oled.draw_lines(["==START JACKTRIP==", "Connecting to:", self.session_params['ip']])
-            self.pytrip.start(self.session_params)
-        except Exception:
-            self.pytrip.stop()
-            raise nh.NoiseBoxCustomError(["==JACKTRIP ERROR==", "JackTrip failed to start"])
-        else:
-            self.pytrip_watch.run(self.pytrip)
-            self.pytrip_wait.run(self.pytrip_watch, self.session_params['ip'])
-            message = self.pytrip_wait.message
+        self.oled.draw_lines(["==START JACKTRIP==", "Connecting to:", self.get_session_params()['ip']])
 
-            if self.pytrip_wait.connected is True:
-                self.jack_helper.disconnect_session()
-                self.oled.draw_lines(message)
-                self.start_jacktrip_monitoring()
-            else:
-                self.pytrip_watch.terminate()
-                self.pytrip.stop()
-                raise nh.NoiseBoxCustomError(message)
+        result = self.pytrip.connect_to_hub_server(self.get_session_params())
+        self.is_session_connected(result)
 
     def start_jacktrip_peer_session(self, server=True, peer_address=None):
 
         start_message = ["==START JACKTRIP==", "Starting server", "Waiting for peer.."]
-        error_message = ["==JACKTRIP ERROR==", "JackTrip failed to start"]
-        peer_address_or_server = "server"
-        long_timeout = True
-
         if server is False:
             start_message = ["==START JACKTRIP==", "Connecting to:", peer_address]
-            peer_address_or_server = peer_address
-            long_timeout = False
 
         self.oled.draw_lines(start_message)
-
-        try:
-            self.pytrip.start(self.session_params, p2p=True, server=server, peer_address=peer_address)
-        except Exception:
-            self.pytrip.stop()
-            raise nh.NoiseBoxCustomError(error_message)
-        else:
-            self.pytrip_watch.run(self.pytrip)
-            self.pytrip_wait.run(self.pytrip_watch, peer_address_or_server, long_timeout=long_timeout)
-            message = self.pytrip_wait.message
-
-            if self.pytrip_wait.connected is True:
-                self.jack_helper.disconnect_session()
-                self.oled.draw_lines(message)
-                self.start_jacktrip_monitoring()
-            else:
-                self.pytrip.stop()
-                self.pytrip_watch.terminate()
-                raise nh.NoiseBoxCustomError(message)
+        result = self.pytrip.connect_to_peer(self.get_session_params(), server=server, peer_address=peer_address)
+        self.is_session_connected(result)
 
     def stop_jacktrip_session(self):
         """Stop JackTrip session"""
 
         self.stop_monitoring()
-        self.pytrip_watch.terminate()
+        self.pytrip.stop_watching()
         self.pytrip.stop()
         self.oled.draw_lines(["==JACKTRIP STOPPED=="])
 
-    def save_settings(self):
-        self.config['jacktrip-default']['ip'] = self.session_params['ip']
-        self.config['jacktrip-default']['jacktrip-channels'] = self.session_params['jacktrip-channels']
-        self.config['jacktrip-default']['input-channels'] = self.session_params['input-channels']
-        with open('./config.ini', 'w') as configfile:
-            self.config.write(configfile)
+    def restart_jack_if_needed(self):
+        new_pps = self.get_session_params()["jack-pps"]
+        if self.jack_helper.check_current_pps(new_pps) is False:
+            self.oled.draw_lines(["==RESTARTING JACK==", "at " + new_pps + " pps" ])
+            self.jack_helper.stop()
+            self.jack_helper.start(self.get_session_params())
 
     def system_update(self):
         p = subprocess.run(["git", "pull"])
         if p.returncode == 1:
-            raise nh.NoiseBoxCustomError(["==ERROR==", "could not update"])
+            raise self.nh.NoiseBoxCustomError(["==ERROR==", "could not update"])
         self.oled.draw_lines(["==UPDATE==", "Update succesful", "restarting system..."])
         sys.exit("System restart")
 
 
 def main():
 
-    menu_items = ['CONNECT TO SERVER',
-                  'LEVEL METER',
-                  'P2P SESSION',
-                  'SETTINGS -->']
+    import RPi.GPIO as GPIO
+    from noisebox_rotary_helpers.rotary import KY040
 
-    settings_menu = ["MONO INPUT",
-                     "MONO OUTPUT",
-                     "SERVER A",
-                     "IP ADDRESS",
-                     "UPDATE",
-                     "<-- BACK"]
-
-    cfg = cp.ConfigParser(interpolation=cp.ExtendedInterpolation())
-    cfg.read('./default-config.ini')
-
-    if os.path.isfile('./config.ini'):
-        custom_cfg = cp.ConfigParser(interpolation=cp.ExtendedInterpolation())
-        custom_cfg.read('./config.ini')
-        cfg['server1']['ip'] = custom_cfg['server1']['ip']
-        cfg['server2']['ip'] = custom_cfg['server2']['ip']
-        cfg['peers'] = custom_cfg['peers']
-        cfg['jacktrip-default']['input-channels'] = custom_cfg['jacktrip-default']['input-channels']
-        cfg['jacktrip-default']['jacktrip-channels'] = custom_cfg['jacktrip-default']['jacktrip-channels']
-        cfg['jacktrip-default']['ip'] = custom_cfg['jacktrip-default']['ip']
-
-    else:
-        print("""
-        config.ini file not found, reading default-config.ini instead,
-        please create your own config.ini file.
-        """)
-
-    if cfg['jacktrip-default']['ip'] == cfg['server2']['ip']:
-        settings_menu.remove('SERVER A')
-        settings_menu.insert(2, 'SERVER B')
-
-    selected_menu_items = []
-
-    if cfg['jacktrip-default']['input-channels'] == '1':
-        selected_menu_items.append('MONO INPUT')
-
-    if cfg['jacktrip-default']['jacktrip-channels'] == '1':
-        selected_menu_items.append('MONO OUTPUT')
-
-    oled = noisebox_oled_helpers.OLED()
-    jack_helper = nh.JackHelper()
-    oled_menu = noisebox_oled_helpers.Menu(menu_items, settings_menu, selected_menu_items)
-    noisebox = Noisebox(cfg, jack_helper, oled)
-    ky040 = noisebox_rotary_helpers.KY040(noisebox, oled_menu)
-    oled_menu.start(noisebox.oled.device)
+    noisebox = Noisebox(dry_run=False)
+    ky040 = KY040(noisebox)
 
     try:
-        oled_menu.start(noisebox.oled.device)
+        noisebox.oled.draw_logo()
+        sleep(3)
+        noisebox.menu.start(noisebox.oled.device)
     except Exception as e:
         print("OLED error:", e)
         sys.exit("Exited because of OLED error")
@@ -223,15 +161,15 @@ def main():
         ky040.start()
     except Exception as e:
         print("Rotary switch error: ", e)
-        oled.draw_lines(["==ERROR==", "Rotary switch error", "Restarting noisebox"])
+        noisebox.oled.draw_lines(["==ERROR==", "Rotary switch error", "Restarting noisebox"])
         sleep(4)
         sys.exit("Exited because of rotary error")
 
     try:
-        jack_helper.start()
+        noisebox.jack_helper.start(noisebox.get_session_params())
     except Exception as e:
         print("JACK Client could not start:", e)
-        oled.draw_lines(["==ERROR==", "JACK didn't start", "Restarting script"])
+        noisebox.oled.draw_lines(["==ERROR==", "JACK didn't start", "Restarting script"])
         sleep(4)
         sys.exit("Exited because jackd not running")
 
