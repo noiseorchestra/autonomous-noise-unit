@@ -163,10 +163,15 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
         if (strval == "CHANNELS"):
             self.new_state(actions.change_jacktrip_channels(noisebox, value))
         if (strval == "IP"):
-            self.new_state(RotaryState_IpPicker)
+            self.new_state(RotaryState_IpPicker_Server)
             self.init_ip_menu(noisebox)
         if (strval == "PPS"):
             self.new_state(actions.change_jack_pps(noisebox, value))
+        if (strval == "MODE"):
+            self.new_state(actions.change_jacktrip_mode(noisebox, value))
+        if (strval == "PEER"):
+            self.new_state(RotaryState_IpPicker_Peer)
+            self.init_ip_menu(noisebox)
         if (strval == "<-- BACK"):
             self.new_state(actions.exit_advanced_menu(noisebox))
             return "<-- BACK"
@@ -218,8 +223,26 @@ class RotaryState_IpPicker(RotaryState):
             self.counter -= 1
         noisebox.menu.draw_ip_menu(self.ip_values[self.counter], self.ip_address)
 
+class RotaryState_IpPicker_Server(RotaryState_IpPicker):
+    """Change IP address"""
+    def __init__(self, debug=False):
+        super().__init__(self)
+        self.debug = debug
+
     def save_ip(self, noisebox):
         next_config = noisebox.config.change_server_ip(self.ip_address)
+        if self.debug is True:
+            return
+        noisebox.config.save(next_config)
+
+class RotaryState_IpPicker_Peer(RotaryState_IpPicker):
+    """Change IP address"""
+    def __init__(self, debug=False):
+        super().__init__(self)
+        self.debug = debug
+
+    def save_ip(self, noisebox):
+        next_config = noisebox.config.change_peer_ip(self.ip_address)
         if self.debug is True:
             return
         noisebox.config.save(next_config)

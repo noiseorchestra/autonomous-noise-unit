@@ -25,7 +25,7 @@ class MenuItems:
         self._channels_values = ["1", "2"]
         self._queue_values = ["2", "4", "6", "8", "10", "12", "14", "16"]
         self._pps_values = ["64", "128", "256", "512"]
-        self._hub_mode_values = ["True", "False"]
+        self._mode_values = ["hub server", "peer connection"]
 
     def get_jacktrip_settings(self):
         config = Config(self.dry_run)
@@ -54,7 +54,7 @@ class MenuItems:
         items[1]["value"] = jacktrip_settings["jacktrip-q"]
         items[2]["value"] = jacktrip_settings["ip"]
         items[3]["value"] = jacktrip_settings["jack-pps"]
-        items[4]["value"] = jacktrip_settings["hub-mode"]
+        items[4]["value"] = jacktrip_settings["jacktrip-mode"]
         items[5]["value"] = jacktrip_settings["peer-ip"]
         return items
 
@@ -70,8 +70,8 @@ class MenuItems:
     def next_pps_value(self):
         return self.next_value(self._pps_values, self.advanced_settings_items[3]["value"])
 
-    def next_mub_mode_value(self):
-        return self.next_value(self._hub_mode_values, self.advanced_settings_items[4]["value"])
+    def next_mode_value(self):
+        return self.next_value(self._mode_values, self.advanced_settings_items[4]["value"])
 
     def next_value(self, values, current_value):
         index = values.index(current_value)

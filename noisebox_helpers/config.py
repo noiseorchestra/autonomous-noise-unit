@@ -46,10 +46,10 @@ class Config:
             cfg["jacktrip-default"]["jack-pps"] = "256"
 
         try:
-            cfg["jacktrip-default"]["hub-mode"]
+            cfg["jacktrip-default"]["jacktrip-mode"]
         except KeyError:
             print("jack-hub key does not exist, setting default value")
-            cfg["jacktrip-default"]["hub-mode"] = "True"
+            cfg["jacktrip-default"]["jacktrip-mode"] = "hub server"
 
         try:
             cfg["jacktrip-default"]["peer-ip"]
@@ -94,6 +94,16 @@ class Config:
     def change_jack_pps(self, pps):
         cfg = self.get_custom_only()
         cfg["jacktrip-default"]["jack-pps"] = pps
+        return cfg
+
+    def change_jacktrip_mode(self, mode):
+        cfg = self.get_custom_only()
+        cfg["jacktrip-default"]["jacktrip-mode"] = mode
+        return cfg
+
+    def change_peer_ip(self, ip):
+        cfg = self.get_custom_only()
+        cfg["jacktrip-default"]["peer-ip"] = ip
         return cfg
 
     def save(self, cfg):
