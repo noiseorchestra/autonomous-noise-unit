@@ -129,7 +129,7 @@ class JackHelper:
         if stereo_input is not True:
             local_receive_ports = [local_receive_ports[0]]
 
-        self.set_all_connections([local_receive_ports], [jacktrip_send_ports, local_send_ports])
+        self.set_all_connections([local_receive_ports], [jacktrip_send_ports + local_send_ports])
         self.set_all_connections([jacktrip_receive_ports], [local_send_ports])
         self.make_all_connections()
 

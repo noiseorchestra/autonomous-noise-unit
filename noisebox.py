@@ -81,7 +81,6 @@ class Noisebox:
 
         self.start_level_meters(jacktrip_session=True)
         self.jack_helper.make_jacktrip_connections(self.is_stereo_input())
-        self.jack_helper.make_monitoring_connections(self.is_stereo_input())
 
     def stop_monitoring(self):
         """Stop monitoring audio"""
