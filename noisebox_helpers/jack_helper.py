@@ -80,7 +80,6 @@ class JackHelper:
     def set_all_connections(self, receive_ports_list, send_ports_list):
         """Connect a list of receive ports to a list of sends"""
 
-        self.connections = []
         for connection in product(receive_ports_list, send_ports_list):
             print(connection)
             receive_ports = connection[0]
@@ -119,6 +118,7 @@ class JackHelper:
         """Make connections for jacktrip session"""
 
         self.disconnect_session()
+        self.connections = []
 
         local_receive_ports = self.jackClient.get_ports('system:capture.*')
         local_send_ports = self.jackClient.get_ports('system:playback.*')
@@ -142,6 +142,8 @@ class JackHelper:
 
         if stereo_input is not True:
             local_receive_ports = [local_receive_ports[0]]
+
+        self.connections = []
 
         self.set_all_connections([local_receive_ports], [local_send_ports])
         self.make_all_connections()
