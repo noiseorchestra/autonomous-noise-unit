@@ -233,6 +233,15 @@ def test_rotarty_state_ip_picker():
     rotaryState.counter = -2
     rotaryState.switchCallback(noisebox)
     noisebox.menu.draw_ip_menu.assert_called_with("<-", "03")
+    rotaryState.counter = 16
+    rotaryState.switchCallback(noisebox)
+    noisebox.menu.draw_ip_menu.assert_called_with(" ->", "033")
+    rotaryState.counter = 56
+    rotaryState.switchCallback(noisebox)
+    noisebox.menu.draw_ip_menu.assert_called_with(" ->", "0334")
+    rotaryState.counter = -102
+    rotaryState.switchCallback(noisebox)
+    noisebox.menu.draw_ip_menu.assert_called_with(" ->", "03342")
 
     rotaryState.ip_address = ""
     rotaryState.counter = 0
