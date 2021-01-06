@@ -141,7 +141,7 @@ class Noisebox:
         sys.exit("System restart")
 
     def jacktrip_update(self):
-        p = subprocess.run(["sudo", "bash", "update_jacktrip.sh"])
+        p = subprocess.run(["bash", "update_jacktrip.sh"])
         if p.returncode == 1:
             raise self.nh.NoiseBoxCustomError(["==ERROR==", "could not JackTrip"])
         self.oled.draw_lines(["==UPDATE==", "JackTrip updated succesfully", "restarting system..."])
