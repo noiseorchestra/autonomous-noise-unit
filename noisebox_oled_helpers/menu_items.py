@@ -19,7 +19,10 @@ class MenuItems:
                                          {"name": "IP", "value": ""},
                                          {"name": "PPS", "value": ""},
                                          {"name": "MODE", "value": ""},
-                                         {"name": "PEER", "value": ""}, "<-- BACK"]
+                                         {"name": "PEER", "value": ""},
+                                         "UPDATE JACKTRIP",
+                                         "<-- BACK"]
+
         self._active_menu_items = self._main_menu_items
         self._input_values = ["1", "2"]
         self._channels_values = ["1", "2"]
