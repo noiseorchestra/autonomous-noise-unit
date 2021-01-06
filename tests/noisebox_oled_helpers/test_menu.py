@@ -17,6 +17,7 @@ advanced_settings_items = [{"name": "CHANNELS", "value": "2"},
                            {"name": "PPS", "value": "256"},
                            {"name": "MODE", "value": "hub-server"},
                            {"name": "PEER", "value": "111.111.111.111"},
+                           "UPDATE JACKTRIP",
                            "<-- BACK"]
 
 input_values = ["1", "2"]

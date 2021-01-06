@@ -15,6 +15,7 @@ def test_get_menu_item_string():
         "PPS: 256",
         "MODE: hub-server",
         "PEER: 111.111.111.111",
+        "UPDATE JACKTRIP",
         "<-- BACK"
     ]
 
