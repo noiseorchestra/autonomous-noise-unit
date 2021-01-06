@@ -6,8 +6,8 @@ sudo apt-get -y install librtaudio-dev
 
 sudo apt-get -y install qt5-default qt5-qmake
 sudo rm -r jacktrip
-git clone https://github.com/jacktrip/jacktrip.git
-cd jacktrip/src
-git checkout v1.2.1
+git clone https://github.com/jacktrip/jacktrip.git ~/jacktrip
+cd ~/jacktrip/src
+git checkout beta.rc.1.3.0
 qmake jacktrip.pro
 sudo make install
