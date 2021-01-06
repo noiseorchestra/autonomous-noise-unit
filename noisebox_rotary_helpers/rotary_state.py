@@ -178,6 +178,8 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
         if (strval == "PEER"):
             self.new_state(RotaryState_IpPicker_Peer)
             self.init_ip_menu(noisebox)
+        if (strval == "UPDATE JACKTRIP"):
+            self.new_state(actions.update_jacktrip(noisebox))
         if (strval == "<-- BACK"):
             self.new_state(actions.exit_advanced_menu(noisebox))
             return "<-- BACK"
