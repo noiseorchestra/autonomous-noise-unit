@@ -10,5 +10,6 @@ sudo rm -r jacktrip
 git clone https://github.com/jacktrip/jacktrip.git
 cd jacktrip/src
 git checkout beta.rc.1.3.0
+sudo rm -r /usr/bin/jacktrip
 qmake jacktrip.pro
 sudo make install
