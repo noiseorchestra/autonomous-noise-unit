@@ -24,7 +24,7 @@ class PyTrip:
         """Generate JackTrip command"""
 
         n = "-n" + params["jacktrip-channels"]
-        q = "-q " + params["jacktrip-q"]
+        q = "-q" + params["jacktrip-q"]
 
         return ["jacktrip", "-s", n, q, "-z"]
 
