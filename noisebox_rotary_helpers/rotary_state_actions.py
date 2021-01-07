@@ -92,7 +92,7 @@ def update(noisebox):
     return rs.RotaryState_Menu
 
 def update_jacktrip(noisebox):
-    noisebox.oled.draw_lines(["==UPDATE==", "Updating JackTrip", "this will take several minutes"])
+    noisebox.oled.draw_lines(["==UPDATE==", "Updating JackTrip", "this will take a while"])
     try:
         noisebox.jacktrip_update()
     except nh.NoiseBoxCustomError as e:
