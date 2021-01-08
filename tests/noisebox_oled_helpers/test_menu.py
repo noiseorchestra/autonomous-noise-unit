@@ -3,7 +3,8 @@ from noisebox_oled_helpers import MenuItems
 
 main_menu_items = ['CONNECT',
                    'LEVEL METER',
-                   'SETTINGS']
+                   'SETTINGS',
+                   'SWITCH OFF']
 
 settings_items = [{"name": "INPUT", "value": "2"},
                   "DEVICE INFO",

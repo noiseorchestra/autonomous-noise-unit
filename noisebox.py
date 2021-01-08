@@ -140,6 +140,8 @@ class Noisebox:
         self.oled.draw_lines(["==UPDATE==", "Update succesful", "restarting system..."])
         sys.exit("System restart")
 
+    def shutdown(self):
+        p = subprocess.run(["sudo", "shutdown", "-h", "now"])
 
 def main():
 
