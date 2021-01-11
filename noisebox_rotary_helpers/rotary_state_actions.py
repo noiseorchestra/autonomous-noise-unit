@@ -91,6 +91,15 @@ def update(noisebox):
         return rs.RotaryState_Scrolling
     return rs.RotaryState_Menu
 
+def shutdown(noisebox):
+    noisebox.oled.draw_lines(["==SHUTTING DOWN==", "wait 5 seconds", "then unplug your ANU"])
+    try:
+        noisebox.shutdown()
+    except nh.NoiseBoxCustomError as e:
+        noisebox.oled.start_scrolling_text(e.args[0])
+        return rs.RotaryState_Scrolling
+    return rs.RotaryState_Menu
+
 def change_queue(noisebox, value):
     next_queue_value = noisebox.menu.next_queue_value()
     noisebox.config.save(noisebox.config.change_queue(next_queue_value))
