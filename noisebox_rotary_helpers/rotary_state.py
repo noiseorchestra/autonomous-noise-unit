@@ -54,10 +54,6 @@ class RotaryState_Menu(RotaryState):
         if (strval == "SETTINGS"):
             self.new_state(actions.settings_menu(noisebox))
 
-        if (strval == "SWITCH OFF"):
-            self.new_state(actions.shutdown(noisebox))
-
-
 
 class RotaryState_Monitoring(RotaryState):
     """Monitoring audio state"""
@@ -154,6 +150,11 @@ class RotaryState_SettingsMenu(RotaryState):
 
         elif (strval == "UPDATE"):
             self.new_state(actions.update(noisebox))
+
+        elif (strval == "SWITCH OFF"):
+            self.new_state(actions.shutdown(noisebox))
+
+
 
 
 class RotaryState_AdvancedSettingsMenu(RotaryState):

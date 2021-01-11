@@ -3,13 +3,13 @@ from noisebox_oled_helpers import MenuItems
 
 main_menu_items = ['CONNECT',
                    'LEVEL METER',
-                   'SETTINGS',
-                   'SWITCH OFF']
+                   'SETTINGS']
 
 settings_items = [{"name": "INPUT", "value": "2"},
                   "DEVICE INFO",
                   "ADVANCED OPTIONS",
                   "UPDATE",
+                  "SWITCH OFF",
                   "<-- BACK"]
 
 advanced_settings_items = [{"name": "CHANNELS", "value": "2"},

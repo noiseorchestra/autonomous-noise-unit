@@ -7,12 +7,12 @@ class MenuItems:
         self.dry_run = dry_run
         self._main_menu_items = ['CONNECT',
                                  'LEVEL METER',
-                                 'SETTINGS',
-                                 'SWITCH OFF']
+                                 'SETTINGS']
         self._settings_items = [{"name": "INPUT", "value": ""},
                                 "DEVICE INFO",
                                 "ADVANCED OPTIONS",
                                 "UPDATE",
+                                'SWITCH OFF',
                                 "<-- BACK"]
 
         self._advanced_settings_items = [{"name": "CHANNELS", "value": ""},

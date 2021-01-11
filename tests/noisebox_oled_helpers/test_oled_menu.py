@@ -3,8 +3,7 @@ from unittest.mock import Mock
 
 menu_items = ['CONNECT',
               'LEVEL METER',
-              'SETTINGS',
-              'SWITCH OFF']
+              'SETTINGS']
 
 
 def test_get_menu_item_string():
@@ -23,6 +22,7 @@ def test_get_menu_item_string():
                      "DEVICE INFO",
                      "ADVANCED OPTIONS",
                      "UPDATE",
+                     "SWITCH OFF",
                      "<-- BACK"]
 
     menu = Menu(dry_run=True)
