@@ -92,7 +92,7 @@ def update(noisebox):
     return rs.RotaryState_Menu
 
 def shutdown(noisebox):
-    noisebox.oled.draw_lines(["==SHUTDOWN=="])
+    noisebox.oled.draw_lines(["==SHUTTING DOWN==", "wait 5 seconds", "then unplug your ANU"])
     try:
         noisebox.shutdown()
     except nh.NoiseBoxCustomError as e:
