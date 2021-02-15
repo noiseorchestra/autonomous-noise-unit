@@ -22,6 +22,7 @@ def test_get_menu_item_string():
                      "DEVICE INFO",
                      "ADVANCED OPTIONS",
                      "UPDATE",
+                     "SWITCH OFF",
                      "<-- BACK"]
 
     menu = Menu(dry_run=True)

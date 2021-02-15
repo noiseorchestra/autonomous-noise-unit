@@ -12,6 +12,7 @@ class MenuItems:
                                 "DEVICE INFO",
                                 "ADVANCED OPTIONS",
                                 "UPDATE",
+                                'SWITCH OFF',
                                 "<-- BACK"]
 
         self._advanced_settings_items = [{"name": "CHANNELS", "value": ""},
