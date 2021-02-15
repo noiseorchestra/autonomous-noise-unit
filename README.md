@@ -41,6 +41,7 @@ $ ssh pi@<rpi-address>.local
 $ sudo apt-get install -y git
 $ git clone https://github.com/noiseorchestra/autonomous-noise-unit.git
 $ pip3 install -r autonomous-noise-unit/requirements.txt
+$ cp default-config.ini config.ini
 ```
 
 Then to run the script:
