@@ -18,14 +18,14 @@ class MenuItems:
         self._advanced_settings_items = [{"name": "CHANNELS", "value": ""},
                                          {"name": "QUEUE", "value": ""},
                                          {"name": "IP", "value": ""},
-                                         {"name": "PPS", "value": ""},
+                                         {"name": "FPP", "value": ""},
                                          {"name": "MODE", "value": ""},
                                          {"name": "PEER", "value": ""}, "<-- BACK"]
         self._active_menu_items = self._main_menu_items
         self._input_values = ["1", "2"]
         self._channels_values = ["1", "2"]
         self._queue_values = ["2", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24"]
-        self._pps_values = ["64", "128", "256", "512"]
+        self._fpp_values = ["64", "128", "256", "512"]
         self._mode_values = ["hub-server", "p2p"]
 
     def get_jacktrip_settings(self):
@@ -54,7 +54,7 @@ class MenuItems:
         items[0]["value"] = jacktrip_settings["jacktrip-channels"]
         items[1]["value"] = jacktrip_settings["jacktrip-q"]
         items[2]["value"] = jacktrip_settings["ip"]
-        items[3]["value"] = jacktrip_settings["jack-pps"]
+        items[3]["value"] = jacktrip_settings["jack-fpp"]
         items[4]["value"] = jacktrip_settings["jacktrip-mode"]
         items[5]["value"] = jacktrip_settings["peer-ip"]
         return items
@@ -68,8 +68,8 @@ class MenuItems:
     def next_channels_value(self):
         return self.next_value(self._channels_values, self.advanced_settings_items[0]["value"])
 
-    def next_pps_value(self):
-        return self.next_value(self._pps_values, self.advanced_settings_items[3]["value"])
+    def next_fpp_value(self):
+        return self.next_value(self._fpp_values, self.advanced_settings_items[3]["value"])
 
     def next_mode_value(self):
         return self.next_value(self._mode_values, self.advanced_settings_items[4]["value"])

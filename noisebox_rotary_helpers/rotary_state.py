@@ -175,8 +175,8 @@ class RotaryState_AdvancedSettingsMenu(RotaryState):
         if (strval == "IP"):
             self.new_state(RotaryState_IpPicker_Server)
             self.init_ip_menu(noisebox)
-        if (strval == "PPS"):
-            self.new_state(actions.change_jack_pps(noisebox, value))
+        if (strval == "FPP"):
+            self.new_state(actions.change_jack_fpp(noisebox, value))
         if (strval == "MODE"):
             self.new_state(actions.change_jacktrip_mode(noisebox, value))
         if (strval == "PEER"):

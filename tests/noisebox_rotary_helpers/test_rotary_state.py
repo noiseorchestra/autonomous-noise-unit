@@ -169,7 +169,7 @@ def test_rotarty_state_advanced_settings_menu_item_queue():
     assert rotaryState.__class__.__name__ == "RotaryState_AdvancedSettingsMenu"
     noisebox.config.change_queue.assert_called_with("8")
 
-def test_rotarty_state_advanced_settings_menu_item_pps():
+def test_rotarty_state_advanced_settings_menu_item_fpp():
 
     noisebox = Mock()
     noisebox.menu = Menu(dry_run=True)
@@ -180,7 +180,7 @@ def test_rotarty_state_advanced_settings_menu_item_pps():
     rotaryState = rs.RotaryState_AdvancedSettingsMenu(debug=True)
     rotaryState.switchCallback(noisebox)
     assert rotaryState.__class__.__name__ == "RotaryState_AdvancedSettingsMenu"
-    noisebox.config.change_jack_pps.assert_called_with("512")
+    noisebox.config.change_jack_fpp.assert_called_with("512")
 
 def test_rotarty_state_advanced_settings_menu_change_ip():
 
