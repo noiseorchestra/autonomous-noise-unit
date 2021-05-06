@@ -2,7 +2,7 @@ cffi==1.14.0
 JACK-Client==0.5.2
 luma.core==1.14.0
 luma.oled==3.5.0
-Pillow==7.2.0
+Pillow==8.1.1
 psutil==5.7.2
 pycparser==2.20
 pyftdi==0.51.2
