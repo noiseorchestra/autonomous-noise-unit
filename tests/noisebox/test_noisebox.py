@@ -72,11 +72,11 @@ def test_restart_jack_if_needed():
     noisebox.jack_helper = nh.JackHelper()
     noisebox.jack_helper.start = Mock()
     noisebox.oled = Mock()
-    noisebox.jack_helper.current_pps = "256"
+    noisebox.jack_helper.current_fpp = "256"
     noisebox.restart_jack_if_needed()
     assert not noisebox.jack_helper.start.called
 
-    noisebox.jack_helper.current_pps = "64"
+    noisebox.jack_helper.current_fpp = "64"
     noisebox.jack_helper.start = Mock()
     noisebox.restart_jack_if_needed()
     noisebox.jack_helper.start.assert_called()

@@ -11,20 +11,20 @@ class JackHelper:
     def __init__(self):
         self.jackClient = None
         self.connections = []
-        self.current_pps = None
+        self.current_fpp = None
 
-    def set_current_pps(self, pps):
-        self.current_pps = pps
+    def set_current_fpp(self, fpp):
+        self.current_fpp = fpp
 
-    def check_current_pps(self, test_pps):
-        return test_pps == self.current_pps
+    def check_current_fpp(self, test_fpp):
+        return test_fpp == self.current_fpp
 
     def generate_command(self, params):
-        pps = "256"
-        if "jack-pps" in params.keys():
-            pps = params["jack-pps"]
-        self.set_current_pps(pps)
-        return ['jackd', '-R', '-dalsa', '-r48000', "-p" + pps, '-n2', '-s', '-S']
+        fpp = "256"
+        if "jack-fpp" in params.keys():
+            fpp = params["jack-fpp"]
+        self.set_current_fpp(fpp)
+        return ['jackd', '-R', '-dalsa', '-r48000', "-p" + fpp, '-n2', '-s', '-S']
 
     def start(self, params):
         """Start JACK with relavent parameters"""

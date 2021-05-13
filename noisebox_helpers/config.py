@@ -40,10 +40,10 @@ class Config:
             cfg["jacktrip-default"]["jacktrip-q"] = "8"
 
         try:
-            cfg["jacktrip-default"]["jack-pps"]
+            cfg["jacktrip-default"]["jack-fpp"]
         except KeyError:
-            print("jack-pps key does not exist, setting default value")
-            cfg["jacktrip-default"]["jack-pps"] = "256"
+            print("jack-fpp key does not exist, setting default value")
+            cfg["jacktrip-default"]["jack-fpp"] = "256"
 
         try:
             cfg["jacktrip-default"]["jacktrip-mode"]
@@ -91,9 +91,9 @@ class Config:
         cfg["jacktrip-default"]["jacktrip-q"] = queue
         return cfg
 
-    def change_jack_pps(self, pps):
+    def change_jack_fpp(self, fpp):
         cfg = self.get_custom_only()
-        cfg["jacktrip-default"]["jack-pps"] = pps
+        cfg["jacktrip-default"]["jack-fpp"] = fpp
         return cfg
 
     def change_jacktrip_mode(self, mode):

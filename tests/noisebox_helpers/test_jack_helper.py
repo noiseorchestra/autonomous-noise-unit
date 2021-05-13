@@ -21,7 +21,7 @@ jacktrip_send_02.name = "jactrip:send_02"
 
 system_capture_mono = [Mock()]
 
-dummy_cfg_with_pps = {
+dummy_cfg_with_fpp = {
     "jacktrip-default": {
         "ip": "123.123.123.123",
         "hub_mode": True,
@@ -29,12 +29,12 @@ dummy_cfg_with_pps = {
         "jacktrip-channels": "2",
         "input-channels": "2",
         "jacktrip-q": "6",
-        "jack-pps": "128"
+        "jack-fpp": "128"
 
     }
 }
 
-dummy_cfg_without_pps = {
+dummy_cfg_without_fpp = {
     "jacktrip-default": {
         "ip": "123.123.123.123",
         "hub_mode": True,
@@ -46,18 +46,18 @@ dummy_cfg_without_pps = {
     }
 }
 
-def test_check_current_pps():
+def test_check_current_fpp():
     jack_helper = nh.JackHelper()
-    jack_helper.current_pps = "256"
-    assert jack_helper.check_current_pps("128") == False
-    assert jack_helper.check_current_pps("256") == True
+    jack_helper.current_fpp = "256"
+    assert jack_helper.check_current_fpp("128") == False
+    assert jack_helper.check_current_fpp("256") == True
 
 def test_generate_command():
     jack_helper = nh.JackHelper()
     result = ['jackd', '-R', '-dalsa', '-r48000', "-p256", '-n2', '-s', '-S']
-    assert jack_helper.generate_command(dummy_cfg_without_pps["jacktrip-default"]) == result
+    assert jack_helper.generate_command(dummy_cfg_without_fpp["jacktrip-default"]) == result
     result = ['jackd', '-R', '-dalsa', '-r48000', "-p128", '-n2', '-s', '-S']
-    assert jack_helper.generate_command(dummy_cfg_with_pps["jacktrip-default"]) == result
+    assert jack_helper.generate_command(dummy_cfg_with_fpp["jacktrip-default"]) == result
 
 
 def test_check_input_ports():

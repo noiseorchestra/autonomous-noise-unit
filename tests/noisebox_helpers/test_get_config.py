@@ -2,54 +2,31 @@ import noisebox_helpers as nh
 
 combined_config = {
     'jacktrip-default': {
-        'hub_mode': 'True',
         'input-channels': '2',
         'ip': '111.111.111.111',
         'jacktrip-mode': 'hub-server',
-        'jack-pps': '256',
+        'jack-fpp': '256',
         'jacktrip-channels': '2',
         'jacktrip-q': '6',
         'peer-ip': '111.111.111.111',
         'server': 'False'
     },
     'peers': {'ip_addresses': 'pi@raspberry.myvpn,pi@raspberry.myvpn'},
-    'server1': {
-        'ip': '111.111.111.111',
-        'jacktrip-n': '2',
-        'jacktrip-p': '256',
-        'jacktrip-q': '6',
-        'jacktrip-r': '48000'},
-    'server2': {
-        'ip': '222.222.222.222',
-        'jacktrip-n': '2',
-        'jacktrip-p': '256',
-        'jacktrip-q': '6',
-        'jacktrip-r': '48000'},
     'version': {'version': '0.1.4'}
 }
 
 default_config = {
     'jacktrip-default': {
-        'hub_mode': 'True',
         'input-channels': '2',
         'ip': '123.123.123.123',
+        'jack-fpp': '256',
         'jacktrip-channels': '2',
+        'jacktrip-mode': 'hub-server',
         'jacktrip-q': '6',
+        'peer-ip': '111.111.111.111',
         'server': 'False',
     },
     'peers': {'ip_addresses': '111.111.111.111,222.222.222.222,333.333.333.333'},
-    'server1': {
-        'ip': '123.123.123.123',
-        'jacktrip-n': '2',
-        'jacktrip-p': '256',
-        'jacktrip-q': '6',
-        'jacktrip-r': '48000'},
-    'server2': {
-        'ip': '234.234.234.234',
-        'jacktrip-n': '2',
-        'jacktrip-p': '256',
-        'jacktrip-q': '6',
-        'jacktrip-r': '48000'},
     'version': {'version': '0.1.4'}
 }
 
@@ -58,12 +35,9 @@ custom_config = {
         'input-channels': '2',
         'ip': '111.111.111.111',
         'jacktrip-channels': '2',
+        'peer-ip': '111.111.111.111'
     },
-    'peers': {'ip_addresses': 'pi@raspberry.myvpn,pi@raspberry.myvpn'},
-    'server1': {
-        'ip': '111.111.111.111'},
-    'server2': {
-        'ip': '222.222.222.222'},
+    'peers': {'ip_addresses': 'pi@raspberry.myvpn,pi@raspberry.myvpn'}
 }
 
 default_path = './tests/test_default_config.ini'
