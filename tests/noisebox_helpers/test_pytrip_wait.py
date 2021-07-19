@@ -42,7 +42,6 @@ def test_check_stdout_error():
     stdout_list = ['Maybe the JACK server is not running',
                    'Unable to connect to JACK server',
                    'JACK server not running',
-                   'Peer Buffer Size',
                    'Wrong bit resolution',
                    'Exiting JackTrip']
 

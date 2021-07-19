@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - dev
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   pytest:
