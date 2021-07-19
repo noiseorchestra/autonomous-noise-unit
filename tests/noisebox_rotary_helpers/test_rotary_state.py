@@ -261,4 +261,10 @@ def test_rotarty_state_ip_picker():
         rotaryState.counter = click
         rotaryState.switchCallback(noisebox)
     assert rotaryState.ip_address == "173.421.381.222"
+
+    # Exceed maximum length of ip address by a couple of digits
+    for click in [2, 2, 2, 2]
+        rotaryState.counter = click
+        rotaryState.switchCallback(noisebox)
+    assert rotaryState.ip_address == "173.421.381.222"
     rotaryState.new_state.assert_called_with(rs.RotaryState_AdvancedSettingsMenu)
