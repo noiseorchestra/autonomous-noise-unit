@@ -73,5 +73,23 @@ $ sudo cp autonomous-noise-unit/default-config.ini autonomous-noise-unit/config.
 - Connect to a hub-server or peer using the OLED menu
 - Monitor audio levels
 
+### ANU (on device) Menu Structure
+
+- CONNECT
+- LEVEL METER
+- SETTINGS
+    - INPUT: value
+    - DEVICE INFO
+    - ADVANCED OPTIONS
+        - CHANNELS: value
+        - QUEUE: value
+        - IP: value
+        - MODE: value
+        - PEER: value
+        - <-- BACK
+    - UPDATE
+    - SWITCH OFF
+    - <-- BACK
+
 ## Status
 This project is very much in development, it's currently in a working state and the main branch will remain that way, but there may be breaking changes.
