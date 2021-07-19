@@ -209,8 +209,8 @@ class RotaryState_IpPicker(RotaryState):
             self.counter = -2
             noisebox.menu.draw_ip_menu(self.ip_values[self.counter], self.ip_address)
 
-        elif len(next_string) == 15:
-            self.ip_address = next_string
+        elif len(next_string) >= 15:
+            self.ip_address = next_string[:15]
             self.save_ip(noisebox)
             self.new_state(actions.draw_advanced_menu(noisebox))
 
