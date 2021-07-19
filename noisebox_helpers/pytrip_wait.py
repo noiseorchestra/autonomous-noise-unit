@@ -42,7 +42,6 @@ class PyTripWait():
         errors = ['Maybe the JACK server is not running',
                   'Unable to connect to JACK server',
                   'JACK server not running',
-                  'Peer Buffer Size',
                   'Wrong bit resolution',
                   'Exiting JackTrip']
 
