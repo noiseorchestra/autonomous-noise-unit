@@ -24,7 +24,7 @@ class MenuItems:
         self._active_menu_items = self._main_menu_items
         self._input_values = ["1", "2"]
         self._channels_values = ["1", "2"]
-        self._queue_values = ["2", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24"]
+        self._queue_values = ["auto", "2", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24"]
         self._fpp_values = ["64", "128", "256", "512"]
         self._mode_values = ["hub-server", "p2p"]
 
