@@ -79,8 +79,8 @@ def jacktrip_menu(noisebox):
 
 def show_ip_address(noisebox):
     title = ["==HOSTNAME & IP=="]
-    noisebox.oled.draw_lines(title + noisebox.get_ip())
-    return rs.RotaryState_Show
+    noisebox.oled.start_scrolling_text(title + noisebox.get_ip())
+    return rs.RotaryState_Scrolling
 
 def update(noisebox):
     noisebox.oled.draw_lines(["==UPDATE==", "Updating system"])
