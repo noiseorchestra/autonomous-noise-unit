@@ -1,5 +1,7 @@
 # AUTONOMOUS-NOISE-UNIT
 
+[https://autonomousnoiseunit.co.uk](https://autonomousnoiseunit.co.uk)
+
 <img style="width:300px" src="https://fra1.digitaloceanspaces.com/sandreae-storage/anu-website/uploads/2020/11/09/636352e7-2062-4df9-8115-398165bd8b23.JPG"/>
 
 Python scripts for running JackTrip on an RPi with OLED screen and rotary switch interface. Works with either the pisound or hifiberry audio interfaces in combination with the in development A-N-U RPi Hat (DIY setup also possible). In order to connect to other peers you will either need a JackTrip hubserver running elsewhere which all clients connect to, or to connect in peer-to-peer fasion you will need to have the relevent port-forwarding enabled on your router and know the other peers public ip address.
@@ -7,7 +9,7 @@ Python scripts for running JackTrip on an RPi with OLED screen and rotary switch
 <img style="width:700px" src="https://fra1.digitaloceanspaces.com/sandreae-storage/anu-website/uploads/2020/11/24/SINGLE%20MIC%20INPUT-01.png"/>
 
 ## Requirements
-**[Raspberry Pi](https://www.raspberrypi.org/products/raspberry-pi-4-model-b/)**
+- **[Raspberry Pi](https://www.raspberrypi.org/products/raspberry-pi-4-model-b/)**
 - audio interface ([pisound](https://blokas.io/pisound/) or [hifiberry DAC + ADC](https://www.hifiberry.com/shop/boards/hifiberry-dac-adc/))
 - Micro SD card
 - Custom ANU hat (or build your own)
